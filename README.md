@@ -2,7 +2,7 @@
 
 This project is a collection of scripts for automated actions on Gamepedia/Fandom wikis, particularly the [Terraria Wiki](https://terraria.fandom.com). It includes a command line tool to start and stop the execution of these scripts.
 
-The project includes a customised version of the [mwcleric package](https://github.com/RheingoldRiver/mwcleric) by RheingoldRiver.
+The project includes a customized version of the [mwcleric package](https://github.com/RheingoldRiver/mwcleric) by RheingoldRiver.
 
 
 ## Prerequisites

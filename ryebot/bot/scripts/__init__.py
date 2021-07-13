@@ -1,0 +1,3 @@
+__availablescripts__ = (
+    'testscript'
+)

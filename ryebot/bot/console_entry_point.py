@@ -62,7 +62,7 @@ def main_start(scriptname, wiki):
 
 
 @click.command(context_settings=CONTEXT_SETTINGS, name='list')
-@click.option('-c', '--count', help='Display only the number of wikis.')
+@click.option('-c', '--count', help='Display only the number of wikis.', is_flag=True)
 def wiki_list(count):
     """Display a list of wikis that the bot has access to."""
     display_wiki_list(count)

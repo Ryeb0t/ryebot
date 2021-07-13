@@ -1,3 +1,3 @@
-__availablescripts__ = (
+__availablescripts__ = [
     'testscript'
-)
+]

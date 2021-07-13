@@ -46,7 +46,7 @@ def add_wiki(wikiname):
         return
     
     # make new directory and standard files
-    new_wiki_directory = os.path.join(wikis, wikiname)
+    new_wiki_directory = os.path.join(PATHS['wikis'], wikiname)
     os.mkdir(new_wiki_directory)
     Path(os.path.join(new_wiki_directory, STATUSFILENAME)).touch() # create the onlinestatus file
     click.echo(f'Granted the bot access to the "{wikiname}" wiki!')
@@ -60,6 +60,6 @@ def remove_wiki(wikiname):
         return
     
     # remove entire contents of the wiki directory
-    shutil.rmtree(os.path.join(wikis, wikiname))
+    shutil.rmtree(os.path.join(PATHS['wikis'], wikiname))
     click.echo(f'The bot now has no access to the "{wikiname}" wiki any longer!')
     

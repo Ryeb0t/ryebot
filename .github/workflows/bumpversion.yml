@@ -1,0 +1,38 @@
+name: Bump version
+
+on: [push]
+
+jobs:
+  bump-version:
+
+    runs-on: ubuntu-latest
+    
+    # determine which part to bump from the commit message:
+    # if it ends with "[major]" or "[patch]", use that, else default to "minor"
+    env:
+      BUMP_PART: ${{ endsWith(github.event.commits[0].message, '[major]') && 'major' || (endsWith(github.event.commits[0].message, '[patch]') && 'patch' || 'minor') }}
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install bumpversion
+        run: |
+          python -m pip install --upgrade pip
+          pip install bump2version
+        
+      # bumpversion wants to make a commit, so we must let git know an identity
+      # we use the email and name of the original committer for that
+      - name: Set git identity
+        run: |
+          git config --local user.name "${{ github.event.commits[0].author.name }}"
+          git config --local user.email "${{ github.event.commits[0].author.email }}"
+
+      - name: Run bumpversion
+        run: |
+          bump2version ${{ env.BUMP_PART }} --verbose
+          git push origin

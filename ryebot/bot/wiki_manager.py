@@ -20,8 +20,12 @@ def get_local_wikis():
     return os.listdir(PATHS['wikis'])
 
 
-def display_wiki_list():
+def display_wiki_list(only_show_count):
     wikis = get_local_wikis()
+
+    if only_show_count:
+        click.echo(len(wikis))
+        return
 
     output_str = ''
     if len(wikis) > 0:

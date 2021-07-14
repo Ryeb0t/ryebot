@@ -53,7 +53,7 @@ def main_scriptinfo(scriptname):
 
 
 @click.command(context_settings=CONTEXT_SETTINGS, name='up')
-@click.option('-w', '--wiki', prompt='Wiki on which to go online', multiple=True, help='Wiki on which to go online (can be used multiple times).')
+@click.option('-w', '--wiki', multiple=True, required=True, help='Wiki on which to go online (can be used multiple times).')
 def main_up(wiki):
     """Go online on a wiki."""
     go_online_on_wiki(wiki)

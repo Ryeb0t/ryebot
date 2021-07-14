@@ -17,7 +17,7 @@ class OnlineStatus(Enum):
 def display_status(requested_wikis):
     registered_wikis = get_local_wikis()
 
-    if requested_wikis is None:
+    if len(requested_wikis) == 0:
         # no specific wiki requested, so display status for all
         requested_wikis = registered_wikis
     
@@ -25,7 +25,7 @@ def display_status(requested_wikis):
     status_str, unregistereds_str = _format_statuses(statuses)
 
     output_str = ''
-    if status_str == '' and unregistereds_str == '' and requested_wikis is None:
+    if status_str == '' and unregistereds_str == '' and len(requested_wikis) == 0:
         output_str = '\nThe bot currently has no access to any wikis. Add one using "ryebot wiki add"!'
     
     elif status_str == '' and unregistereds_str != '':

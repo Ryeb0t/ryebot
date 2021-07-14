@@ -18,7 +18,8 @@ REQUIREMENTS = [
     'mwparserfromhell',
     'click>=8.0.0'
 ]
-ENTRYPOINT_COMMAND = 'ryebot' # command that will be used to execute the program from the command line
+# command that will be used to execute the program from the command line
+ENTRYPOINT_COMMAND = 'ryebot'
 
 # +++++++++++++++++++++++++++++++++
 # ++   Metadata definition end   ++

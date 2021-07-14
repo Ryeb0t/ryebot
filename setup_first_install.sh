@@ -10,5 +10,4 @@ source ~/ryebot/localdata/.ryebotvenv/bin/activate
 python3 -m pip install ~/ryebot
 
 # Make directory structure
-mkdir -p ~/ryebot/localdata/global_config
-mkdir -p ~/ryebot/localdata/wikis
+mkdir -p ~/ryebot/localdata/{global_config,wikis}

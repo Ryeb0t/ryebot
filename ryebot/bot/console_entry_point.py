@@ -3,7 +3,7 @@ from importlib import metadata
 
 from .scripts import __availablescripts__
 from .status_displayer import display_status
-from .wiki_manager import display_wiki_list, add_wiki, remove_wiki
+from .wiki_manager import display_wiki_list, add_wiki, remove_wiki, go_online_on_wiki, go_offline_on_wiki
 
 
 # allow using both "-h" and "--help" for help (default is only "--help")
@@ -52,6 +52,20 @@ def main_scriptinfo(scriptname):
         click.echo(f'This is some info about the script "{scriptname}".')
 
 
+@click.command(context_settings=CONTEXT_SETTINGS, name='up')
+@click.option('-w', '--wiki', prompt='Wiki on which to go online', multiple=True, help='Wiki on which to go online (can be used multiple times).')
+def main_up(wiki):
+    """Go online on a wiki."""
+    go_online_on_wiki(wiki)
+
+
+@click.command(context_settings=CONTEXT_SETTINGS, name='down')
+@click.option('-w', '--wiki', multiple=True, help='Wiki on which to go offline (can be used multiple times).')
+def main_down(wiki):
+    """Go offline on a wiki."""
+    go_offline_on_wiki(wiki)
+
+
 @click.command(context_settings=CONTEXT_SETTINGS, name='start')
 @click.option('-s', '--scriptname', type=click.Choice(__availablescripts__, case_sensitive=False), prompt='Name of the script to start')
 @click.option('-w', '--wiki', prompt='Wiki to start the script on')
@@ -88,6 +102,8 @@ def wiki_remove(name):
 main.add_command(main_status)
 main.add_command(main_list)
 main.add_command(main_scriptinfo)
+main.add_command(main_up)
+main.add_command(main_down)
 main.add_command(main_start)
 main.add_command(wiki)
 

@@ -62,4 +62,55 @@ def remove_wiki(wikiname):
     # remove entire contents of the wiki directory
     shutil.rmtree(os.path.join(PATHS['wikis'], wikiname))
     click.echo(f'The bot now does not have access to the "{wikiname}" wiki any longer!')
+
+
+def go_online_on_wiki(wikiname):
+    wikis = get_local_wikis()
     
+    if wikiname not in wikis:
+        click.echo('\n'.join((
+            f'Cannot go online on the "{wikiname}" wiki, because the bot currently does not have access to it.',
+            'You can grant access to the wiki using "ryebot wiki add".'
+        )))
+        return
+
+    statusfile = os.path.join(PATHS['wikis'], wikiname, STATUSFILENAME)
+
+    if not os.path.exists(statusfile):
+        Path(statusfile).touch() # create the file
+
+    output_str = f'Went online on the "{wikiname}" wiki!'
+    if os.stat(statusfile).st_size > 0:
+        output_str = f'Already online on the "{wikiname}" wiki.'
+
+    with open(statusfile, 'w') as f:
+        # always set the file's content to "1", even if it already is "1" or even something else for some reason
+        f.write('1')
+
+    click.echo(output_str)
+
+
+def go_offline_on_wiki(wikiname):
+    wikis = get_local_wikis()
+    
+    if wikiname not in wikis:
+        click.echo('\n'.join((
+            f'Cannot go offline on the "{wikiname}" wiki, because the bot currently does not have access to it.',
+            'You can grant access to the wiki using "ryebot wiki add".'
+        )))
+        return
+
+    statusfile = os.path.join(PATHS['wikis'], wikiname, STATUSFILENAME)
+
+    if not os.path.exists(statusfile):
+        Path(statusfile).touch() # create the file
+
+    output_str = f'Went offline on the "{wikiname}" wiki!'
+    if os.stat(statusfile).st_size == 0:
+        output_str = f'Already offline on the "{wikiname}" wiki.'
+
+    with open(statusfile, 'w') as f:
+        # always set the file's content to nothing
+        f.write('')
+
+    click.echo(output_str)

@@ -24,5 +24,5 @@ def start_daemon():
 
 
 def log_command(command):
-    logging.basicConfig(level=logging.INFO, filename=COMMANDLOGFILE, format='[%(asctime)s] %(message)s', datefmt='%a %b %d %H:%M:%S %Y')
+    logging.basicConfig(level=logging.INFO, filename=os.path.join(PATHS['localdata'], COMMANDLOGFILE), format='[%(asctime)s] %(message)s', datefmt='%a %b %d %H:%M:%S %Y')
     logging.info(command)

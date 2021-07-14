@@ -64,8 +64,13 @@ def remove_wiki(wikiname):
     click.echo(f'The bot now does not have access to the "{wikiname}" wiki any longer!')
 
 
-def go_online_on_wiki(wikinames):
+def go_online_on_wiki(wikinames, on_all_wikis):
     wikis = get_local_wikis()
+
+    if on_all_wikis:
+        # if we should go online on all wikis, then don't disregard the "wikinames" input
+        # so that invalid wikinames there can still be pointed out
+        wikinames = set(wikinames + wikis) # set removes duplicate values
 
     for wikiname in wikinames:
         
@@ -82,7 +87,8 @@ def go_online_on_wiki(wikinames):
             Path(statusfile).touch() # create the file
 
         output_str = f'Went online on the "{wikiname}" wiki!'
-        if os.stat(statusfile).st_size > 0:
+        if os.stat(statusfile).st_size > 0 and not on_all_wikis:
+            # do not display this message if we should go online on all wikis
             output_str = f'Already online on the "{wikiname}" wiki.'
 
         with open(statusfile, 'w') as f:
@@ -92,9 +98,14 @@ def go_online_on_wiki(wikinames):
         click.echo(output_str)
 
 
-def go_offline_on_wiki(wikinames):
+def go_offline_on_wiki(wikinames, on_all_wikis):
     wikis = get_local_wikis()
-        
+
+    if on_all_wikis:
+        # if we should go offline on all wikis, then don't disregard the "wikinames" input
+        # so that invalid wikinames there can still be pointed out
+        wikinames = set(wikinames + wikis) # set removes duplicate values
+
     for wikiname in wikinames:
 
         if wikiname not in wikis:
@@ -110,7 +121,8 @@ def go_offline_on_wiki(wikinames):
             Path(statusfile).touch() # create the file
 
         output_str = f'Went offline on the "{wikiname}" wiki!'
-        if os.stat(statusfile).st_size == 0:
+        if os.stat(statusfile).st_size == 0 and not on_all_wikis:
+            # do not display this message if we should go offline on all wikis
             output_str = f'Already offline on the "{wikiname}" wiki.'
 
         with open(statusfile, 'w') as f:

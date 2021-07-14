@@ -54,16 +54,18 @@ def main_scriptinfo(scriptname):
 
 @click.command(context_settings=CONTEXT_SETTINGS, name='up')
 @click.option('-w', '--wiki', multiple=True, required=True, help='Wiki on which to go online (can be used multiple times).')
-def main_up(wiki):
+@click.option('-a', '--all', is_flag=True, help='Go online on all wikis.')
+def main_up(wiki, all):
     """Go online on a wiki."""
-    go_online_on_wiki(wiki)
+    go_online_on_wiki(wiki, all)
 
 
 @click.command(context_settings=CONTEXT_SETTINGS, name='down')
 @click.option('-w', '--wiki', multiple=True, required=True, help='Wiki on which to go offline (can be used multiple times).')
-def main_down(wiki):
+@click.option('-a', '--all', is_flag=True, help='Go offline on all wikis.')
+def main_down(wiki, all):
     """Go offline on a wiki."""
-    go_offline_on_wiki(wiki)
+    go_offline_on_wiki(wiki, all)
 
 
 @click.command(context_settings=CONTEXT_SETTINGS, name='start')

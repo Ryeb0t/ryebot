@@ -60,7 +60,7 @@ def main_up(wiki):
 
 
 @click.command(context_settings=CONTEXT_SETTINGS, name='down')
-@click.option('-w', '--wiki', multiple=True, help='Wiki on which to go offline (can be used multiple times).')
+@click.option('-w', '--wiki', multiple=True, required=True, help='Wiki on which to go offline (can be used multiple times).')
 def main_down(wiki):
     """Go offline on a wiki."""
     go_offline_on_wiki(wiki)

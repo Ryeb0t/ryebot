@@ -18,7 +18,6 @@ REQUIREMENTS = [
     'mwparserfromhell',
     'click>=8.0.0',
     'psutil',
-    'logging',
     'python-daemon'
 ]
 # command that will be used to execute the program from the command line

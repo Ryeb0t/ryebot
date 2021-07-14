@@ -89,13 +89,17 @@ def go_online_on_wiki(wikinames, on_all_wikis):
         output_str = f'Went online on the "{wikiname}" wiki!'
         if os.stat(statusfile).st_size > 0 and not on_all_wikis:
             # do not display this message if we should go online on all wikis
-            output_str = f'Already online on the "{wikiname}" wiki.'
+            if on_all_wikis:
+                output_str = ''
+            else:
+                output_str = f'Already online on the "{wikiname}" wiki.'
 
         with open(statusfile, 'w') as f:
             # always set the file's content to "1", even if it already is "1" or even something else for some reason
             f.write('1')
 
-        click.echo(output_str)
+        if output_str != '':
+            click.echo(output_str)
 
 
 def go_offline_on_wiki(wikinames, on_all_wikis):
@@ -121,12 +125,16 @@ def go_offline_on_wiki(wikinames, on_all_wikis):
             Path(statusfile).touch() # create the file
 
         output_str = f'Went offline on the "{wikiname}" wiki!'
-        if os.stat(statusfile).st_size == 0 and not on_all_wikis:
+        if os.stat(statusfile).st_size == 0:
             # do not display this message if we should go offline on all wikis
-            output_str = f'Already offline on the "{wikiname}" wiki.'
+            if on_all_wikis:
+                output_str = ''
+            else:
+                output_str = f'Already offline on the "{wikiname}" wiki.'
 
         with open(statusfile, 'w') as f:
             # always set the file's content to nothing
             f.write('')
 
-        click.echo(output_str)
+        if output_str != '':
+            click.echo(output_str)

@@ -72,7 +72,7 @@ def go_online_on_wiki(wikinames, on_all_wikis):
         # so that invalid wikinames there can still be pointed out
         wikinames = set(list(wikinames) + wikis) # set removes duplicate values
 
-    for wikiname in wikinames:
+    for wikiname in sorted(wikinames):
         
         if wikiname not in wikis:
             click.echo('\n'.join((
@@ -110,7 +110,7 @@ def go_offline_on_wiki(wikinames, on_all_wikis):
         # so that invalid wikinames there can still be pointed out
         wikinames = set(list(wikinames) + wikis) # set removes duplicate values
 
-    for wikiname in wikinames:
+    for wikiname in sorted(wikinames):
 
         if wikiname not in wikis:
             click.echo('\n'.join((

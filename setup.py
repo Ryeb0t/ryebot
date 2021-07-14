@@ -16,7 +16,10 @@ PYTHON_VERSION = '>=3.8.0'
 REQUIREMENTS = [
     'mwclient',
     'mwparserfromhell',
-    'click>=8.0.0'
+    'click>=8.0.0',
+    'psutil',
+    'logging',
+    'python-daemon'
 ]
 # command that will be used to execute the program from the command line
 ENTRYPOINT_COMMAND = 'ryebot'

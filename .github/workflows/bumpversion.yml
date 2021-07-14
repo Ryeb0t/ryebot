@@ -7,6 +7,9 @@ jobs:
 
     runs-on: ubuntu-latest
     
+    # don't bump version if the commit was a version-bump itself
+    if: ${{ !contains(github.event.commits[0].message, 'bump version') }}
+    
     # determine which part to bump from the commit message:
     # if it ends with "[major]" or "[minor]", use that, else default to "patch"
     env:

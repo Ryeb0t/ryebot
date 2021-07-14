@@ -52,16 +52,16 @@ def main_scriptinfo(scriptname):
         click.echo(f'This is some info about the script "{scriptname}".')
 
 
-@click.command(context_settings=CONTEXT_SETTINGS, name='up')
-@click.option('-w', '--wiki', multiple=True, required=True, help='Wiki on which to go online (can be used multiple times).')
+@click.command(context_settings=CONTEXT_SETTINGS, name='up', no_args_is_help=True)
+@click.option('-w', '--wiki', multiple=True, help='Wiki on which to go online (can be used multiple times).')
 @click.option('-a', '--all', is_flag=True, help='Go online on all wikis.')
 def main_up(wiki, all):
     """Go online on a wiki."""
     go_online_on_wiki(wiki, all)
 
 
-@click.command(context_settings=CONTEXT_SETTINGS, name='down')
-@click.option('-w', '--wiki', multiple=True, required=True, help='Wiki on which to go offline (can be used multiple times).')
+@click.command(context_settings=CONTEXT_SETTINGS, name='down', no_args_is_help=True)
+@click.option('-w', '--wiki', multiple=True, help='Wiki on which to go offline (can be used multiple times).')
 @click.option('-a', '--all', is_flag=True, help='Go offline on all wikis.')
 def main_down(wiki, all):
     """Go offline on a wiki."""

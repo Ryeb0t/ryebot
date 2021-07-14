@@ -1,6 +1,9 @@
-import click
+import sys
 from importlib import metadata
 
+import click
+
+from .daemon_manager import start_daemon, log_command
 from .scripts import __availablescripts__
 from .status_displayer import display_status
 from .wiki_manager import display_wiki_list, add_wiki, remove_wiki, go_online_on_wiki, go_offline_on_wiki
@@ -15,7 +18,8 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 def main():
     """This is the entry point function called from the command line via `$ ryebot`, as defined in `setup.py`."""
     # code here is *always* executed when the command "ryebot" is called from the command line, no matter the arguments and options
-    pass
+    start_daemon()
+    log_command(sys.argv)
 
 
 @click.group(context_settings=CONTEXT_SETTINGS, help='Use this menu to display the wikis that the bot has access to, and to add or remove wikis from that list.\n\nEach command has a "-h" option for help about its usage.', short_help='Manage the wikis that the bot has access to.')

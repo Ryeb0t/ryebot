@@ -21,7 +21,7 @@ def display_status(requested_wikis):
         # no specific wiki requested, so display status for all
         requested_wikis = registered_wikis
     
-    statuses = _get_statuses(requested_wikis)
+    statuses = _get_statuses(requested_wikis, registered_wikis)
     status_str, unregistereds_str = _format_statuses(statuses)
 
     output_str = ''
@@ -42,11 +42,11 @@ def display_status(requested_wikis):
     click.echo(output_str)
 
 
-def _get_statuses(wikis):
+def _get_statuses(wikis, registered_wikis):
     statuses = {}
     for wiki in wikis:
         # check if the wiki is registered
-        if wiki not in wikis:
+        if wiki not in registered_wikis:
             statuses[wiki] = OnlineStatus.UNREGISTERED
             continue
 

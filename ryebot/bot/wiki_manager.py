@@ -61,5 +61,5 @@ def remove_wiki(wikiname):
     
     # remove entire contents of the wiki directory
     shutil.rmtree(os.path.join(PATHS['wikis'], wikiname))
-    click.echo(f'The bot now has no access to the "{wikiname}" wiki any longer!')
+    click.echo(f'The bot now does not have access to the "{wikiname}" wiki any longer!')
     

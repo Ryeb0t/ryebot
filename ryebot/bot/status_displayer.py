@@ -32,7 +32,7 @@ def display_status(requested_wikis):
         output_str = '\n' + unregistereds_str
 
     elif status_str != '':
-        output_str = '\nOnline status of the bot:{}'.format(status_str)
+        output_str = 'Online status of the bot:{}'.format(status_str)
         if unregistereds_str != '':
             output_str += '\n\n' + unregistereds_str
     

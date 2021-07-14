@@ -26,10 +26,10 @@ def display_status(requested_wikis):
 
     output_str = ''
     if status_str == '' and unregistereds_str == '' and len(requested_wikis) == 0:
-        output_str = '\nThe bot currently has no access to any wikis. Add one using "ryebot wiki add"!'
+        output_str = 'The bot currently has no access to any wikis. Add one using "ryebot wiki add"!'
     
     elif status_str == '' and unregistereds_str != '':
-        output_str = '\n' + unregistereds_str
+        output_str = unregistereds_str
 
     elif status_str != '':
         output_str = 'Online status of the bot:{}'.format(status_str)
@@ -80,7 +80,7 @@ def _format_statuses(statuses):
     if len(unregistereds) > 0:
         unregistereds_str = '\n'.join((
             'Could not display the status of the bot in the following wikis:',
-            '{}'.format(unregistereds),
+            '    '.join(unregistereds),
             'This is because the bot does not have access to those wikis. You can grant access using "ryebot wiki add".'
         ))
 

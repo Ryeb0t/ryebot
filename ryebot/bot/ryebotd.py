@@ -11,10 +11,10 @@ LOGFILE = '.log'
 
 
 def maind():
-    logging.basicConfig(level=logging.INFO, filename=os.path.join(PATHS['localdata'], LOGFILE), format='[%(asctime)s] %(message)s', datefmt='%a %b %d %H:%M:%S %Y')
+    logging.basicConfig(level=logging.INFO, filename=os.path.join(PATHS['localdata'], LOGFILE), format='[%(asctime)s] [pid %(pid)d] %(message)s', datefmt='%a %b %d %H:%M:%S %Y')
     while True:
         time.sleep(6)
-        logging.info('heartbeat from daemon')
+        logging.info('heartbeat from daemon', extra={'pid': os.getpid()})
 
 
 def main():

@@ -25,7 +25,7 @@ class CustomLoggingEventHandler(FileSystemEventHandler):
         logstr = logstr.format(
             what='directory' if event.is_directory else 'file',
             src=event.src_path,
-            # only move events have the dest_path attribute
+            # only move-events have the dest_path attribute
             dst=event.dest_path if hasattr(event, 'dest_path') else ''
         )
         self.logger.info(logstr, extra={'pid': os.getpid()})
@@ -94,7 +94,7 @@ def start_monitoring():
     observer.start()
 
 
-def maind():
+def main():
     logging.basicConfig(level=logging.INFO, filename=os.path.join(PATHS['localdata'], LOGFILE),
         format='[%(asctime)s] [pid %(pid)d] %(message)s', datefmt='%a %b %d %H:%M:%S %Y')
 
@@ -105,10 +105,6 @@ def maind():
         logging.info('heartbeat from daemon', extra={'pid': os.getpid()})
 
 
-def main():
-    with DaemonContext():
-        maind()
-
-
 if __name__ == '__main__':
-    main()
+    with DaemonContext():
+        main()

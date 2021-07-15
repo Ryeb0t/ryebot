@@ -19,8 +19,9 @@ def _is_daemon_already_running():
 def start_daemon():
     if _is_daemon_already_running():
         return
-    cmd = os.path.join(PATHS['venv'], 'bin', 'python3')
-    psutil.Popen([cmd, 'ryebotd.py'])
+    python_command = os.path.join(PATHS['venv'], 'bin', 'python3')
+    daemon_file = os.path.join(PATHS['package'], 'bot', 'ryebotd.py')
+    psutil.Popen([python_command, daemon_file])
 
 
 def log_command(command):

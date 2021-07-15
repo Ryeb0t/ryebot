@@ -7,7 +7,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 
 from ryebot.bot import PATHS
-from ryebot.bot.wiki_manager import STATUSFILENAME
+from ryebot.bot.daemon_handlers import FileModifiedEventHandler
 
 
 LOGFILE = '.log'
@@ -55,36 +55,21 @@ class CustomEventHandler(CustomLoggingEventHandler):
     def __init__(self, logger=None):
         super().__init__(logger)
 
-    def _handle_onlinestatus_event(self, file_path):
-        if os.path.basename(file_path) != STATUSFILENAME:
-            return
-        if os.path.dirname(os.path.dirname(file_path)) != PATHS['wikis']:
-            return
-        wikiname = os.path.basename(os.path.dirname(file_path))
-        newstatus = 'online' if os.stat(file_path).st_size > 0 else 'offline'
-        self.logger.info(f'Going {newstatus} on the "{wikiname}" wiki.', extra={'pid': os.getpid()})
-
-    def _handle_file_event(self, file_path):
-        logstr = f"File {file_path} was modified. New size: {os.path.getsize(file_path)}."
-        self.logger.info(logstr, extra={'pid': os.getpid()})
-        self._handle_onlinestatus_event(file_path)
-
     def on_modified(self, event):
         if os.path.basename(event.src_path) == LOGFILE:
             # do not log modifications of the log file, because those are caused by ourselves
             # and we don't want an infinite logging loop
             return
-
-        super().on_modified(event)
-
+        super().on_modified(event) # log standard "Modified ..." message
         if not event.is_directory:
-            self._handle_file_event(event.src_path)
+            # do whatever action the file modification instructed to do
+            FileModifiedEventHandler(self.logger, event.src_path).handle()
 
     def on_created(self, event):
-        super().on_created(event)
-
+        super().on_created(event) # log standard "Created ..." message
         if not event.is_directory:
-            self._handle_file_event(event.src_path)
+            FileModifiedEventHandler(self.logger, event.src_path).handle()
+
 
 def start_monitoring():
     monitored_directory = PATHS['localdata']

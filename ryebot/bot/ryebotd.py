@@ -7,7 +7,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 
 from ryebot.bot import PATHS
-from .wiki_manager import STATUSFILENAME
+from ryebot.bot.wiki_manager import STATUSFILENAME
 
 
 LOGFILE = '.log'

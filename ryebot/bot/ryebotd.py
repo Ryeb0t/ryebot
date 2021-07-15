@@ -19,7 +19,7 @@ class CustomLoggingEventHandler(FileSystemEventHandler):
         super().__init__()
 
         self.logger = logger or logging.root
-    
+
     def do_log(self, logstr: str, event: FileSystemEvent):
         logstr = logstr.format(
             what='directory' if event.is_directory else 'file',
@@ -54,12 +54,24 @@ class CustomEventHandler(CustomLoggingEventHandler):
     def __init__(self, logger=None):
         super().__init__(logger)
 
+    def _handle_file_event(self, file_path):
+        logstr = f"File {file_path} was modified. New size: {os.path.getsize(file_path)}."
+        self.logger.info(logstr, extra={'pid': os.getpid()})
+
     def on_modified(self, event):
         if os.path.basename(event.src_path) != LOGFILE:
-            # do not handle modifications of the log file, because those are caused by ourselves
+            # do not log modifications of the log file, because those are caused by ourselves
             # and we don't want an infinite logging loop
             super().on_modified(event)
 
+        if not event.is_directory:
+            self._handle_file_event(event.src_path)
+
+    def on_created(self, event):
+        super().on_created(event)
+
+        if not event.is_directory:
+            self._handle_file_event(event.src_path)
 
 def start_monitoring():
     monitored_directory = PATHS['localdata']

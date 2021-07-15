@@ -7,6 +7,7 @@ from watchdog.observers import Observer
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 
 from ryebot.bot import PATHS
+from .wiki_manager import STATUSFILENAME
 
 
 LOGFILE = '.log'
@@ -54,9 +55,19 @@ class CustomEventHandler(CustomLoggingEventHandler):
     def __init__(self, logger=None):
         super().__init__(logger)
 
+    def _handle_onlinestatus_event(self, file_path):
+        if os.path.basename(file_path) != STATUSFILENAME:
+            return
+        if os.path.dirname(os.path.dirname(file_path)) != PATHS['wikis']:
+            return
+        wikiname = os.path.basename(os.path.dirname(file_path))
+        newstatus = 'online' if os.stat(file_path).st_size > 0 else 'offline'
+        self.logger.info(f'Going {newstatus} on the "{wikiname}" wiki.', extra={'pid': os.getpid()})
+
     def _handle_file_event(self, file_path):
         logstr = f"File {file_path} was modified. New size: {os.path.getsize(file_path)}."
         self.logger.info(logstr, extra={'pid': os.getpid()})
+        self._handle_onlinestatus_event(file_path)
 
     def on_modified(self, event):
         if os.path.basename(event.src_path) != LOGFILE:

@@ -70,10 +70,12 @@ class CustomEventHandler(CustomLoggingEventHandler):
         self._handle_onlinestatus_event(file_path)
 
     def on_modified(self, event):
-        if os.path.basename(event.src_path) != LOGFILE:
+        if os.path.basename(event.src_path) == LOGFILE:
             # do not log modifications of the log file, because those are caused by ourselves
             # and we don't want an infinite logging loop
-            super().on_modified(event)
+            return
+
+        super().on_modified(event)
 
         if not event.is_directory:
             self._handle_file_event(event.src_path)

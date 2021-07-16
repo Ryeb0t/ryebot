@@ -81,7 +81,7 @@ def _read_loginstatusfile(wiki, return_default=False):
     status_dict = {
         'current_status': LoginStatus.LOGGED_OUT,
         'last_login_time': time.gmtime(0), # Jan 1, 1970
-        'last_login_time': time.gmtime(0)
+        'last_logout_time': time.gmtime(0)
     }
     if return_default:
         return status_dict

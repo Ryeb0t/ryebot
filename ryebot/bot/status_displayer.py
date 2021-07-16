@@ -1,18 +1,39 @@
 import os
 from enum import Enum
 from pathlib import Path
+import time
 
 import click
 
 from ryebot.bot import PATHS
-from .wiki_manager import ONLINESTATUSFILENAME, get_local_wikis
+from .wiki_manager import ONLINESTATUSFILENAME, LOGINSTATUSFILENAME, get_local_wikis
 
 
 class OnlineStatus(Enum):
     OFFLINE = 0
     ONLINE = 1
-    UNREGISTERED = 2
-    
+
+    def __str__(self):
+        strmap = {
+            'OFFLINE': 'Offline',
+            'ONLINE': 'Online'
+        }
+        return strmap[self.name]
+
+
+class LoginStatus(Enum):
+    LOGGED_OUT = 0
+    LOGGING_IN = 1
+    LOGGED_IN = 2
+
+    def __str__(self):
+        strmap = {
+            'LOGGED_OUT': 'logged out',
+            'LOGGING_IN': 'logging in',
+            'LOGGED_IN': 'logged in'
+        }
+        return strmap[self.name]
+
 
 def display_status(requested_wikis):
     registered_wikis = get_local_wikis()
@@ -42,26 +63,68 @@ def display_status(requested_wikis):
     click.echo(output_str)
 
 
+def _read_onlinestatusfile(wiki, return_default=False):
+    if return_default:
+        return OnlineStatus.OFFLINE
+    
+    onlinestatusfile = os.path.join(PATHS['wikis'], wiki, ONLINESTATUSFILENAME)
+    if os.path.exists(onlinestatusfile):
+        filesize = os.stat(onlinestatusfile).st_size
+        if filesize > 0:
+            return OnlineStatus.ONLINE
+    else:
+        Path(onlinestatusfile).touch() # create the file
+    return OnlineStatus.OFFLINE
+
+
+def _read_loginstatusfile(wiki, return_default=False):
+    status_dict = {
+        'current_status': LoginStatus.LOGGED_OUT,
+        'last_login_time': time.gmtime(0), # Jan 1, 1970
+        'last_login_time': time.gmtime(0)
+    }
+    if return_default:
+        return status_dict
+    
+    loginstatusfile = os.path.join(PATHS['wikis'], wiki, LOGINSTATUSFILENAME)
+    if os.path.exists(loginstatusfile):
+        with open(loginstatusfile) as f:
+            current_status = f.readline().strip()
+            last_login_time = f.readline().strip()
+            last_logout_time = f.readline().strip()
+
+        try:
+            status_dict['current_status'] = LoginStatus(int(current_status))
+        except ValueError:
+            # either conversion from string to int failed, or the number is not in the enum,
+            # so just leave the status at logged out
+            pass
+        try:
+            status_dict['last_login_time'] = time.gmtime(float(last_login_time))
+        except ValueError:
+            pass
+        try:
+            status_dict['last_logout_time'] = time.gmtime(float(last_logout_time))
+        except ValueError:
+            pass
+
+    else:
+        Path(loginstatusfile).touch() # create the file
+
+    return status_dict
+        
+
 def _get_statuses(wikis, registered_wikis):
     statuses = {}
     for wiki in wikis:
-        # check if the wiki is registered
-        if wiki not in registered_wikis:
-            statuses[wiki] = OnlineStatus.UNREGISTERED
-            continue
-
-        # check the statusfile for the wiki
-        statusfile = os.path.join(PATHS['wikis'], wiki, ONLINESTATUSFILENAME)
-        if os.path.exists(statusfile):
-            filesize = os.stat(statusfile).st_size
-            if filesize > 0:
-                statuses[wiki] = OnlineStatus.ONLINE
-            else:
-                statuses[wiki] = OnlineStatus.OFFLINE
-        else:
-            Path(statusfile).touch() # create the file
-            statuses[wiki] = OnlineStatus.OFFLINE
-    
+        # check the online and the login status files, and if the
+        # wiki is not registered, then just return the default values
+        wiki_is_unregistered = wiki not in registered_wikis
+        statuses[wiki] = {
+            'unregistered': wiki_is_unregistered,
+            'onlinestatus': _read_onlinestatusfile(wiki, return_default=wiki_is_unregistered),
+            'loginstatus': _read_loginstatusfile(wiki, return_default=wiki_is_unregistered)
+        }
     return statuses
 
 
@@ -71,11 +134,27 @@ def _format_statuses(statuses):
     status_str = ''
 
     for wiki in sorted(list(statuses.keys())):
-        if statuses[wiki] == OnlineStatus.UNREGISTERED:
+        if statuses[wiki]['unregistered']:
             unregistereds.append(wiki)
             continue
-        wikistatus = 'Online' if statuses[wiki] == OnlineStatus.ONLINE else 'Offline'
-        status_str += f'\n  # {wiki}   {wikistatus}'
+
+        onlinestatus = str(statuses[wiki]['onlinestatus'])
+        loginstatus = str(statuses[wiki]['loginstatus']['current_status'])
+
+        time_format = '%a, %d %b %Y %H:%M:%S UTC' # RFC5322 format
+
+        last_login = '?'
+        last_login_time = statuses[wiki]['loginstatus']['last_login_time']
+        if last_login_time != time.gmtime(0):
+            # only use the time from the status if it is not Jan 1, 1970
+            last_login = time.strftime(time_format, last_login_time)
+
+        last_logout = '?'
+        last_logout_time = statuses[wiki]['loginstatus']['last_logout_time']
+        if last_logout_time != time.gmtime(0):
+            last_logout = time.strftime(time_format, last_logout_time)
+
+        status_str += f'\n  # {wiki}   {onlinestatus}, {loginstatus}. Last login: {last_login}. Last logout: {last_logout}.'
     
     if len(unregistereds) > 0:
         unregistereds_str = '\n'.join((

@@ -14,6 +14,13 @@ from ryebot.bot import PATHS
 # and will be recreated.
 ONLINESTATUSFILENAME = '.onlinestatus'
 
+# Name of the file that holds the login status for the wiki.
+# This file contains three lines: 1) the status (0 - logged out,
+# 1 - logging in, 2 - logged in), 2) the time of the last successful
+# login, and 3) the time of the last logout. Both times are in
+# seconds since the Unix epoch.
+LOGINSTATUSFILENAME = '.loginstatus'
+
 
 def get_local_wikis():
     """Return a list of the wikis that are registered in the `localdata/wikis` directory, i.e., that the bot has access to."""
@@ -44,11 +51,12 @@ def add_wiki(wikiname):
     if wikiname in wikis:
         click.echo(f'The bot already has access to the "{wikiname}" wiki!')
         return
-    
+
     # make new directory and standard files
     new_wiki_directory = os.path.join(PATHS['wikis'], wikiname)
     os.mkdir(new_wiki_directory)
     Path(os.path.join(new_wiki_directory, ONLINESTATUSFILENAME)).touch() # create the onlinestatus file
+    Path(os.path.join(new_wiki_directory, LOGINSTATUSFILENAME)).touch() # create the loginstatus file
     click.echo(f'Granted the bot access to the "{wikiname}" wiki!')
 
 

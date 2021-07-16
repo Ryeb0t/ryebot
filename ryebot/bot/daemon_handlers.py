@@ -2,7 +2,7 @@ import logging
 import os
 
 from ryebot.bot import PATHS
-from ryebot.bot.wiki_manager import STATUSFILENAME
+from ryebot.bot.wiki_manager import ONLINESTATUSFILENAME
 
 
 class FileModifiedEventHandler():
@@ -23,7 +23,7 @@ class FileModifiedEventHandler():
 
 
     def onlinestatus(self):
-        if os.path.basename(self.file_path) != STATUSFILENAME:
+        if os.path.basename(self.file_path) != ONLINESTATUSFILENAME:
             return
         if os.path.dirname(os.path.dirname(self.file_path)) != PATHS['wikis']:
             return

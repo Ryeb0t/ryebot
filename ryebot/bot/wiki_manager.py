@@ -12,7 +12,7 @@ from ryebot.bot import PATHS
 # the wiki) or contains a single byte (which means it is online).
 # If it doesn't exist, then it must have been removed at some point
 # and will be recreated.
-STATUSFILENAME = '.onlinestatus'
+ONLINESTATUSFILENAME = '.onlinestatus'
 
 
 def get_local_wikis():
@@ -48,7 +48,7 @@ def add_wiki(wikiname):
     # make new directory and standard files
     new_wiki_directory = os.path.join(PATHS['wikis'], wikiname)
     os.mkdir(new_wiki_directory)
-    Path(os.path.join(new_wiki_directory, STATUSFILENAME)).touch() # create the onlinestatus file
+    Path(os.path.join(new_wiki_directory, ONLINESTATUSFILENAME)).touch() # create the onlinestatus file
     click.echo(f'Granted the bot access to the "{wikiname}" wiki!')
 
 
@@ -81,7 +81,7 @@ def go_online_on_wiki(wikinames, on_all_wikis):
             )))
             continue
 
-        statusfile = os.path.join(PATHS['wikis'], wikiname, STATUSFILENAME)
+        statusfile = os.path.join(PATHS['wikis'], wikiname, ONLINESTATUSFILENAME)
 
         if not os.path.exists(statusfile):
             Path(statusfile).touch() # create the file
@@ -119,7 +119,7 @@ def go_offline_on_wiki(wikinames, on_all_wikis):
             )))
             return
 
-        statusfile = os.path.join(PATHS['wikis'], wikiname, STATUSFILENAME)
+        statusfile = os.path.join(PATHS['wikis'], wikiname, ONLINESTATUSFILENAME)
 
         if not os.path.exists(statusfile):
             Path(statusfile).touch() # create the file

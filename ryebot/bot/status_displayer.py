@@ -5,7 +5,7 @@ from pathlib import Path
 import click
 
 from ryebot.bot import PATHS
-from .wiki_manager import STATUSFILENAME, get_local_wikis
+from .wiki_manager import ONLINESTATUSFILENAME, get_local_wikis
 
 
 class OnlineStatus(Enum):
@@ -51,7 +51,7 @@ def _get_statuses(wikis, registered_wikis):
             continue
 
         # check the statusfile for the wiki
-        statusfile = os.path.join(PATHS['wikis'], wiki, STATUSFILENAME)
+        statusfile = os.path.join(PATHS['wikis'], wiki, ONLINESTATUSFILENAME)
         if os.path.exists(statusfile):
             filesize = os.stat(statusfile).st_size
             if filesize > 0:

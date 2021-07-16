@@ -86,7 +86,7 @@ def go_online_on_wiki(wikinames, on_all_wikis):
         if not os.path.exists(statusfile):
             Path(statusfile).touch() # create the file
 
-        output_str = f'Went online on the "{wikiname}" wiki!'
+        output_str = f'Going online on the "{wikiname}" wiki.'
         if os.stat(statusfile).st_size > 0 and not on_all_wikis:
             # do not display this message if we should go online on all wikis
             if on_all_wikis:
@@ -124,7 +124,7 @@ def go_offline_on_wiki(wikinames, on_all_wikis):
         if not os.path.exists(statusfile):
             Path(statusfile).touch() # create the file
 
-        output_str = f'Went offline on the "{wikiname}" wiki!'
+        output_str = f'Going offline on the "{wikiname}" wiki.'
         if os.stat(statusfile).st_size == 0:
             # do not display this message if we should go offline on all wikis
             if on_all_wikis:

@@ -10,6 +10,7 @@ from ryebot.bot import PATHS
 from ryebot.bot.daemon_handlers import FileModifiedEventHandler
 
 
+# Name of the file that contains everything logged by the daemon
 LOGFILE = '.log'
 
 
@@ -28,7 +29,7 @@ class CustomLoggingEventHandler(FileSystemEventHandler):
             # only move-events have the dest_path attribute
             dst=event.dest_path if hasattr(event, 'dest_path') else ''
         )
-        self.logger.info(logstr, extra={'pid': os.getpid()})
+        self.logger.info(logstr)
 
     def on_moved(self, event):
         super().on_moved(event)
@@ -81,13 +82,13 @@ def start_monitoring():
 
 def main():
     logging.basicConfig(level=logging.INFO, filename=os.path.join(PATHS['localdata'], LOGFILE),
-        format='[%(asctime)s] [pid %(pid)d] %(message)s', datefmt='%a %b %d %H:%M:%S %Y')
+        format='[%(asctime)s] [pid %(process)d tid %(thread)d] %(message)s', datefmt='%a %b %d %H:%M:%S %Y')
 
     start_monitoring()
 
     while True:
         time.sleep(6)
-        logging.info('heartbeat from daemon', extra={'pid': os.getpid()})
+        logging.info('heartbeat from daemon')
 
 
 if __name__ == '__main__':

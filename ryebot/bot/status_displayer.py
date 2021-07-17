@@ -6,7 +6,7 @@ import time
 import click
 
 from ryebot.bot import PATHS
-from .wiki_manager import ONLINESTATUSFILENAME, LOGINSTATUSFILENAME, get_local_wikis
+from ryebot.bot.wiki_manager import ONLINESTATUSFILENAME, LOGINSTATUSFILENAME, get_local_wikis
 
 
 class OnlineStatus(Enum):

@@ -21,7 +21,7 @@ def main():
     try:
         # import script and run it
         if scriptname == '_login':
-            from .login_and_logout import login_to_wiki
+            from ryebot.bot.login_and_logout import login_to_wiki
             login_to_wiki()
         else:
             scriptmodule = importlib.import_module(scriptname)

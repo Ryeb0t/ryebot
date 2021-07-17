@@ -8,10 +8,11 @@ from watchdog.events import FileSystemEvent, FileSystemEventHandler
 
 from ryebot.bot import PATHS
 from ryebot.bot.daemon_handlers import FileModifiedEventHandler
+from ryebot.bot.loggers import watchdog_logger, WATCHLOGFILE
 
 
-# Name of the file that contains everything logged by the daemon
-LOGFILE = '.log'
+# File that will be edited by the daemon in a set interval, to signify that it is alive
+HEARTBEATFILE = '.heartbeat'
 
 
 class CustomLoggingEventHandler(FileSystemEventHandler):
@@ -57,7 +58,7 @@ class CustomEventHandler(CustomLoggingEventHandler):
         super().__init__(logger)
 
     def on_modified(self, event):
-        if os.path.basename(event.src_path) == LOGFILE:
+        if os.path.basename(event.src_path) == WATCHLOGFILE:
             # do not log modifications of the log file, because those are caused by ourselves
             # and we don't want an infinite logging loop
             return
@@ -72,25 +73,22 @@ class CustomEventHandler(CustomLoggingEventHandler):
             FileModifiedEventHandler(self.logger, event.src_path).handle()
 
 
-def start_monitoring():
+def start_monitoring(logger: logging.Logger=None):
     monitored_directory = PATHS['localdata']
     observer = Observer()
-    observer.schedule(CustomEventHandler(), monitored_directory, recursive=True)
-    logging.info(f'Now listening to all changes to the "{monitored_directory}" directory and its subdirectories, recursively.')
+    observer.schedule(CustomEventHandler(logger), monitored_directory, recursive=True)
+    logger.info(f'Now listening to all changes to the "{monitored_directory}" directory and its subdirectories, recursively.')
     observer.start()
 
 
 def do_heartbeat():
     time.sleep(6)
-    with open(os.path.join(PATHS['localdata'], '.heartbeat'), 'w') as f:
+    with open(os.path.join(PATHS['localdata'], HEARTBEATFILE), 'w') as f:
         f.write(time.strftime('%a, %d %b %Y %H:%M:%S UTC')) # RFC5322 format
 
 
 def main():
-    logging.basicConfig(level=logging.INFO, filename=os.path.join(PATHS['localdata'], LOGFILE),
-        format='[%(asctime)s] [pid %(process)d tid %(thread)d] %(message)s', datefmt='%a %b %d %H:%M:%S %Y')
-
-    start_monitoring()
+    start_monitoring(watchdog_logger())
     while True:
         do_heartbeat()
 

@@ -1,10 +1,9 @@
 import importlib
-import logging
 import os
 import sys
 
-from ryebot.bot.ryebotd import LOGFILE
 from ryebot.bot import PATHS
+from ryebot.bot.loggers import common_logger
 
 
 def main():
@@ -13,8 +12,7 @@ def main():
     except IndexError:
         return
 
-    logging.basicConfig(level=logging.INFO, filename=os.path.join(PATHS['localdata'], LOGFILE),
-        format='[%(asctime)s] [pid %(process)d tid %(thread)d] %(message)s', datefmt='%a %b %d %H:%M:%S %Y')
+    logger = common_logger()
 
     if scriptname == '_login':
         from .login_and_logout import login_to_wiki

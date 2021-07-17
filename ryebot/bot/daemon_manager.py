@@ -1,14 +1,10 @@
-import logging
 import os
 
 import psutil
 
 from ryebot.bot import PATHS
 from ryebot.custom_utils.ps_util import find_procs_by_cmd
-
-
-# file that stores a log of all entered commands
-COMMANDLOGFILE = '.cmdlog'
+from ryebot.bot.loggers import cmd_logger
 
 
 def _is_daemon_already_running():
@@ -25,5 +21,4 @@ def start_daemon():
 
 
 def log_command(command):
-    logging.basicConfig(level=logging.INFO, filename=os.path.join(PATHS['localdata'], COMMANDLOGFILE), format='[%(asctime)s] %(message)s', datefmt='%a %b %d %H:%M:%S %Y')
-    logging.info(command)
+    cmd_logger().info(command)

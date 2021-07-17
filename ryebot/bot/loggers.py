@@ -18,8 +18,11 @@ WATCHLOGFILE = '.watchlog'
 
 def _make_logger(name: str='', handler: logging.Handler=None):
     logger = logging.getLogger(name)
-    logger.setLevel(logging.INFO)
-    logger.addHandler(handler)
+    if not logger.hasHandlers():
+        # if the logger has handlers, then this function was already called for this logger.
+        # in that case, don't add the handler again
+        logger.setLevel(logging.INFO)
+        logger.addHandler(handler)
     return logger
 
 

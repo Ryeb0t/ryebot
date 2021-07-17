@@ -23,27 +23,26 @@ class CustomLoggingEventHandler(FileSystemEventHandler):
         self.logger = logger or logging.root
 
     def do_log(self, logstr: str, event: FileSystemEvent):
-        what='directory' if event.is_directory else 'file',
+        what = 'directory' if event.is_directory else 'file'
         logstr = logstr.format(what=what, src=event.src_path)
         self.logger.info(logstr)
 
     def on_moved(self, event):
         super().on_moved(event)
-        logstr = "(watchdog) Moved {{what}}: from {{src}} to {dst} (new size {size})"
-        logstr = logstr.format(dst=event.dest_path, size=os.path.getsize(event.dest_path))  
-        self.do_log(logstr, event)
+        self.do_log("Moved {what}: from {src} to %s" % event.dest_path, event)
 
     def on_created(self, event):
         super().on_created(event)
-        self.do_log("(watchdog) Created {what}: {src}", event)
+        self.do_log("Created {what}: {src}", event)
 
     def on_deleted(self, event):
         super().on_deleted(event)
-        self.do_log("(watchdog) Deleted {what}: {src}", event)
+        self.do_log("Deleted {what}: {src}", event)
 
     def on_modified(self, event):
         super().on_modified(event)
-        self.do_log("(watchdog) Modified {what}: {src}", event)
+        logstr = "Modified {what}: {src} (new size %s)" % os.path.getsize(event.dest_path)
+        self.do_log(logstr, event)
 
 
 class CustomEventHandler(CustomLoggingEventHandler):

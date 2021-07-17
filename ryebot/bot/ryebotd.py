@@ -69,6 +69,7 @@ class CustomEventHandler(CustomLoggingEventHandler):
 def start_monitoring(logger: logging.Logger=None):
     monitored_directory = PATHS['localdata']
     observer = Observer()
+    observer.name = "tWatchdog"
     observer.schedule(CustomEventHandler(logger), monitored_directory, recursive=True)
     logger.info(f'Now listening to all changes to the "{monitored_directory}" directory and its subdirectories, recursively.')
     observer.start()

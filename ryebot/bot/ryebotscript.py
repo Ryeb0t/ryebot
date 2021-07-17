@@ -7,19 +7,27 @@ from ryebot.bot.loggers import common_logger
 
 
 def main():
-    try:
-        scriptname = sys.argv[1]
-    except IndexError:
-        return
-
     logger = common_logger()
 
-    if scriptname == '_login':
-        from .login_and_logout import login_to_wiki
-        login_to_wiki()
-    else:
-        scriptmodule = importlib.import_module(scriptname)
-        scriptmodule.main()
+    wikiname = os.path.basename(os.getcwd())
+
+    try:
+        logger.info(f'Starting the "{sys.argv[1]}" script on the "{wikiname}" wiki.')
+        scriptname = sys.argv[1]
+    except IndexError:
+        # no script name specified
+        return
+
+    try:
+        # import script and run it
+        if scriptname == '_login':
+            from .login_and_logout import login_to_wiki
+            login_to_wiki()
+        else:
+            scriptmodule = importlib.import_module(scriptname)
+            scriptmodule.main()
+    except Exception:
+        logger.info(f'Error during the "{sys.argv[1]}" script on the "{wikiname}" wiki!', exc_info=True, stack_info=True)
 
 
 if __name__ == '__main__':

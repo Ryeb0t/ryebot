@@ -9,21 +9,21 @@ from ryebot.bot.status_displayer import LoginStatus
 from ryebot.bot.wiki_manager import LOGINSTATUSFILENAME
 
 
-def login_to_wiki(wikiname: str):
-    _modify_loginstatus_file(wikiname, newstatus=LoginStatus.LOGGING_IN)
+def login_to_wiki(wikiname: str, logger: logging.Logger):
+    _modify_loginstatus_file(logger, wikiname, newstatus=LoginStatus.LOGGING_IN)
 
     try:
         site, login_log = login(wikiname, return_log=True)
     except Exception as e:
-        _modify_loginstatus_file(wikiname, newstatus=LoginStatus.LOGGED_OUT)
-        logging.info(f"Error while logging in to the \"{wikiname}\" wiki: " + str(e))
-        return
+        _modify_loginstatus_file(logger, wikiname, newstatus=LoginStatus.LOGGED_OUT)
+        logger.info("Modified the login status file due to error while logging in.")
+        raise e
 
-    logging.info(login_log)
-    _modify_loginstatus_file(wikiname, newstatus=LoginStatus.LOGGED_IN, newlastlogin=time.time())
+    logger.info(login_log)
+    _modify_loginstatus_file(logger, wikiname, newstatus=LoginStatus.LOGGED_IN, newlastlogin=time.time())
 
 
-def _modify_loginstatus_file(wiki: str, newstatus: LoginStatus=None, newlastlogin: float=None, newlastlogout: float=None):
+def _modify_loginstatus_file(logger: logging.Logger, wiki: str, newstatus: LoginStatus=None, newlastlogin: float=None, newlastlogout: float=None):
     loginstatusfile = os.path.join(PATHS['wikis'], wiki, LOGINSTATUSFILENAME)
     if not os.path.exists(loginstatusfile):
         Path(loginstatusfile).touch() # create the file

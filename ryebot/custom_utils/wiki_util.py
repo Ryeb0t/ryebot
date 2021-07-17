@@ -1,7 +1,7 @@
 import mwparserfromhell
 
 from custom_mwclient.auth_credentials import AuthCredentials
-from custom_mwclient.gamepedia_client import GamepediaClient
+from custom_mwclient.fandom_client import FandomClient
 
 
 def template_str_to_object(template_str: str):
@@ -38,7 +38,7 @@ def login_to_wiki(targetwiki: str, username='bot', return_log=False, log=None):
 
     # --- do login ---
     creds = AuthCredentials(user_file=username)
-    site = GamepediaClient(wiki=targetwiki, credentials=creds)
+    site = FandomClient(wiki=targetwiki, credentials=creds)
 
     # -- validate wikiname post-login ---
     wiki_id = site.get_current_wiki_name()

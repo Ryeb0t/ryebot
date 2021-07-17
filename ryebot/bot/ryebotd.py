@@ -58,7 +58,7 @@ class CustomEventHandler(CustomLoggingEventHandler):
         super().__init__(logger)
 
     def on_modified(self, event):
-        if os.path.basename(event.src_path) == WATCHLOGFILE:
+        if os.path.basename(event.src_path) in (WATCHLOGFILE, HEARTBEATFILE):
             # do not log modifications of the log file, because those are caused by ourselves
             # and we don't want an infinite logging loop
             return

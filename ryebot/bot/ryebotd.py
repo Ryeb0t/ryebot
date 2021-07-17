@@ -41,7 +41,7 @@ class CustomLoggingEventHandler(FileSystemEventHandler):
 
     def on_modified(self, event):
         super().on_modified(event)
-        logstr = "Modified {what}: {src} (new size %s)" % os.path.getsize(event.dest_path)
+        logstr = "Modified {what}: {src} (new size %s)" % os.path.getsize(event.src_path)
         self.do_log(logstr, event)
 
 

@@ -24,7 +24,7 @@ class CustomLoggingEventHandler(FileSystemEventHandler):
 
     def do_log(self, logstr: str, event: FileSystemEvent):
         what = 'directory' if event.is_directory else 'file'
-        logstr = 'eventid ' + str(id(event)) + ' ' + logstr.format(what=what, src=event.src_path)
+        logstr = '[eventid ' + str(id(event)) + '] ' + logstr.format(what=what, src=event.src_path)
         self.logger.info(logstr)
 
     def on_moved(self, event):

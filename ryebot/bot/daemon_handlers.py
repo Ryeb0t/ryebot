@@ -14,9 +14,6 @@ class FileModifiedEventHandler():
         self.file_path = file_path
 
     def handle(self):
-        logstr = f"File {self.file_path} was modified. New size: {os.path.getsize(self.file_path)}."
-        self.logger.info(logstr)
-
         # a file was modified, so the daemon is supposed to do something.
         # we use the following methods to find out what that is, based on the file path, content, size, etc.
 

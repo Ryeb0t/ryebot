@@ -80,15 +80,19 @@ def start_monitoring():
     observer.start()
 
 
+def do_heartbeat():
+    time.sleep(6)
+    with open(os.path.join(PATHS['localdata'], '.heartbeat'), 'w') as f:
+        f.write(time.strftime('%a, %d %b %Y %H:%M:%S UTC')) # RFC5322 format
+
+
 def main():
     logging.basicConfig(level=logging.INFO, filename=os.path.join(PATHS['localdata'], LOGFILE),
         format='[%(asctime)s] [pid %(process)d tid %(thread)d] %(message)s', datefmt='%a %b %d %H:%M:%S %Y')
 
     start_monitoring()
-
     while True:
-        time.sleep(6)
-        logging.info('heartbeat from daemon')
+        do_heartbeat()
 
 
 if __name__ == '__main__':

@@ -23,7 +23,7 @@ class AuthCredentials(object):
 
         credentials_file = os.path.join(PATHS['global_config'], self.file_pattern.format(user_name.lower()))
         if not os.path.exists(credentials_file):
-            raise InvalidUserFile
+            raise InvalidUserFile(credentials_file, missing=True)
         
         with open(credentials_file) as f:
             json_data = json.load(f)
@@ -31,5 +31,5 @@ class AuthCredentials(object):
             self.password = json_data['password']
             self.username = json_data['username']
         else:
-            raise InvalidUserFile
+            raise InvalidUserFile(credentials_file)
         

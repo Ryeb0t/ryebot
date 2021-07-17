@@ -8,7 +8,7 @@ from watchdog.events import FileSystemEvent, FileSystemEventHandler
 
 from ryebot.bot import PATHS
 from ryebot.bot.daemon_handlers import FileModifiedEventHandler
-from ryebot.bot.loggers import common_logger, watchdog_logger, WATCHLOGFILE
+from ryebot.bot.loggers import common_logger, watchdog_logger, COMMONLOGFILE, COMMANDLOGFILE, WATCHLOGFILE
 
 
 # File that will be edited by the daemon in a set interval, to signify that it is alive
@@ -50,9 +50,8 @@ class CustomEventHandler(CustomLoggingEventHandler):
         super().__init__(logger)
 
     def on_modified(self, event):
-        if os.path.basename(event.src_path) in (WATCHLOGFILE, HEARTBEATFILE):
-            # do not log modifications of the log file, because those are caused by ourselves
-            # and we don't want an infinite logging loop
+        if os.path.basename(event.src_path) in (COMMONLOGFILE, COMMANDLOGFILE, WATCHLOGFILE, HEARTBEATFILE):
+            # do not log modifications of the log files, partly to prevent an infinite logging loop
             return
         super().on_modified(event) # log standard "Modified ..." message
         if not event.is_directory:

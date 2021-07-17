@@ -37,7 +37,7 @@ def login_to_wiki(targetwiki: str, username='bot', return_log=False, log=None):
     """
 
     # --- do login ---
-    creds = AuthCredentials(user_file=username)
+    creds = AuthCredentials(user_name=username)
     site = FandomClient(wiki=targetwiki, credentials=creds)
 
     # -- validate wikiname post-login ---

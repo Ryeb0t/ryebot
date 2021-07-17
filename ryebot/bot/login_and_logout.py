@@ -40,7 +40,7 @@ def _modify_loginstatus_file(wiki: str, newstatus: LoginStatus=None, newlastlogi
 
     # modify the lines
     if newstatus:
-        lines[0] = str(newstatus) + '\n'
+        lines[0] = str(newstatus.value) + '\n'
     if newlastlogin:
         lines[1] = str(newlastlogin) + '\n'
     if newlastlogout:

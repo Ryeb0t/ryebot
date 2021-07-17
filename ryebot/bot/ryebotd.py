@@ -65,12 +65,12 @@ class CustomEventHandler(CustomLoggingEventHandler):
         super().on_modified(event) # log standard "Modified ..." message
         if not event.is_directory:
             # do whatever action the file modification instructed to do
-            FileModifiedEventHandler(self.logger, event.src_path).handle()
+            FileModifiedEventHandler(common_logger(), event.src_path).handle()
 
     def on_created(self, event):
         super().on_created(event) # log standard "Created ..." message
         if not event.is_directory:
-            FileModifiedEventHandler(self.logger, event.src_path).handle()
+            FileModifiedEventHandler(common_logger(), event.src_path).handle()
 
 
 def start_monitoring(logger: logging.Logger=None):

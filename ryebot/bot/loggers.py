@@ -16,34 +16,26 @@ COMMANDLOGFILE = '.cmdlog'
 WATCHLOGFILE = '.watchlog'
 
 
+def _make_logger(name: str='', handler: logging.Handler=None):
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.INFO)
+    logger.addHandler(handler)
+    return logger
+
+
 def common_logger():
     filehandler = logging.FileHandler(os.path.join(PATHS['localdata'], COMMONLOGFILE))
-    filehandler.setLevel(logging.INFO)
     filehandler.setFormatter(logging.Formatter(*LOGFORMAT))
-
-    logger = logging.getLogger('common_logger')
-    logger.addHandler(filehandler)
-
-    return logger
+    return _make_logger('common_logger', filehandler)
 
 
 def cmd_logger():
     filehandler = logging.FileHandler(os.path.join(PATHS['localdata'], COMMANDLOGFILE))
-    filehandler.setLevel(logging.INFO)
     filehandler.setFormatter(logging.Formatter('[%(asctime)s] %(message)s', LOGFORMAT[1]))
-
-    logger = logging.getLogger('cmd_logger')
-    logger.addHandler(filehandler)
-
-    return logger
+    return _make_logger('cmd_logger', filehandler)
 
 
 def watchdog_logger():
     filehandler = logging.FileHandler(os.path.join(PATHS['localdata'], WATCHLOGFILE))
-    filehandler.setLevel(logging.INFO)
     filehandler.setFormatter(logging.Formatter(*LOGFORMAT))
-
-    logger = logging.getLogger('watchdog_logger')
-    logger.addHandler(filehandler)
-
-    return logger
+    return _make_logger('watchdog_logger', filehandler)

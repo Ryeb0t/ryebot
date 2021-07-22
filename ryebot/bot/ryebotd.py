@@ -9,7 +9,7 @@ from watchdog.events import FileSystemEvent, FileSystemEventHandler
 
 from ryebot.bot import PATHS
 from ryebot.bot.daemon_handlers import FileModifiedEventHandler
-from ryebot.bot.loggers import common_logger, watchdog_logger, COMMONLOGFILE, COMMANDLOGFILE, WATCHLOGFILE
+from ryebot.bot.loggers import COMMONLOGFILE, COMMANDLOGFILE, WATCHLOGFILE
 
 
 # File that will be edited by the daemon in a set interval, to prove that it is alive
@@ -97,4 +97,5 @@ def main():
 
 if __name__ == '__main__':
     with DaemonContext(pidfile=PidFile(PIDFILE, PATHS['localdata'])):
+        from ryebot.bot.loggers import common_logger, watchdog_logger
         main()

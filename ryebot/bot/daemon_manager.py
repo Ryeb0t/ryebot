@@ -18,16 +18,18 @@ def _is_daemon_already_running():
         return True
 
 
-    running_daemons = find_procs_by_cmd('ryebotd.py')
-    return len(running_daemons) > 0
+def _run_daemon():
+    python_executable = os.path.join(PATHS['venv'], 'bin', 'python3')
+    daemon_pythonfile = os.path.join(PATHS['package'], 'bot', 'ryebotd.py')
+
+    # start a new process that runs the ryebotd.py file with the Python interpreter of the venv;
+    # the last argument is not functional, it's just for easily identifying the process
+    psutil.Popen([python_executable, daemon_pythonfile, 'ryebotd'])
 
 
 def start_daemon():
-    if _is_daemon_already_running():
-        return
-    python_command = os.path.join(PATHS['venv'], 'bin', 'python3')
-    daemon_file = os.path.join(PATHS['package'], 'bot', 'ryebotd.py')
-    psutil.Popen([python_command, daemon_file])
+    if not _is_daemon_already_running():
+        _run_daemon()
 
 
 def log_command(command):

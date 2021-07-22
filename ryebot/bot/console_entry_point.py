@@ -5,7 +5,7 @@ import click
 
 from ryebot.bot.daemon_manager import start_daemon, log_command
 from ryebot.bot.scripts import __availablescripts__
-from ryebot.bot.status_displayer import display_status
+from ryebot.bot.status_displayer import StatusDisplayer
 from ryebot.bot.wiki_manager import display_wiki_list, add_wiki, remove_wiki, go_online_on_wiki, go_offline_on_wiki
 
 
@@ -33,7 +33,7 @@ def wiki():
 @click.option('-w', '--wiki', multiple=True, help='Display status only for this wiki (can be used multiple times).')
 def main_status(wiki):
     """Display the online/offline status of the bot."""
-    display_status(wiki)
+    StatusDisplayer(wiki).display()
 
 
 @click.command(context_settings=CONTEXT_SETTINGS, name='list')

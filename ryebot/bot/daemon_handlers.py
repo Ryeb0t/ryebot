@@ -3,8 +3,8 @@ import os
 import psutil
 
 from ryebot.bot import PATHS
-from ryebot.bot.wiki_manager import ONLINESTATUSFILENAME
-from ryebot.bot.status_displayer import OnlineStatus
+from ryebot.bot.wiki_manager import LOGINCONTROLFILE
+from ryebot.bot.status_displayer import LoginControlCommand
 
 
 class FileModifiedEventHandler():
@@ -17,25 +17,30 @@ class FileModifiedEventHandler():
         # a file was modified, so the daemon is supposed to do something.
         # we use the following methods to find out what that is, based on the file path, content, size, etc.
 
-        # changes to the online status on a wiki
-        self.onlinestatus()
+        # command to go online or offline on a wiki
+        self.logincontrolcommand()
 
 
-    def onlinestatus(self):
-        if os.path.basename(self.file_path) != ONLINESTATUSFILENAME:
+    def logincontrolcommand(self):
+        if os.path.basename(self.file_path) != LOGINCONTROLFILE:
             return
         if os.path.dirname(os.path.dirname(self.file_path)) != PATHS['wikis']:
             return
+        
+        filesize = os.stat(self.file_path).st_size
+        try:
+            newstatus = LoginControlCommand(int(filesize))
+        except ValueError:
+            # the file size is not in the enum's values, so consider the control command invalid
+            return
+        if newstatus == LoginControlCommand.DO_NOTHING:
+            return
 
         wikiname = os.path.basename(os.path.dirname(self.file_path))
-        if os.stat(self.file_path).st_size > 0:
-            newstatus = OnlineStatus.ONLINE
-        else:
-            newstatus = OnlineStatus.OFFLINE
 
-        self.logger.info(f'Going {str(newstatus).lower()} on the "{wikiname}" wiki.')
+        self.logger.info(f'{str(newstatus)} on the "{wikiname}" wiki.')
 
-        if newstatus == OnlineStatus.ONLINE:
+        if newstatus == LoginControlCommand.DO_LOGIN:
             python_command = os.path.join(PATHS['venv'], 'bin', 'python3')
             script_file = os.path.join(PATHS['package'], 'bot', 'ryebotscript.py')
             wikidirectory = os.path.join(PATHS['wikis'], wikiname)

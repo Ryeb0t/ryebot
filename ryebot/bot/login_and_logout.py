@@ -6,7 +6,7 @@ import time
 from ryebot.bot import PATHS
 from ryebot.custom_utils.wiki_util import login_to_wiki as login
 from ryebot.bot.status_displayer import LoginStatus
-from ryebot.bot.wiki_manager import LOGINSTATUSFILENAME
+from ryebot.bot.wiki_manager import LOGINSTATUSFILE, LOGINCONTROLFILE
 
 
 def login_to_wiki(wikiname: str, logger: logging.Logger):
@@ -17,14 +17,16 @@ def login_to_wiki(wikiname: str, logger: logging.Logger):
     except Exception as e:
         _modify_loginstatus_file(logger, wikiname, newstatus=LoginStatus.LOGGED_OUT)
         logger.info("Modified the login status file due to error while logging in.")
+        _register_control_command(wikiname)
         raise e
 
     logger.info(login_log)
     _modify_loginstatus_file(logger, wikiname, newstatus=LoginStatus.LOGGED_IN, newlastlogin=time.time())
+    _register_control_command(wikiname)
 
 
 def _modify_loginstatus_file(logger: logging.Logger, wiki: str, newstatus: LoginStatus=None, newlastlogin: float=None, newlastlogout: float=None):
-    loginstatusfile = os.path.join(PATHS['wikis'], wiki, LOGINSTATUSFILENAME)
+    loginstatusfile = os.path.join(PATHS['wikis'], wiki, LOGINSTATUSFILE)
     if not os.path.exists(loginstatusfile):
         Path(loginstatusfile).touch() # create the file
 
@@ -49,3 +51,10 @@ def _modify_loginstatus_file(logger: logging.Logger, wiki: str, newstatus: Login
     # write modified lines to file
     with open(loginstatusfile, 'w+') as f:
         f.writelines(lines)
+
+
+def _register_control_command(wiki: str):
+    logincontrolfile = os.path.join(PATHS['wikis'], wiki, LOGINCONTROLFILE)
+    # empty the file
+    with open(logincontrolfile, 'w'):
+        pass

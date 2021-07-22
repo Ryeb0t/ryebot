@@ -6,19 +6,13 @@ import time
 import click
 
 from ryebot.bot import PATHS
-from ryebot.bot.wiki_manager import ONLINESTATUSFILENAME, LOGINSTATUSFILENAME, get_local_wikis
+from ryebot.bot.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_local_wikis
 
 
-class OnlineStatus(Enum):
-    OFFLINE = 0
-    ONLINE = 1
-
-    def __str__(self):
-        strmap = {
-            'OFFLINE': 'Offline',
-            'ONLINE': 'Online'
-        }
-        return strmap[self.name]
+class LoginControlCommand(Enum):
+    DO_NOTHING = 0
+    DO_LOGIN = 1
+    DO_LOGOUT = 2
 
 
 class LoginStatus(Enum):
@@ -77,14 +71,14 @@ class StatusDisplayer():
     def _get_statuses(self):
         for wiki in self.requested_wikis:
             self.statuses[wiki] = {
-                'onlinestatus': self._read_onlinestatusfile(wiki),
+                'logincontrol': self._read_logincontrolfile(wiki),
                 'loginstatus': self._read_loginstatusfile(wiki)
             }
 
 
     def _format_statuses(self):
         for wiki in sorted(list(self.statuses.keys())):
-            onlinestatus = str(self.statuses[wiki]['onlinestatus'])
+            logincontrol = str(self.statuses[wiki]['logincontrol'])
             loginstatus = str(self.statuses[wiki]['loginstatus']['current_status'])
 
             time_format = '%a, %d %b %Y %H:%M:%S UTC' # RFC5322 format
@@ -100,8 +94,10 @@ class StatusDisplayer():
             if last_logout_time != time.gmtime(0):
                 last_logout = time.strftime(time_format, last_logout_time)
 
-            self.status_str += f'\n  # {wiki}   {onlinestatus}, {loginstatus}. Last login: {last_login}. Last logout: {last_logout}.'
+            self.status_str += f'\n  # {wiki}   {logincontrol}, {loginstatus}. Last login: {last_login}. Last logout: {last_logout}.'
 
+
+    def _make_output_string(self):
         if len(self.unregistered_wikis) > 0:
             self.unregistereds_str = '\n'.join((
                 'Could not display the status of the bot in the following wikis:',
@@ -109,9 +105,6 @@ class StatusDisplayer():
                 'This is because the bot does not have access to those wikis. You can grant access using "ryebot wiki add".'
             ))
 
-
-    def _make_output_string(self):
-        self.output_str = ''
         if self.status_str == '' and self.unregistereds_str != '':
             self.output_str = self.unregistereds_str
 
@@ -121,18 +114,21 @@ class StatusDisplayer():
                 self.output_str += '\n\n' + self.unregistereds_str
 
 
-    def _read_onlinestatusfile(self, wiki: str):
+    def _read_logincontrolfile(self, wiki: str):
         if wiki in self.unregistered_wikis:
-            return OnlineStatus.OFFLINE
+            return LoginControlCommand.DO_NOTHING
 
-        onlinestatusfile = os.path.join(PATHS['wikis'], wiki, ONLINESTATUSFILENAME)
-        if os.path.exists(onlinestatusfile):
-            filesize = os.stat(onlinestatusfile).st_size
-            if filesize > 0:
-                return OnlineStatus.ONLINE
+        logincontrolfile = os.path.join(PATHS['wikis'], wiki, LOGINCONTROLFILE)
+        if os.path.exists(logincontrolfile):
+            filesize = os.stat(logincontrolfile).st_size
+            try:
+                return LoginControlCommand(int(filesize))
+            except ValueError:
+                # the file size is not in the enum's values, so consider the control command invalid
+                pass
         else:
-            Path(onlinestatusfile).touch() # create the file
-        return OnlineStatus.OFFLINE
+            Path(logincontrolfile).touch() # create the file
+        return LoginControlCommand.DO_NOTHING
 
 
     def _read_loginstatusfile(self, wiki: str):
@@ -144,7 +140,7 @@ class StatusDisplayer():
         if wiki in self.unregistered_wikis:
             return status_dict
 
-        loginstatusfile = os.path.join(PATHS['wikis'], wiki, LOGINSTATUSFILENAME)
+        loginstatusfile = os.path.join(PATHS['wikis'], wiki, LOGINSTATUSFILE)
         if os.path.exists(loginstatusfile):
             with open(loginstatusfile) as f:
                 current_status = f.readline().strip()

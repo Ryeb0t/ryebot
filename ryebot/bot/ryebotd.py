@@ -3,6 +3,7 @@ import os
 import time
 
 from daemon import DaemonContext
+from pid import PidFile
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 
@@ -11,8 +12,11 @@ from ryebot.bot.daemon_handlers import FileModifiedEventHandler
 from ryebot.bot.loggers import common_logger, watchdog_logger, COMMONLOGFILE, COMMANDLOGFILE, WATCHLOGFILE
 
 
-# File that will be edited by the daemon in a set interval, to signify that it is alive
+# File that will be edited by the daemon in a set interval, to prove that it is alive
 HEARTBEATFILE = '.heartbeat'
+
+# File that contains the PID of the daemon; only exists while it is running
+PIDFILE = '.ryebotd.pid'
 
 
 class CustomLoggingEventHandler(FileSystemEventHandler):
@@ -81,5 +85,5 @@ def main():
 
 
 if __name__ == '__main__':
-    with DaemonContext():
+    with DaemonContext(pidfile=PidFile(PIDFILE, PATHS['localdata'])):
         main()

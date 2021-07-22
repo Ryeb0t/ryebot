@@ -19,7 +19,8 @@ REQUIREMENTS = [
     'click>=8.0.0',
     'psutil',
     'watchdog',
-    'python-daemon'
+    'python-daemon',
+    'pid'
 ]
 # command that will be used to execute the program from the command line
 ENTRYPOINT_COMMAND = 'ryebot'

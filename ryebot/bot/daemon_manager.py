@@ -1,13 +1,23 @@
 import os
 
 import psutil
+from pid import PidFile, PidFileAlreadyRunningError
 
 from ryebot.bot import PATHS
-from ryebot.custom_utils.ps_util import find_procs_by_cmd
 from ryebot.bot.loggers import cmd_logger
+from ryebot.bot.ryebotd import PIDFILE
 
 
 def _is_daemon_already_running():
+    try:
+        PidFile(PIDFILE, PATHS['localdata']).check()
+        # if the check() method succeeded without an error, then the daemon
+        # is currently not running normally
+        return False
+    except PidFileAlreadyRunningError:
+        return True
+
+
     running_daemons = find_procs_by_cmd('ryebotd.py')
     return len(running_daemons) > 0
 

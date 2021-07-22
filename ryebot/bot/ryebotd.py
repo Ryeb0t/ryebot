@@ -72,6 +72,16 @@ def start_monitoring(logger: logging.Logger=None):
     observer.start()
 
 
+def on_startup():
+    # empty all control command files
+    for dirpath, dirnames, filenames in os.walk():
+        for filename in filenames:
+            if filename.endswith('.control'):
+                # empty the file
+                with open(filename, 'w'):
+                    pass
+
+
 def do_heartbeat():
     time.sleep(6)
     with open(os.path.join(PATHS['localdata'], HEARTBEATFILE), 'w') as f:
@@ -79,6 +89,7 @@ def do_heartbeat():
 
 
 def main():
+    on_startup()
     start_monitoring(watchdog_logger())
     while True:
         do_heartbeat()

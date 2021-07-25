@@ -6,10 +6,9 @@ from pid import PidFile
 
 from ryebot.bot import PATHS
 from ryebot.bot.monitorer import start_monitoring
+from ryebot.bot.heartbeat import do_heartbeat
 
 
-# File that will be edited by the daemon in a set interval, to prove that it is alive
-HEARTBEATFILE = '.heartbeat'
 
 # File that contains the PID of the daemon; only exists while it is running
 PIDFILE = '.ryebotd.pid'
@@ -26,12 +25,6 @@ def on_startup():
                         pass
                 except OSError:
                     pass
-
-
-def do_heartbeat():
-    time.sleep(6)
-    with open(os.path.join(PATHS['localdata'], HEARTBEATFILE), 'w') as f:
-        f.write(time.strftime('%a, %d %b %Y %H:%M:%S')) # RFC5322 format
 
 
 def main():

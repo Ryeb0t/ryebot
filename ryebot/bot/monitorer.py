@@ -6,7 +6,7 @@ from watchdog.observers import Observer
 from ryebot.bot import PATHS
 from ryebot.bot.daemon_handlers import FileModifiedEventHandler
 from ryebot.bot.loggers import COMMONLOGFILE, COMMANDLOGFILE, WATCHLOGFILE
-from ryebot.bot.ryebotd import HEARTBEATFILE
+from ryebot.bot.heartbeat import HEARTBEATFILE
 
 
 class CustomLoggingEventHandler(FileSystemEventHandler):

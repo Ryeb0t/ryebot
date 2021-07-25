@@ -38,7 +38,7 @@ class FileModifiedEventHandler():
 
         wikiname = os.path.basename(os.path.dirname(self.file_path))
 
-        self.logger.info(f'{str(newstatus)} on the "{wikiname}" wiki.')
+        self.logger.info(f'{repr(newstatus)} on the "{wikiname}" wiki.')
 
         if newstatus == LoginControlCommand.DO_LOGIN:
             python_command = os.path.join(PATHS['venv'], 'bin', 'python3')

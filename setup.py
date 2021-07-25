@@ -20,7 +20,8 @@ REQUIREMENTS = [
     'psutil',
     'watchdog',
     'python-daemon',
-    'pid'
+    'pid',
+    'beautifultable>=1.0.0'
 ]
 # command that will be used to execute the program from the command line
 ENTRYPOINT_COMMAND = 'ryebot'

@@ -4,6 +4,7 @@ from pathlib import Path
 import time
 
 import click
+from beautifultable import BeautifulTable
 
 from ryebot.bot import PATHS
 from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_local_wikis
@@ -77,6 +78,8 @@ class StatusDisplayer():
 
 
     def _format_statuses(self):
+        statustable = BeautifulTable()
+
         for wiki in sorted(list(self.statuses.keys())):
             logincontrol = str(self.statuses[wiki]['logincontrol'])
             loginstatus = str(self.statuses[wiki]['loginstatus']['current_status'])
@@ -94,7 +97,14 @@ class StatusDisplayer():
             if last_logout_time != time.gmtime(0):
                 last_logout = time.strftime(time_format, last_logout_time)
 
-            self.status_str += f'\n  # {wiki}   {logincontrol}, {loginstatus}. Last login: {last_login}. Last logout: {last_logout}.'
+            statustable.rows.append([wiki, loginstatus, logincontrol, last_login])
+
+        if len(statustable.rows) > 0:
+            statustable.columns.header = ["WIKI", "STATUS", "CTRLCMD", "LASTLOGIN"]
+            statustable.columns.alignment = BeautifulTable.ALIGN_LEFT
+            statustable.columns.padding_right["WIKI"] = 3
+            statustable.set_style(BeautifulTable.STYLE_NONE)
+            self.status_str = str(statustable)
 
 
     def _make_output_string(self):
@@ -109,7 +119,7 @@ class StatusDisplayer():
             self.output_str = self.unregistereds_str
 
         elif self.status_str != '':
-            self.output_str = 'Current status of the bot:{}'.format(self.status_str)
+            self.output_str = 'Current status of the bot:\n' + self.status_str
             if self.unregistereds_str != '':
                 self.output_str += '\n\n' + self.unregistereds_str
 

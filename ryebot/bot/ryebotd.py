@@ -74,7 +74,7 @@ def start_monitoring(logger: logging.Logger=None):
 
 def on_startup():
     # empty all control command files
-    for dirpath, dirnames, filenames in os.walk():
+    for dirpath, dirnames, filenames in os.walk(PATHS['localdata']):
         for filename in filenames:
             if filename.endswith('.control'):
                 # empty the file

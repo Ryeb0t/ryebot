@@ -78,7 +78,10 @@ def on_startup():
         for filename in filenames:
             if filename.endswith('.control'):
                 # empty the file
-                with open(filename, 'w'):
+                try:
+                    with open(filename, 'w'):
+                        pass
+                except OSError:
                     pass
 
 

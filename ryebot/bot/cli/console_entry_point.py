@@ -3,10 +3,10 @@ from importlib import metadata
 
 import click
 
-from ryebot.bot.daemon_manager import start_daemon, log_command
+from ryebot.bot.cli.daemon_manager import start_daemon, log_command
+from ryebot.bot.cli.status_displayer import StatusDisplayer
+from ryebot.bot.cli.wiki_manager import display_wiki_list, add_wiki, remove_wiki, go_online_on_wiki, go_offline_on_wiki
 from ryebot.bot.scripts import __availablescripts__
-from ryebot.bot.status_displayer import StatusDisplayer
-from ryebot.bot.wiki_manager import display_wiki_list, add_wiki, remove_wiki, go_online_on_wiki, go_offline_on_wiki
 
 
 # allow using both "-h" and "--help" for help (default is only "--help")

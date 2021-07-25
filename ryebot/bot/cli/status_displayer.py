@@ -6,7 +6,7 @@ import time
 import click
 
 from ryebot.bot import PATHS
-from ryebot.bot.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_local_wikis
+from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_local_wikis
 
 
 class LoginControlCommand(Enum):

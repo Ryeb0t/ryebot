@@ -4,9 +4,9 @@ from pathlib import Path
 import time
 
 from ryebot.bot import PATHS
+from ryebot.bot.cli.status_displayer import LoginStatus
+from ryebot.bot.cli.wiki_manager import LOGINSTATUSFILE, LOGINCONTROLFILE
 from ryebot.custom_utils.wiki_util import login_to_wiki as login
-from ryebot.bot.status_displayer import LoginStatus
-from ryebot.bot.wiki_manager import LOGINSTATUSFILE, LOGINCONTROLFILE
 
 
 def login_to_wiki(wikiname: str, logger: logging.Logger):

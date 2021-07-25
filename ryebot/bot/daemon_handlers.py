@@ -3,8 +3,8 @@ import os
 import psutil
 
 from ryebot.bot import PATHS
-from ryebot.bot.wiki_manager import LOGINCONTROLFILE
-from ryebot.bot.status_displayer import LoginControlCommand
+from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE
+from ryebot.bot.cli.status_displayer import LoginControlCommand
 
 
 class FileModifiedEventHandler():

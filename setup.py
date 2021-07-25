@@ -14,13 +14,13 @@ LICENSE = 'MIT'
 URL = 'https://github.com/Ryeb0t/ryebot'
 PYTHON_VERSION = '>=3.8.0'
 REQUIREMENTS = [
-    'mwclient',
-    'mwparserfromhell',
+    'mwclient>=0.10.1',
+    'mwparserfromhell>=0.6.2',
     'click>=8.0.0',
-    'psutil',
-    'watchdog',
-    'python-daemon',
-    'pid',
+    'psutil>=5.8.0',
+    'watchdog>=2.1.0',
+    'python-daemon>=2.3.0',
+    'pid>=3.0.4',
     'beautifultable>=1.0.0'
 ]
 # command that will be used to execute the program from the command line

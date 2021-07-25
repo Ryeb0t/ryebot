@@ -88,7 +88,7 @@ def on_startup():
 def do_heartbeat():
     time.sleep(6)
     with open(os.path.join(PATHS['localdata'], HEARTBEATFILE), 'w') as f:
-        f.write(time.strftime('%a, %d %b %Y %H:%M:%S UTC')) # RFC5322 format
+        f.write(time.strftime('%a, %d %b %Y %H:%M:%S')) # RFC5322 format
 
 
 def main():

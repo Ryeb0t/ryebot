@@ -64,7 +64,7 @@ setup(
     install_requires=REQUIREMENTS,
     entry_points={
         'console_scripts': [
-            ENTRYPOINT_COMMAND + ' = ryebot.bot.console_entry_point:main'
+            ENTRYPOINT_COMMAND + ' = ryebot.bot.cli.console_entry_point:main'
         ]
     }
 )

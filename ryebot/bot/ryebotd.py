@@ -99,6 +99,6 @@ def main():
 
 
 if __name__ == '__main__':
-    with DaemonContext(pidfile=PidFile(PIDFILE, PATHS['localdata'])):
+    with DaemonContext(pidfile=PidFile(PIDFILE, PATHS['localdata']), umask=0o022):
         from ryebot.bot.loggers import common_logger, watchdog_logger
         main()

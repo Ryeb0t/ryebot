@@ -9,8 +9,8 @@ from ryebot.bot.cli.wiki_manager import display_wiki_list, add_wiki, remove_wiki
 from ryebot.bot.scripts import __availablescripts__
 
 
-# allow using both "-h" and "--help" for help (default is only "--help")
-CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
+# allow using "-h", "-?", and "--help" for help (default is only "--help")
+CONTEXT_SETTINGS = dict(help_option_names=['-h', '-?', '--help'])
 
 
 @click.group(context_settings=CONTEXT_SETTINGS, help='Welcome to the Ryebot menu! Specify one of the commands below to perform an action.\n\nEach command has a "-h" option for help about its usage.')

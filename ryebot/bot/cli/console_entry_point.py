@@ -3,7 +3,7 @@ from importlib import metadata
 
 import click
 
-from ryebot.bot.cli.daemon_manager import start_daemon
+from ryebot.bot.cli.daemon_manager import start_daemon, do_debug_action
 from ryebot.bot.cli.status_displayer import StatusDisplayer
 from ryebot.bot.cli.wiki_manager import display_wiki_list, add_wiki, remove_wiki, go_online_on_wiki, go_offline_on_wiki
 from ryebot.bot.loggers import cmd_logger
@@ -16,10 +16,15 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '-?', '--help'])
 
 @click.group(context_settings=CONTEXT_SETTINGS, help='Welcome to the Ryebot menu! Specify one of the commands below to perform an action.\n\nEach command has a "-h" option for help about its usage.')
 @click.version_option(metadata.version('ryebot'), '-v', '--version') # enable version option
-def main():
+@click.option('--debug', type=click.Choice(('pid', 'kill', 'restart'), case_sensitive=False))
+def main(debug):
     """This is the entry point function called from the command line via `$ ryebot`, as defined in `setup.py`."""
-    # code here is *always* executed when the command "ryebot" is called from the command line, no matter the arguments and options
-    start_daemon()
+    # the code in this function is always executed when the command "ryebot" is called from the command line,
+    # no matter the arguments and options, that is unless one of the help or version options (-h, -v, etc.) is used
+    if debug:
+        do_debug_action(debug)
+    else:
+        start_daemon()
     cmd_logger().info(sys.argv) # log the entered command, including options and arguments
 
 

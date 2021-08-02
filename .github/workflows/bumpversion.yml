@@ -43,6 +43,6 @@ jobs:
       # then update it
       - name: Run bumpversion
         run: |
-          currentver=$(sed -nr 's/__version__\s*=\s*(\S)(.+)\1\s*$/\2/p' mypackage/_version.py)
+          currentver=$(sed -nr 's/__version__\s*=\s*(\S)(.+)\1\s*$/\2/p' ryebot/_version.py)
           bump2version ${{ env.BUMP_PART }} ryebot/_version.py --current-version $currentver --no-configured-files --commit --message "Autobump version: {current_version} → {new_version}" --verbose
           git push origin

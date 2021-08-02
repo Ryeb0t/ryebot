@@ -3,9 +3,10 @@ from importlib import metadata
 
 import click
 
-from ryebot.bot.cli.daemon_manager import start_daemon, log_command
+from ryebot.bot.cli.daemon_manager import start_daemon
 from ryebot.bot.cli.status_displayer import StatusDisplayer
 from ryebot.bot.cli.wiki_manager import display_wiki_list, add_wiki, remove_wiki, go_online_on_wiki, go_offline_on_wiki
+from ryebot.bot.loggers import cmd_logger
 from ryebot.bot.scripts import __availablescripts__
 
 
@@ -19,7 +20,7 @@ def main():
     """This is the entry point function called from the command line via `$ ryebot`, as defined in `setup.py`."""
     # code here is *always* executed when the command "ryebot" is called from the command line, no matter the arguments and options
     start_daemon()
-    log_command(sys.argv)
+    cmd_logger().info(sys.argv) # log the entered command, including options and arguments
 
 
 @click.group(context_settings=CONTEXT_SETTINGS, help='Use this menu to display the wikis that the bot has access to, and to add or remove wikis from that list.\n\nEach command has a "-h" option for help about its usage.', short_help='Manage the wikis that the bot has access to.')

@@ -4,7 +4,6 @@ import psutil
 from pid import PidFile, PidFileAlreadyRunningError
 
 from ryebot.bot import PATHS
-from ryebot.bot.loggers import cmd_logger
 from ryebot.bot.ryebotd import PIDFILE
 
 
@@ -30,7 +29,3 @@ def _run_daemon():
 def start_daemon():
     if not _is_daemon_already_running():
         _run_daemon()
-
-
-def log_command(command):
-    cmd_logger().info(command)

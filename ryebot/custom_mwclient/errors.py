@@ -2,7 +2,16 @@ from mwclient.errors import AssertUserFailedError
 
 
 class InvalidUserFile(KeyError):
-    pass
+    def __init__(self, filename: str='', missing=False):
+        self.filename = filename
+        self.missing = missing
+
+    def __str__(self):
+        if self.missing:
+            details = "The file doesn't exist."
+        else:
+            details = "The file doesn't contain a valid JSON string."
+        return f'User credentials file "{self.filename}" is invalid: {details}'
 
 
 class PatrolRevisionNotSpecified(KeyError):

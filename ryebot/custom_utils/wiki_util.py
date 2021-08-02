@@ -1,7 +1,7 @@
 import mwparserfromhell
 
 from custom_mwclient.auth_credentials import AuthCredentials
-from custom_mwclient.gamepedia_client import GamepediaClient
+from custom_mwclient.fandom_client import FandomClient
 
 
 def template_str_to_object(template_str: str):
@@ -37,8 +37,19 @@ def login_to_wiki(targetwiki: str, username='bot', return_log=False, log=None):
     """
 
     # --- do login ---
-    creds = AuthCredentials(user_file=username)
-    site = GamepediaClient(wiki=targetwiki, credentials=creds)
+    creds = AuthCredentials(user_name=username)
+
+    try:
+        targetwiki_base, targetwiki_lang = targetwiki.split('/')
+        has_lang = True
+    except ValueError:
+        # the targetwiki string has more or fewer than one slash character, so don't use a language
+        has_lang = False
+
+    if has_lang:
+        site = FandomClient(credentials=creds, wiki=targetwiki_base, lang=targetwiki_lang)
+    else:
+        site = FandomClient(credentials=creds, wiki=targetwiki)
 
     # -- validate wikiname post-login ---
     wiki_id = site.get_current_wiki_name()

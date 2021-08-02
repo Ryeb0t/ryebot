@@ -579,7 +579,7 @@ class WikiClient(object):
         return result_namespaces
 
 
-    @DeprecationWarning('"page_exists" should be able to be replaced with "page.exists"!')
+    # calls to this function should be able to be replaced with "page.exists"
     def page_exists(self, pagename: str, log):
         """Check whether a page with the specified name exists on the wiki."""
         try:

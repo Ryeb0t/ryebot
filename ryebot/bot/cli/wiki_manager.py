@@ -74,7 +74,7 @@ def get_wiki_name_from_directory(basedir: str, subdir: str):
 
 
 def get_wiki_name_from_path(path: str):
-    get_wiki_name_from_directory(get_wiki_directory_from_path(path))
+    return get_wiki_name_from_directory(*get_wiki_directory_from_path(path))
 
 
 

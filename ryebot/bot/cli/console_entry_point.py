@@ -16,15 +16,18 @@ CONTEXT_SETTINGS = dict(help_option_names=['-h', '-?', '--help'])
 
 @click.group(context_settings=CONTEXT_SETTINGS, help='Welcome to the Ryebot menu! Specify one of the commands below to perform an action.\n\nEach command has a "-h" option for help about its usage.')
 @click.version_option(metadata.version('ryebot'), '-v', '--version') # enable version option
-@click.option('--debug', type=click.Choice(('pid', 'kill', 'restart'), case_sensitive=False))
-def main(debug):
+@click.option('--debug',
+    type=click.Choice(('pid', 'kill', 'restart'), case_sensitive=False),
+    callback=do_debug_action, is_eager=True,
+    hidden=True, # don't display this option in the help text
+    expose_value=False # don't pass this option's value to the main() function
+)
+def main():
     """This is the entry point function called from the command line via `$ ryebot`, as defined in `setup.py`."""
     # the code in this function is always executed when the command "ryebot" is called from the command line,
-    # no matter the arguments and options, that is unless one of the help or version options (-h, -v, etc.) is used
-    if debug:
-        do_debug_action(debug)
-    else:
-        start_daemon()
+    # no matter the arguments and options, that is unless one of the options that exit the app in their callback
+    # (help/version/debug, i.e. --debug, -h, -v, etc.) is used (because the parser doesn't reach this function in that case)
+    start_daemon()
     cmd_logger().info(sys.argv) # log the entered command, including options and arguments
 
 

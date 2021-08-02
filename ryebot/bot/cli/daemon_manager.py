@@ -33,28 +33,36 @@ def start_daemon():
         _run_daemon()
 
 
-def do_debug_action(action):
+def do_debug_action(ctx: click.Context, param: click.Parameter, value: str):
+    if not value or ctx.resilient_parsing:
+        # this is necessary because this callback function is always executed, even if the --debug parameter is not set
+        # (see https://click.palletsprojects.com/en/8.0.x/advanced/#callback-evaluation-order)
+        return
+
     pidfile = os.path.join(PATHS['localdata'], PIDFILE)
 
     def read_pid():
         with open(pidfile) as f:
             return int(f.read().strip())
     
-    if action == 'pid':
+    if value == 'pid':
         if not _is_daemon_currently_running():
             click.echo('Daemon is currently not running, cannot retrieve PID.')
         else:
             click.echo(f'PID as per file: {read_pid()}')
 
-    elif action == 'kill':
+    elif value == 'kill':
         if not _is_daemon_currently_running():
             click.echo('Daemon is currently not running, cannot kill it.')
         else:
             os.kill(read_pid(), signal.SIGTERM)
 
-    elif action == 'restart':
+    elif value == 'restart':
         if _is_daemon_currently_running():
             os.kill(read_pid(), signal.SIGTERM)
         else:
             click.echo('Daemon was not already not running, starting it now.')
         _run_daemon()
+    
+    # terminate the application to prevent the "missing command" error that would be thrown if the parsing continued
+    ctx.exit()

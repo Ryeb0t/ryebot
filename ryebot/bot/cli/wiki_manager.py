@@ -49,13 +49,6 @@ def get_wiki_directory_from_name(wikiname: str):
     return (basedirname, subdirname)
 
 
-def get_wiki_name_from_directory(basedir: str, subdir: str):
-    suffix = ''
-    if subdir != 'MAIN':
-        suffix = '/' + subdir
-    return basedir + suffix
-
-
 def get_wiki_directory_from_path(path: str):
     subpath = []
     basepath = path
@@ -72,6 +65,16 @@ def get_wiki_directory_from_path(path: str):
     # e.g. return ('MAIN', 'terraria')
     return (subpath[-1], subpath[-2])
 
+
+def get_wiki_name_from_directory(basedir: str, subdir: str):
+    suffix = ''
+    if subdir != 'MAIN':
+        suffix = '/' + subdir
+    return basedir + suffix
+
+
+def get_wiki_name_from_path(path: str):
+    get_wiki_name_from_directory(get_wiki_directory_from_path(path))
 
 
 

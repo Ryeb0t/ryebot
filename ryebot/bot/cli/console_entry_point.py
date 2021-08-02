@@ -89,14 +89,14 @@ def wiki_list(count):
 
 
 @click.command(context_settings=CONTEXT_SETTINGS, name='add')
-@click.option('-n', '--name', prompt='Name of the wiki')
+@click.option('-n', '--name', prompt='Name of the wiki', help='Name of the wiki to add. Use "<wikiname>/<lang>" for language variants.')
 def wiki_add(name):
     """Grant the bot access to a new wiki."""
     add_wiki(name)
 
 
 @click.command(context_settings=CONTEXT_SETTINGS, name='remove')
-@click.option('-n', '--name', prompt='Name of the wiki')
+@click.option('-n', '--name', prompt='Name of the wiki', help='Name of the wiki to remove. Use "<wikiname>/<lang>" for language variants.')
 @click.confirmation_option('-y', '--yes', prompt='Are you sure you want to withdraw access from this wiki? This will permanently delete all local information that the bot has collected about the wiki, such as logs about script executions on the wiki.')
 def wiki_remove(name):
     """Withdraw access to a wiki from the bot."""

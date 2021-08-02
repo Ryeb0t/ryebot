@@ -23,7 +23,56 @@ LOGINSTATUSFILE = '.login.status'
 
 def get_local_wikis():
     """Return a list of the wikis that are registered in the `localdata/wikis` directory, i.e., that the bot has access to."""
-    return os.listdir(PATHS['wikis'])
+
+    local_wikis = []
+    for wikiname in os.listdir(PATHS['wikis']):
+        for language_variant in os.listdir(os.path.join(PATHS['wikis'], wikiname)):
+            if language_variant == 'MAIN':
+                local_wikis.append(wikiname)
+            else:
+                local_wikis.append(wikiname + '/' + language_variant)
+
+    return local_wikis
+
+
+def get_wiki_directory_from_name(wikiname: str):
+    parts = wikiname.count('/') + 1
+    if parts == 2:
+        # wikiname is e.g. "terraria/de", so return ("terraria", "de")
+        basedirname, subdirname = wikiname.split('/')
+    elif parts == 1:
+        # wikiname is e.g. "terraria", so return ("terraria", "MAIN")
+        basedirname = wikiname
+        subdirname = 'MAIN'
+    else:
+        raise ValueError(f'Wiki name "{wikiname}" contains more than one slash; expected is one or no slash!')
+    return (basedirname, subdirname)
+
+
+def get_wiki_name_from_directory(basedir: str, subdir: str):
+    suffix = ''
+    if subdir != 'MAIN':
+        suffix = '/' + subdir
+    return basedir + suffix
+
+
+def get_wiki_directory_from_path(path: str):
+    subpath = []
+    basepath = path
+    # e.g. start with basepath='/pathswikis/terraria/MAIN/some.file'
+
+    while basepath != PATHS['WIKIS']:
+        subpath.append(os.path.basename(basepath))
+        basepath = os.path.dirname(basepath)
+    # e.g. subpath would now be ['some.file', 'MAIN', 'terraria']
+
+    if len(subpath) < 2:
+        raise ValueError(f'Cannot get the wiki directory from the path "{path}"!')
+
+    # e.g. return ('MAIN', 'terraria')
+    return (subpath[-1], subpath[-2])
+
+
 
 
 def display_wiki_list(only_show_count):
@@ -52,8 +101,8 @@ def add_wiki(wikiname):
         return
 
     # make new directory and standard files
-    new_wiki_directory = os.path.join(PATHS['wikis'], wikiname)
-    os.mkdir(new_wiki_directory)
+    new_wiki_directory = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wikiname))
+    os.makedirs(new_wiki_directory)
     Path(os.path.join(new_wiki_directory, LOGINCONTROLFILE)).touch() # create the login control command file
     Path(os.path.join(new_wiki_directory, LOGINSTATUSFILE)).touch() # create the login status file
     click.echo(f'Granted the bot access to the "{wikiname}" wiki!')
@@ -66,8 +115,8 @@ def remove_wiki(wikiname):
         click.echo(f'Cannot withdraw access from the "{wikiname}" wiki, because the bot currently does not have access to it.')
         return
 
-    # remove entire contents of the wiki directory
-    shutil.rmtree(os.path.join(PATHS['wikis'], wikiname))
+    # remove entire contents of the wiki subdirectory
+    shutil.rmtree(os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wikiname)))
     click.echo(f'The bot now does not have access to the "{wikiname}" wiki any longer!')
 
 
@@ -88,7 +137,7 @@ def go_online_on_wiki(wikinames, on_all_wikis):
             )))
             continue
 
-        statusfile = os.path.join(PATHS['wikis'], wikiname, LOGINCONTROLFILE)
+        statusfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wikiname), LOGINCONTROLFILE)
 
         if not os.path.exists(statusfile):
             Path(statusfile).touch() # create the file
@@ -123,7 +172,7 @@ def go_offline_on_wiki(wikinames, on_all_wikis):
             )))
             return
 
-        statusfile = os.path.join(PATHS['wikis'], wikiname, LOGINCONTROLFILE)
+        statusfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wikiname), LOGINCONTROLFILE)
 
         if not os.path.exists(statusfile):
             Path(statusfile).touch() # create the file

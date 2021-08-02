@@ -7,7 +7,7 @@ import click
 from beautifultable import BeautifulTable
 
 from ryebot.bot import PATHS
-from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_local_wikis
+from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_local_wikis, get_wiki_directory_from_name
 
 
 class LoginControlCommand(Enum):
@@ -144,7 +144,7 @@ class StatusDisplayer():
         if wiki in self.unregistered_wikis:
             return LoginControlCommand.DO_NOTHING
 
-        logincontrolfile = os.path.join(PATHS['wikis'], wiki, LOGINCONTROLFILE)
+        logincontrolfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wiki), LOGINCONTROLFILE)
         if os.path.exists(logincontrolfile):
             filesize = os.stat(logincontrolfile).st_size
             try:
@@ -166,7 +166,7 @@ class StatusDisplayer():
         if wiki in self.unregistered_wikis:
             return status_dict
 
-        loginstatusfile = os.path.join(PATHS['wikis'], wiki, LOGINSTATUSFILE)
+        loginstatusfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wiki), LOGINSTATUSFILE)
         if os.path.exists(loginstatusfile):
             with open(loginstatusfile) as f:
                 current_status = f.readline().strip()

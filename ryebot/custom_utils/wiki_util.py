@@ -38,7 +38,18 @@ def login_to_wiki(targetwiki: str, username='bot', return_log=False, log=None):
 
     # --- do login ---
     creds = AuthCredentials(user_name=username)
-    site = FandomClient(wiki=targetwiki, credentials=creds)
+
+    try:
+        targetwiki_base, targetwiki_lang = targetwiki.split('/')
+        has_lang = True
+    except ValueError:
+        # the targetwiki string has more or fewer than one slash character, so don't use a language
+        has_lang = False
+
+    if has_lang:
+        site = FandomClient(credentials=creds, wiki=targetwiki_base, lang=targetwiki_lang)
+    else:
+        site = FandomClient(credentials=creds, wiki=targetwiki)
 
     # -- validate wikiname post-login ---
     wiki_id = site.get_current_wiki_name()

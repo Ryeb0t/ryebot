@@ -5,7 +5,7 @@ import time
 
 from ryebot.bot import PATHS
 from ryebot.bot.cli.status_displayer import LoginStatus
-from ryebot.bot.cli.wiki_manager import LOGINSTATUSFILE, LOGINCONTROLFILE
+from ryebot.bot.cli.wiki_manager import LOGINSTATUSFILE, LOGINCONTROLFILE, get_wiki_directory_from_name
 from ryebot.custom_utils.wiki_util import login_to_wiki as login
 
 
@@ -26,7 +26,7 @@ def login_to_wiki(wikiname: str, logger: logging.Logger):
 
 
 def _modify_loginstatus_file(logger: logging.Logger, wiki: str, newstatus: LoginStatus=None, newlastlogin: float=None, newlastlogout: float=None):
-    loginstatusfile = os.path.join(PATHS['wikis'], wiki, LOGINSTATUSFILE)
+    loginstatusfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wiki), LOGINSTATUSFILE)
     if not os.path.exists(loginstatusfile):
         Path(loginstatusfile).touch() # create the file
 
@@ -54,7 +54,7 @@ def _modify_loginstatus_file(logger: logging.Logger, wiki: str, newstatus: Login
 
 
 def _register_control_command(wiki: str):
-    logincontrolfile = os.path.join(PATHS['wikis'], wiki, LOGINCONTROLFILE)
+    logincontrolfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wiki), LOGINCONTROLFILE)
     # empty the file
     with open(logincontrolfile, 'w'):
         pass

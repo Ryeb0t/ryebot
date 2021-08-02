@@ -67,15 +67,13 @@ def get_wiki_directory_from_path(path: str):
 
 
 def get_wiki_name_from_directory(basedir: str, subdir: str):
-    suffix = ''
     if subdir != 'MAIN':
-        suffix = '/' + subdir
-    return basedir + suffix
+        basedir += '/' + subdir
+    return basedir
 
 
 def get_wiki_name_from_path(path: str):
     return get_wiki_name_from_directory(*get_wiki_directory_from_path(path))
-
 
 
 def display_wiki_list(only_show_count):

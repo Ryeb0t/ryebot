@@ -61,7 +61,7 @@ def get_wiki_directory_from_path(path: str):
     basepath = path
     # e.g. start with basepath='/pathswikis/terraria/MAIN/some.file'
 
-    while basepath != PATHS['WIKIS']:
+    while basepath != PATHS['wikis']:
         subpath.append(os.path.basename(basepath))
         basepath = os.path.dirname(basepath)
     # e.g. subpath would now be ['some.file', 'MAIN', 'terraria']

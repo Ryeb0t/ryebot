@@ -4,12 +4,13 @@ import sys
 
 from ryebot.bot import PATHS
 from ryebot.bot.loggers import common_logger
+from ryebot.bot.cli.wiki_manager import get_wiki_name_from_path
 
 
 def main():
     logger = common_logger()
 
-    wikiname = os.path.basename(os.getcwd())
+    wikiname = get_wiki_name_from_path(os.getcwd())
 
     try:
         logger.info(f'Starting the "{sys.argv[1]}" script on the "{wikiname}" wiki.')

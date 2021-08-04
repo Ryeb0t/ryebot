@@ -19,14 +19,22 @@ def main():
         # no script name specified
         return
 
+    # wrapper for script execution, catch errors thrown by the script
     try:
         # import script and run it
+        # special scripts:
         if scriptname == '_login':
             from ryebot.bot.login_and_logout import login_to_wiki
             login_to_wiki(wikiname, logger)
+        elif scriptname == '_pingchecker':
+            from ryebot.bot.pingchecker import check_ping
+            check_ping(wikiname, logger)
+        
+        # common scripts:
         else:
             scriptmodule = importlib.import_module(scriptname)
             scriptmodule.main()
+
     except Exception:
         logger.info(f'Error during the "{sys.argv[1]}" script on the "{wikiname}" wiki!', exc_info=True, stack_info=True)
 

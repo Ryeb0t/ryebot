@@ -27,8 +27,8 @@ def main():
             from ryebot.bot.login_and_logout import login_to_wiki
             login_to_wiki(wikiname, logger)
         elif scriptname == '_pingchecker':
-            from ryebot.bot.pingchecker import check_ping
-            check_ping(wikiname, logger)
+            from ryebot.bot.pingchecker import pingcheck
+            pingcheck(wikiname, logger)
         
         # common scripts:
         else:

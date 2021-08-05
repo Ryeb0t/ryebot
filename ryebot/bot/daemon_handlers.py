@@ -1,10 +1,13 @@
 import logging
 import os
+
+from pid import PidFile, PidFileAlreadyRunningError
 import psutil
 
 from ryebot.bot import PATHS
-from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_wiki_name_from_directory, get_wiki_directory_from_path
+from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_wiki_directory_from_name, get_wiki_name_from_directory, get_wiki_directory_from_path
 from ryebot.bot.cli.status_displayer import LoginControlCommand, LoginStatus
+from ryebot.bot.pingchecker import PIDFILE
 
 
 class FileModifiedEventHandler():
@@ -86,4 +89,14 @@ class FileModifiedEventHandler():
             self.logger.info(f'Started new Python process with PID {p.pid} for starting the pingchecker.')
         else:
             # stop the pingchecker
-            pass
+            pidfiledir = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wikiname))
+            try:
+                check_result = PidFile(pidname=PIDFILE, piddir=pidfiledir).check()
+                # if the check() method succeeded without an error, then the process
+                # is currently not running normally, so there's no need to terminate it
+                self.logger.info(f'The ping checker is currently not running normally (check result: "{check_result}"), so leaving it be.')
+            except PidFileAlreadyRunningError as e:
+                # process is running normally, so we can terminate it without problems.
+                # conveniently, the error object has an attribute with the PID stored in the PID file
+                psutil.Process(e.pid).terminate()
+                self.logger.info(f'Terminated the ping checker process successfully (PID was {e.pid}).')

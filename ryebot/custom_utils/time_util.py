@@ -42,13 +42,13 @@ def stdtimeformat_file_str() -> str:
     return "%Y-%m-%d_%H-%M-%S"
 
 
-def format_secs(secs: int, format="%a, %d %b %Y %H:%M:%S") -> str:
+def format_secs(secs, format="%a, %d %b %Y %H:%M:%S") -> str:
     """Formats a number of seconds in a specified date/time format. Also appends `` (UTC)``.
 
     Parameters
     ----------
-    1. secs : int
-        - The number of seconds to format.
+    1. secs : int | time.struct_time
+        - The number of seconds or time struct to format.
     2. format : str
         - The format.
     The default format is as follows:
@@ -58,7 +58,11 @@ def format_secs(secs: int, format="%a, %d %b %Y %H:%M:%S") -> str:
     See https://docs.python.org/3/library/time.html#time.strftime for the formatting syntax.
     """
 
-    time_struct = time.gmtime(secs)
+    if isinstance(secs, time.struct_time):
+        # parameter is already a struct
+        time_struct = secs
+    else:
+        time_struct = time.gmtime(secs)
     timestr = time.strftime(format, time_struct)
     return timestr + ' (UTC)'
 

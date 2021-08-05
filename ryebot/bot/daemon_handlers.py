@@ -60,13 +60,15 @@ class FileModifiedEventHandler():
         if os.path.dirname(os.path.dirname(os.path.dirname(self.file_path))) != PATHS['wikis']:
             return
 
-        # parse the size of the file
-        filesize = os.stat(self.file_path).st_size
-        try:
-            loginstatus = LoginStatus(int(filesize))
-        except ValueError:
-            # the file size is not in the enum's values, so consider the login status invalid
-            return
+        with open(self.file_path) as f:
+            try:
+                line = f.readline().strip() # first line in the file
+                loginstatus = LoginStatus(int(line))
+            except (IndexError, ValueError):
+                # reading the first line might have failed,
+                # or conversion to int/LoginStatus might have failed,
+                # so consider the status invalid
+                return
         if loginstatus == LoginStatus.LOGGING_IN:
             return
 

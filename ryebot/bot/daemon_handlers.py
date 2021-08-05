@@ -50,8 +50,8 @@ class FileModifiedEventHandler():
             python_command = os.path.join(PATHS['venv'], 'bin', 'python3')
             script_file = os.path.join(PATHS['package'], 'bot', 'ryebotscript.py')
             wikidirectory = os.path.join(PATHS['wikis'], wikidir, wikisubdir)
-            psutil.Popen([python_command, script_file, '_login'], cwd=wikidirectory)
-            self.logger.info('Started new Python process for logging in.')
+            p = psutil.Popen([python_command, script_file, '_login'], cwd=wikidirectory)
+            self.logger.info(f'Started new Python process with PID {p.pid} for logging in.')
 
 
     def _pingchecker(self):
@@ -82,8 +82,8 @@ class FileModifiedEventHandler():
             python_command = os.path.join(PATHS['venv'], 'bin', 'python3')
             script_file = os.path.join(PATHS['package'], 'bot', 'ryebotscript.py')
             wikidirectory = os.path.join(PATHS['wikis'], wikidir, wikisubdir)
-            psutil.Popen([python_command, script_file, '_pingchecker'], cwd=wikidirectory)
-            self.logger.info('Started new Python process for starting the pingchecker.')
+            p = psutil.Popen([python_command, script_file, '_pingchecker'], cwd=wikidirectory)
+            self.logger.info(f'Started new Python process with PID {p.pid} for starting the pingchecker.')
         else:
             # stop the pingchecker
             pass

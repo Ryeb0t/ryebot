@@ -1,6 +1,12 @@
 name: Bump version
 
+# There are two types of events that trigger this workflow:
+# pushes to the main branch and closed pull requests of the main branch.
+
 on:
+  push:
+    branches:
+      - main
   pull_request:
     types:
       - closed
@@ -8,41 +14,149 @@ on:
       - main
 
 jobs:
-  bump-version:
+
+  # The two event types are handled by the two jobs in this workflow,
+  # "bumpver-push" and "bumpver-pullreq", respectively.
+
+  # The "bumpver-push" job only runs if the "github.event_name" is not "pull_request".
+  # The "bumpver-pullreq" job only runs if the "github.event_name" is "pull_request", and
+  # the closure of the PR was caused by the merge of the PR (i.e., manually closed PRs,
+  # for instance, are ignored).
+
+  # The difference between the two jobs is that for regular pushes, the version part
+  # to bump is always assumed to be "patch".
+  # For PR merges, the version part is taken from the PR description (the strings
+  # "bumpversion:major" and "bumpversion:patch" are recognized; if neither of these
+  # are present, the version part is assumed to be "minor").
+  # Apart from that, the code is analogous in both jobs.
+
+
+  # There is an issue with PR merges: they trigger this workflow twice, so it
+  # starts running twice, simultaneously. That is because a PR merge includes both
+  # the closure of the PR and the push of the merge commit. Both of these events
+  # are recognized by this workflow.
+  # This is a problem because the bumpversion program will attempt to push its commit
+  # in both workflow executions.
+  # Therefore, one of the two executions must be stopped. This is achieved as follows:
+  # * The "bumpver-push" job compares the SHA of the push that triggered it to the SHA
+  #   of the most recently closed PR in the repository. (The SHA of the merge commit
+  #   push of a PR is equal to the SHA of the respective merged (closed) PR.)
+  # * If they are equal, that means the triggering push is a pushed merge commit.
+  # * The "bumpver-push" job is then terminated, because the "bumpver-pullreq" job
+  #   already runs simultaneously in the other workflow (triggered by the closed PR)
+  #   and it will manage the version bumping.
+
+
+  bumpver-push:
+
+    name: Bump version (regular push)
+
+    if: ${{ github.event_name != 'pull_request' }}
 
     runs-on: ubuntu-latest
 
-    if: ${{ github.event.pull_request.merged == true }}
-
-    # determine which part to bump from the PR comment;
-    # the comment should contain a string in the format "[bumpversion:<part>]"
     env:
-      BUMP_PART: ${{ contains(github.event.pull_request.body, '[bumpversion:major]') && 'major' || (contains(github.event.pull_request.body, '[bumpversion:patch]') && 'patch' || 'minor') }}
+      # file that contains the current version
+      CURVER_FILE: ryebot/_version.py
+      # assume the version part is "patch", in any case
+      BUMP_PART: 'patch'
 
     steps:
       - uses: actions/checkout@v2
+
+      # for debug
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "Dumped GitHub context, see environment variables."
+
+      - name: Get PRs
+        uses: octokit/request-action@v2.x
+        id: pullreqs
+        with:
+          route: GET /repos/{owner}/{repo}/pulls
+          owner: ${{ github.repository_owner }}
+          repo: ${{ github.event.repository.name }}
+          state: "closed"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # set the environment variable CONTINUE_JOB to true if the SHA of this push
+      # is not equal to the SHA of the most recently closed PR
+      - name: Compare SHAs
+        env:
+          SHA_API: ${{ fromJSON(steps.pullreqs.outputs.data)[0].merge_commit_sha }}
+          SHAS_NE: ${{ fromJSON(steps.pullreqs.outputs.data)[0].merge_commit_sha != github.sha }}
+        run: |
+          echo "CONTINUE_JOB=$SHAS_NE" >> $GITHUB_ENV
+          echo "$GITHUB_SHA ${{ env.SHAS_NE == 'true' && '!=' || '==' }} $SHA_API, so ${{ env.SHAS_NE == 'true' && 'continue' || 'exit' }}."
+
+      # bumpversion wants to make a commit, so git must know an identity,
+      # using the generic GitHub Actions bot account for that
+      - name: Set git identity
+        if: env.CONTINUE_JOB == 'true'
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Set up Python 3.8
+        if: env.CONTINUE_JOB == 'true'
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      # retrieve the current version from the _version.py file using sed
+      - name: Install and run bumpversion
+        if: env.CONTINUE_JOB == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          pip install bump2version
+          currentver=$(sed -nr 's/__version__\s*=\s*(\S)(.+)\1\s*$/\2/p' $CURVER_FILE)
+          bump2version $BUMP_PART $CURVER_FILE --current-version $currentver --no-configured-files --commit --message "Autobump version: {current_version} → {new_version}" --verbose
+          git push origin
+
+
+
+  bumpver-pullreq:
+
+    name: Bump version (pull request)
+
+    if: ${{ github.event_name == 'pull_request' && github.event.pull_request.merged == true }}
+
+    runs-on: ubuntu-latest
+
+    env:
+      # file that contains the current version
+      CURVER_FILE: ryebot/_version.py
+      # retrieve the version part from the PR description
+      BUMP_PART: ${{ contains(github.event.pull_request.body, 'bumpversion:major') && 'major' || (contains(github.event.pull_request.body, 'bumpversion:patch') && 'patch' || 'minor') }}
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # for debug
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        run: echo "Dumped GitHub context, see environment variables."
+
+      # bumpversion wants to make a commit, so git must know an identity,
+      # using the generic GitHub Actions bot account for that
+      - name: Set git identity
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Set up Python 3.8
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
 
-      - name: Install bumpversion
+      # retrieve the current version from the _version.py file using sed
+      - name: Install and run bumpversion
         run: |
           python -m pip install --upgrade pip
           pip install bump2version
-
-      # bumpversion wants to make a commit, so we must let git know an identity
-      # we use the email and name of the original committer for that
-      - name: Set git identity
-        run: |
-          git config --local user.name "${{ github.event.commits[0].author.name }}"
-          git config --local user.email "${{ github.event.commits[0].author.email }}"
-
-      # first retrieve the current version from the _version.py file using sed,
-      # then update it
-      - name: Run bumpversion
-        run: |
-          currentver=$(sed -nr 's/__version__\s*=\s*(\S)(.+)\1\s*$/\2/p' ryebot/_version.py)
-          bump2version ${{ env.BUMP_PART }} ryebot/_version.py --current-version $currentver --no-configured-files --commit --message "Autobump version: {current_version} → {new_version}" --verbose
+          currentver=$(sed -nr 's/__version__\s*=\s*(\S)(.+)\1\s*$/\2/p' $CURVER_FILE)
+          bump2version $BUMP_PART $CURVER_FILE --current-version $currentver --no-configured-files --commit --message "Autobump version: {current_version} → {new_version}" --verbose
           git push origin

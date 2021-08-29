@@ -51,6 +51,13 @@ class LoginControl():
             Path(self.controlfile).touch() # create the file
 
 
+    def register_command(self):
+        """Clear the login control file, indicating that the command in there has been registered and executed."""
+
+        with open(self.controlfile, 'w'):
+            pass # empty the file
+
+
     @property
     def command(self):
         """Return the content of the login control file, as an `ELoginControlCommand` value."""
@@ -226,51 +233,24 @@ class LoginStatus():
 
 
 def login_to_wiki(wikiname: str, logger: logging.Logger):
-    _modify_loginstatus_file(logger, wikiname, newstatus=ELoginStatus.LOGGING_IN)
+    loginstatus = LoginStatus(wiki=wikiname)
+    logincontrol = LoginControl(wiki=wikiname)
+
+    loginstatus.status = ELoginStatus.LOGGING_IN
 
     try:
+        # connect to wiki
         site, login_log = login(wikiname, return_log=True)
     except Exception as e:
-        _modify_loginstatus_file(logger, wikiname, newstatus=ELoginStatus.LOGGED_OUT)
+        # connection failed
+        loginstatus.status = ELoginStatus.LOGGED_OUT
         logger.info("Modified the login status file due to error while logging in.")
-        _register_control_command(wikiname)
+        logincontrol.register_command()
         raise e
 
     logger.info(login_log)
-    _modify_loginstatus_file(logger, wikiname, newstatus=ELoginStatus.LOGGED_IN, newlastlogin=time.time())
-    _register_control_command(wikiname)
 
-
-def _modify_loginstatus_file(logger: logging.Logger, wiki: str, newstatus: ELoginStatus=None, newlastlogin: float=None, newlastlogout: float=None):
-    loginstatusfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wiki), LOGINSTATUSFILE)
-    if not os.path.exists(loginstatusfile):
-        Path(loginstatusfile).touch() # create the file
-
-    lines = []
-
-    # read current lines in the file
-    with open(loginstatusfile) as f:
-        lines = f.readlines()
-
-    for _ in range(3-len(lines)):
-        # if the file has fewer than three lines, then append the missing number of lines
-        lines.append('\n')
-
-    # modify the lines
-    if newstatus:
-        lines[0] = str(newstatus.value) + '\n'
-    if newlastlogin:
-        lines[1] = str(newlastlogin) + '\n'
-    if newlastlogout:
-        lines[2] = str(newlastlogout)
-
-    # write modified lines to file
-    with open(loginstatusfile, 'w+') as f:
-        f.writelines(lines)
-
-
-def _register_control_command(wiki: str):
-    logincontrolfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wiki), LOGINCONTROLFILE)
-    # empty the file
-    with open(logincontrolfile, 'w'):
-        pass
+    # connection was successful
+    loginstatus.status=ELoginStatus.LOGGED_IN
+    loginstatus.last_login=time.time()
+    logincontrol.register_command()

@@ -5,23 +5,7 @@ import click
 from beautifultable import BeautifulTable
 
 from ryebot.bot.cli.wiki_manager import get_local_wikis
-from ryebot.bot.login_and_logout import ELoginControlCommand, LoginControl, LoginStatus
-
-
-class ELoginStatus(Enum):
-    LOGGED_OUT = 0
-    LOGGING_IN = 1
-    LOGGED_IN = 2
-    UNKNOWN = 3
-
-    def __str__(self):
-        strmap = {
-            'LOGGED_OUT': 'logged out',
-            'LOGGING_IN': 'logging in',
-            'LOGGED_IN': 'logged in',
-            'UNKNOWN': 'unknown'
-        }
-        return strmap[self.name]
+from ryebot.bot.login_and_logout import ELoginControlCommand, ELoginStatus, LoginControl, LoginStatus
 
 
 class StatusDisplayer():

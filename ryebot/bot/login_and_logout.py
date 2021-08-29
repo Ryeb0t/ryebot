@@ -5,7 +5,6 @@ from pathlib import Path
 import time
 
 from ryebot.bot import PATHS
-from ryebot.bot.cli.status_displayer import ELoginStatus
 from ryebot.bot.cli.wiki_manager import LOGINSTATUSFILE, LOGINCONTROLFILE, get_wiki_directory_from_name
 from ryebot.custom_utils.wiki_util import login_to_wiki as login
 
@@ -74,6 +73,22 @@ class LoginControl():
                 f.write('1')
             elif value == ELoginControlCommand.DO_LOGOUT:
                 f.write('11')
+
+
+class ELoginStatus(Enum):
+    LOGGED_OUT = 0
+    LOGGING_IN = 1
+    LOGGED_IN = 2
+    UNKNOWN = 3
+
+    def __str__(self):
+        strmap = {
+            'LOGGED_OUT': 'logged out',
+            'LOGGING_IN': 'logging in',
+            'LOGGED_IN': 'logged in',
+            'UNKNOWN': 'unknown'
+        }
+        return strmap[self.name]
 
 
 class LoginStatus():

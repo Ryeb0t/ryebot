@@ -7,6 +7,7 @@ import psutil
 from ryebot.bot import PATHS
 from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_wiki_directory_from_name, get_wiki_name_from_directory, get_wiki_directory_from_path
 from ryebot.bot.cli.status_displayer import LoginControlCommand, LoginStatus
+from ryebot.bot.login_and_logout import LoginControl
 from ryebot.bot.pingchecker import PIDFILE
 
 
@@ -33,23 +34,17 @@ class FileModifiedEventHandler():
             return
         if os.path.dirname(os.path.dirname(os.path.dirname(self.file_path))) != PATHS['wikis']:
             return
-
-        # parse the size of the file
-        filesize = os.stat(self.file_path).st_size
-        try:
-            newstatus = LoginControlCommand(int(filesize))
-        except ValueError:
-            # the file size is not in the enum's values, so consider the control command invalid
-            return
-        if newstatus == LoginControlCommand.DO_NOTHING:
+        
+        controlcommand = LoginControl(file=self.file_path).command
+        if controlcommand == LoginControlCommand.DO_NOTHING:
             return
 
         wikidir, wikisubdir = get_wiki_directory_from_path(self.file_path)
 
         wikiname = get_wiki_name_from_directory(wikidir, wikisubdir)
-        self.logger.info(f'{repr(newstatus)} on the "{wikiname}" wiki.')
+        self.logger.info(f'{repr(controlcommand)} on the "{wikiname}" wiki.')
 
-        if newstatus == LoginControlCommand.DO_LOGIN:
+        if controlcommand == LoginControlCommand.DO_LOGIN:
             python_command = os.path.join(PATHS['venv'], 'bin', 'python3')
             script_file = os.path.join(PATHS['package'], 'bot', 'ryebotscript.py')
             wikidirectory = os.path.join(PATHS['wikis'], wikidir, wikisubdir)

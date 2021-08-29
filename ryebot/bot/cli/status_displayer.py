@@ -8,6 +8,7 @@ from beautifultable import BeautifulTable
 
 from ryebot.bot import PATHS
 from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_local_wikis, get_wiki_directory_from_name
+from ryebot.bot.login_and_logout import LoginControl
 
 
 class LoginControlCommand(Enum):
@@ -143,18 +144,7 @@ class StatusDisplayer():
     def _read_logincontrolfile(self, wiki: str):
         if wiki in self.unregistered_wikis:
             return LoginControlCommand.DO_NOTHING
-
-        logincontrolfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wiki), LOGINCONTROLFILE)
-        if os.path.exists(logincontrolfile):
-            filesize = os.stat(logincontrolfile).st_size
-            try:
-                return LoginControlCommand(int(filesize))
-            except ValueError:
-                # the file size is not in the enum's values, so consider the control command invalid
-                pass
-        else:
-            Path(logincontrolfile).touch() # create the file
-        return LoginControlCommand.DO_NOTHING
+        return LoginControl(wiki=wiki).command
 
 
     def _read_loginstatusfile(self, wiki: str):

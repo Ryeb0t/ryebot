@@ -48,6 +48,10 @@ class CustomEventHandler(CustomLoggingEventHandler):
         if os.path.basename(event.src_path) in (COMMONLOGFILE, COMMANDLOGFILE, WATCHLOGFILE, HEARTBEATFILE):
             # do not log modifications of the log files, partly to prevent an infinite logging loop
             return
+        if event.src_path == PATHS['localdata']:
+            # do not log modifications of the localdata directory, because these are likely
+            # caused by the loggers (also the heartbeat in particular) and have little meaning
+            return
         super().on_modified(event) # log standard "Modified ..." message
         if not event.is_directory:
             # do whatever action the file modification instructed to do

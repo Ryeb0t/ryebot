@@ -18,7 +18,7 @@ PERIOD = 7
 # file that contains the PID of the pingchecker process; only exists while it is running
 PIDFILE = '.pingchecker.pid'
 
-PINGPAGE = 'User:Ryebot/bot/ping'
+PINGPAGE = 'User:{username}/bot/ping'
 PINGPAGETEXT = "Use this page to verify my online status. If I'm online, I will respond within a couple of seconds!"
 TIME_UNTIL_WIPE = 90
 WIPE_SUMMARY = 'Wiped.'
@@ -42,8 +42,10 @@ def pingcheck(wikiname: str, logger: logging.Logger):
         logger.info(login_log)
         logger.info(f'Started pingchecker on the "{wikiname}" wiki.')
 
+        pingpage_name = PINGPAGE.format(username=site.get_current_wiki_user())
+
         # remember the content of the ping page as it is right now when starting the pingchecker
-        initial_pingpage_text = site.client.pages[PINGPAGE].text()
+        initial_pingpage_text = site.client.pages[pingpage_name].text()
 
         # get time of formal login to wiki, for the ping responses
         startuptime = get_login_time(wikiname)
@@ -55,11 +57,11 @@ def pingcheck(wikiname: str, logger: logging.Logger):
         # start listening
         while True:
             time.sleep(PERIOD)
-            _check(site, initial_pingpage_text, startuptime)
+            _check(site, pingpage_name, initial_pingpage_text, startuptime)
 
 
-def _check(site: FandomClient, initial_pingpage_text: str, startuptime: float):
-    pingpage = site.client.pages[PINGPAGE]
+def _check(site: FandomClient, pingpage_name: str, initial_pingpage_text: str, startuptime: float):
+    pingpage = site.client.pages[pingpage_name]
     pingpage_text = pingpage.text()
 
     if pingpage_text != PINGPAGETEXT:

@@ -15,12 +15,14 @@ class ELoginStatus(Enum):
     LOGGED_OUT = 0
     LOGGING_IN = 1
     LOGGED_IN = 2
+    UNKNOWN = 3
 
     def __str__(self):
         strmap = {
             'LOGGED_OUT': 'logged out',
             'LOGGING_IN': 'logging in',
-            'LOGGED_IN': 'logged in'
+            'LOGGED_IN': 'logged in',
+            'UNKNOWN': 'unknown'
         }
         return strmap[self.name]
 

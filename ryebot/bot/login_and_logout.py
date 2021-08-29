@@ -14,12 +14,14 @@ class ELoginControlCommand(Enum):
     DO_NOTHING = 0
     DO_LOGIN = 1
     DO_LOGOUT = 2
+    UNKNOWN = 3
 
     def __str__(self):
         strmap = {
             'DO_NOTHING': '-',
             'DO_LOGIN': 'login',
-            'DO_LOGOUT': 'logout'
+            'DO_LOGOUT': 'logout',
+            'UNKNOWN': '?'
         }
         return strmap[self.name]
 
@@ -27,7 +29,8 @@ class ELoginControlCommand(Enum):
         strmap = {
             'DO_NOTHING': 'Doing nothing',
             'DO_LOGIN': 'Logging in',
-            'DO_LOGOUT': 'Logging out'
+            'DO_LOGOUT': 'Logging out',
+            'UNKNOWN': 'Unknown'
         }
         return strmap[self.name]
 

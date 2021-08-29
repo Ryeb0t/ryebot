@@ -36,7 +36,7 @@ class FileModifiedEventHandler():
             return
         
         controlcommand = LoginControl(file=self.file_path).command
-        if controlcommand == ELoginControlCommand.DO_NOTHING:
+        if controlcommand in (ELoginControlCommand.DO_NOTHING, ELoginControlCommand.UNKNOWN):
             return
 
         wikidir, wikisubdir = get_wiki_directory_from_path(self.file_path)

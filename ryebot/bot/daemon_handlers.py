@@ -6,8 +6,8 @@ import psutil
 
 from ryebot.bot import PATHS
 from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_wiki_directory_from_name, get_wiki_name_from_directory, get_wiki_directory_from_path
-from ryebot.bot.cli.status_displayer import LoginControlCommand, LoginStatus
-from ryebot.bot.login_and_logout import LoginControl
+from ryebot.bot.cli.status_displayer import LoginStatus
+from ryebot.bot.login_and_logout import LoginControl, LoginControlCommand
 from ryebot.bot.pingchecker import PIDFILE
 
 

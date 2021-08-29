@@ -8,29 +8,7 @@ from beautifultable import BeautifulTable
 
 from ryebot.bot import PATHS
 from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_local_wikis, get_wiki_directory_from_name
-from ryebot.bot.login_and_logout import LoginControl
-
-
-class LoginControlCommand(Enum):
-    DO_NOTHING = 0
-    DO_LOGIN = 1
-    DO_LOGOUT = 2
-
-    def __str__(self):
-        strmap = {
-            'DO_NOTHING': '-',
-            'DO_LOGIN': 'login',
-            'DO_LOGOUT': 'logout'
-        }
-        return strmap[self.name]
-
-    def __repr__(self):
-        strmap = {
-            'DO_NOTHING': 'Doing nothing',
-            'DO_LOGIN': 'Logging in',
-            'DO_LOGOUT': 'Logging out'
-        }
-        return strmap[self.name]
+from ryebot.bot.login_and_logout import LoginControl, LoginControlCommand
 
 
 class LoginStatus(Enum):

@@ -1,12 +1,35 @@
 import logging
 import os
+from enum import Enum
 from pathlib import Path
 import time
 
 from ryebot.bot import PATHS
-from ryebot.bot.cli.status_displayer import LoginControlCommand, LoginStatus
+from ryebot.bot.cli.status_displayer import LoginStatus
 from ryebot.bot.cli.wiki_manager import LOGINSTATUSFILE, LOGINCONTROLFILE, get_wiki_directory_from_name
 from ryebot.custom_utils.wiki_util import login_to_wiki as login
+
+
+class LoginControlCommand(Enum):
+    DO_NOTHING = 0
+    DO_LOGIN = 1
+    DO_LOGOUT = 2
+
+    def __str__(self):
+        strmap = {
+            'DO_NOTHING': '-',
+            'DO_LOGIN': 'login',
+            'DO_LOGOUT': 'logout'
+        }
+        return strmap[self.name]
+
+    def __repr__(self):
+        strmap = {
+            'DO_NOTHING': 'Doing nothing',
+            'DO_LOGIN': 'Logging in',
+            'DO_LOGOUT': 'Logging out'
+        }
+        return strmap[self.name]
 
 
 class LoginControl():

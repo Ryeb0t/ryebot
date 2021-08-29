@@ -49,8 +49,9 @@ class LoginControl():
         try:
             return LoginControlCommand(int(filesize))
         except ValueError:
-            # the file size is not in the enum's values
-            return
+            # the file size is not in the enum's values,
+            # so consider the control command to be "do nothing"
+            return LoginControlCommand.DO_NOTHING
 
 
 

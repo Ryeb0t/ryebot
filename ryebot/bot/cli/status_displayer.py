@@ -5,7 +5,8 @@ import click
 from beautifultable import BeautifulTable
 
 from ryebot.bot.cli.wiki_manager import get_local_wikis
-from ryebot.bot.login_and_logout import ELoginControlCommand, ELoginStatus, LoginControl, LoginStatus
+from ryebot.bot.logincontrol import ELoginControlCommand, LoginControl
+from ryebot.bot.loginstatus import ELoginStatus, LoginStatus
 
 
 class StatusDisplayer():

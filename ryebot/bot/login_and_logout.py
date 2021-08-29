@@ -5,12 +5,12 @@ from pathlib import Path
 import time
 
 from ryebot.bot import PATHS
-from ryebot.bot.cli.status_displayer import LoginStatus
+from ryebot.bot.cli.status_displayer import ELoginStatus
 from ryebot.bot.cli.wiki_manager import LOGINSTATUSFILE, LOGINCONTROLFILE, get_wiki_directory_from_name
 from ryebot.custom_utils.wiki_util import login_to_wiki as login
 
 
-class LoginControlCommand(Enum):
+class ELoginControlCommand(Enum):
     DO_NOTHING = 0
     DO_LOGIN = 1
     DO_LOGOUT = 2
@@ -70,31 +70,31 @@ class LoginControl():
         # parse the size of the file
         filesize = os.stat(self.controlfile).st_size
         try:
-            return LoginControlCommand(int(filesize))
+            return ELoginControlCommand(int(filesize))
         except ValueError:
             # the file size is not in the enum's values,
             # so consider the control command to be "do nothing"
-            return LoginControlCommand.DO_NOTHING
+            return ELoginControlCommand.DO_NOTHING
 
 
 
 def login_to_wiki(wikiname: str, logger: logging.Logger):
-    _modify_loginstatus_file(logger, wikiname, newstatus=LoginStatus.LOGGING_IN)
+    _modify_loginstatus_file(logger, wikiname, newstatus=ELoginStatus.LOGGING_IN)
 
     try:
         site, login_log = login(wikiname, return_log=True)
     except Exception as e:
-        _modify_loginstatus_file(logger, wikiname, newstatus=LoginStatus.LOGGED_OUT)
+        _modify_loginstatus_file(logger, wikiname, newstatus=ELoginStatus.LOGGED_OUT)
         logger.info("Modified the login status file due to error while logging in.")
         _register_control_command(wikiname)
         raise e
 
     logger.info(login_log)
-    _modify_loginstatus_file(logger, wikiname, newstatus=LoginStatus.LOGGED_IN, newlastlogin=time.time())
+    _modify_loginstatus_file(logger, wikiname, newstatus=ELoginStatus.LOGGED_IN, newlastlogin=time.time())
     _register_control_command(wikiname)
 
 
-def _modify_loginstatus_file(logger: logging.Logger, wiki: str, newstatus: LoginStatus=None, newlastlogin: float=None, newlastlogout: float=None):
+def _modify_loginstatus_file(logger: logging.Logger, wiki: str, newstatus: ELoginStatus=None, newlastlogin: float=None, newlastlogout: float=None):
     loginstatusfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wiki), LOGINSTATUSFILE)
     if not os.path.exists(loginstatusfile):
         Path(loginstatusfile).touch() # create the file

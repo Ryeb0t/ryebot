@@ -8,10 +8,10 @@ from beautifultable import BeautifulTable
 
 from ryebot.bot import PATHS
 from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_local_wikis, get_wiki_directory_from_name
-from ryebot.bot.login_and_logout import LoginControl, LoginControlCommand
+from ryebot.bot.login_and_logout import LoginControl, ELoginControlCommand
 
 
-class LoginStatus(Enum):
+class ELoginStatus(Enum):
     LOGGED_OUT = 0
     LOGGING_IN = 1
     LOGGED_IN = 2
@@ -121,13 +121,13 @@ class StatusDisplayer():
 
     def _read_logincontrolfile(self, wiki: str):
         if wiki in self.unregistered_wikis:
-            return LoginControlCommand.DO_NOTHING
+            return ELoginControlCommand.DO_NOTHING
         return LoginControl(wiki=wiki).command
 
 
     def _read_loginstatusfile(self, wiki: str):
         status_dict = {
-            'current_status': LoginStatus.LOGGED_OUT,
+            'current_status': ELoginStatus.LOGGED_OUT,
             'last_login_time': time.gmtime(0), # Jan 1, 1970
             'last_logout_time': time.gmtime(0)
         }
@@ -142,7 +142,7 @@ class StatusDisplayer():
                 last_logout_time = f.readline().strip()
 
             try:
-                status_dict['current_status'] = LoginStatus(int(current_status))
+                status_dict['current_status'] = ELoginStatus(int(current_status))
             except ValueError:
                 # either conversion from string to int failed, or the number is not in the enum,
                 # so just leave the status at logged out

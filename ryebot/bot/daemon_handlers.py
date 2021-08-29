@@ -6,8 +6,8 @@ import psutil
 
 from ryebot.bot import PATHS
 from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE, get_wiki_directory_from_name, get_wiki_name_from_directory, get_wiki_directory_from_path
-from ryebot.bot.cli.status_displayer import LoginStatus
-from ryebot.bot.login_and_logout import LoginControl, LoginControlCommand
+from ryebot.bot.cli.status_displayer import ELoginStatus
+from ryebot.bot.login_and_logout import LoginControl, ELoginControlCommand
 from ryebot.bot.pingchecker import PIDFILE
 
 
@@ -36,7 +36,7 @@ class FileModifiedEventHandler():
             return
         
         controlcommand = LoginControl(file=self.file_path).command
-        if controlcommand == LoginControlCommand.DO_NOTHING:
+        if controlcommand == ELoginControlCommand.DO_NOTHING:
             return
 
         wikidir, wikisubdir = get_wiki_directory_from_path(self.file_path)
@@ -44,7 +44,7 @@ class FileModifiedEventHandler():
         wikiname = get_wiki_name_from_directory(wikidir, wikisubdir)
         self.logger.info(f'{repr(controlcommand)} on the "{wikiname}" wiki.')
 
-        if controlcommand == LoginControlCommand.DO_LOGIN:
+        if controlcommand == ELoginControlCommand.DO_LOGIN:
             python_command = os.path.join(PATHS['venv'], 'bin', 'python3')
             script_file = os.path.join(PATHS['package'], 'bot', 'ryebotscript.py')
             wikidirectory = os.path.join(PATHS['wikis'], wikidir, wikisubdir)
@@ -61,21 +61,21 @@ class FileModifiedEventHandler():
         with open(self.file_path) as f:
             try:
                 line = f.readline().strip() # first line in the file
-                loginstatus = LoginStatus(int(line))
+                loginstatus = ELoginStatus(int(line))
             except (IndexError, ValueError):
                 # reading the first line might have failed,
                 # or conversion to int/LoginStatus might have failed,
                 # so consider the status invalid
                 return
-        if loginstatus == LoginStatus.LOGGING_IN:
+        if loginstatus == ELoginStatus.LOGGING_IN:
             return
 
         wikidir, wikisubdir = get_wiki_directory_from_path(self.file_path)
 
         wikiname = get_wiki_name_from_directory(wikidir, wikisubdir)
-        self.logger.info(f'{"Starting" if loginstatus == LoginStatus.LOGGED_IN else "Stopping"} the pingchecker on the "{wikiname}" wiki.')
+        self.logger.info(f'{"Starting" if loginstatus == ELoginStatus.LOGGED_IN else "Stopping"} the pingchecker on the "{wikiname}" wiki.')
 
-        if loginstatus == LoginStatus.LOGGED_IN:
+        if loginstatus == ELoginStatus.LOGGED_IN:
             # start the pingchecker
             python_command = os.path.join(PATHS['venv'], 'bin', 'python3')
             script_file = os.path.join(PATHS['package'], 'bot', 'ryebotscript.py')

@@ -5,6 +5,7 @@ from pathlib import Path
 import click
 
 from ryebot.bot import PATHS
+from ryebot.bot.logincontrol import ELoginControlCommand, LoginControl
 
 
 # Name of the file that contains the command for the daemon.
@@ -138,22 +139,14 @@ def go_online_on_wiki(wikinames, on_all_wikis):
             )))
             continue
 
-        statusfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wikiname), LOGINCONTROLFILE)
-
-        if not os.path.exists(statusfile):
-            Path(statusfile).touch() # create the file
-
-        output_str = f'Going online on the "{wikiname}" wiki.'
-        filesize = os.stat(statusfile).st_size
-        if filesize == 1:
-            output_str = f'Currently already going online on the "{wikiname}" wiki.'
-        elif filesize == 2:
-            output_str = f'Cannot go online on the "{wikiname}" wiki! Currently going offline there.'
-
-        with open(statusfile, 'w') as f:
-            f.write('1')
-
-        click.echo(output_str)
+        current_command = LoginControl(wiki=wikiname).command
+        if current_command == ELoginControlCommand.DO_LOGIN:
+            click.echo(f'Currently already going online on the "{wikiname}" wiki.')
+        elif current_command == ELoginControlCommand.DO_LOGOUT:
+            click.echo(f'Cannot go online on the "{wikiname}" wiki! Currently going offline there.')
+        else:
+            click.echo(f'Going online on the "{wikiname}" wiki.')
+            LoginControl(wiki=wikiname).command = ELoginControlCommand.DO_LOGIN
 
 
 def go_offline_on_wiki(wikinames, on_all_wikis):
@@ -173,19 +166,11 @@ def go_offline_on_wiki(wikinames, on_all_wikis):
             )))
             return
 
-        statusfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wikiname), LOGINCONTROLFILE)
-
-        if not os.path.exists(statusfile):
-            Path(statusfile).touch() # create the file
-
-        output_str = f'Going offline on the "{wikiname}" wiki.'
-        filesize = os.stat(statusfile).st_size
-        if filesize == 2:
-            output_str = f'Currently already going offline on the "{wikiname}" wiki.'
-        elif filesize == 1:
-            output_str = f'Cannot go offline on the "{wikiname}" wiki! Currently going online there.'
-
-        with open(statusfile, 'w') as f:
-            f.write('11')
-
-        click.echo(output_str)
+        current_command = LoginControl(wiki=wikiname).command
+        if current_command == ELoginControlCommand.DO_LOGOUT:
+            click.echo(f'Currently already going offline on the "{wikiname}" wiki.')
+        elif current_command == ELoginControlCommand.DO_LOGIN:
+            click.echo(f'Cannot go offline on the "{wikiname}" wiki! Currently going online there.')
+        else:
+            click.echo(f'Going offline on the "{wikiname}" wiki.')
+            LoginControl(wiki=wikiname).command = ELoginControlCommand.DO_LOGOUT

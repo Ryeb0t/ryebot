@@ -4,9 +4,54 @@ from pathlib import Path
 import time
 
 from ryebot.bot import PATHS
-from ryebot.bot.cli.status_displayer import LoginStatus
+from ryebot.bot.cli.status_displayer import LoginControlCommand, LoginStatus
 from ryebot.bot.cli.wiki_manager import LOGINSTATUSFILE, LOGINCONTROLFILE, get_wiki_directory_from_name
 from ryebot.custom_utils.wiki_util import login_to_wiki as login
+
+
+class LoginControl():
+    """Class for reading and modifying the login control file of a wiki."""
+
+    def __init__(self, wiki: str='', file: str=''):
+        """Access the login control file of a wiki, either using the wiki name or the file name directly."""
+
+        if file:
+            self.controlfile = file
+        elif wiki:
+            self.controlfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wiki), LOGINCONTROLFILE)
+        else:
+            raise ValueError('LoginControl requires either a wiki name or a file name!')
+        
+        if not os.path.exists(self.controlfile):
+            Path(self.controlfile).touch() # create the file
+
+
+    def command_login(self):
+        """Set the content of the wiki's login control file size to 1, indicating that the bot should login there."""
+
+        with open(self.controlfile, 'w') as f:
+            f.write('1')
+
+
+    def command_logout(self):
+        """Set the content of the wiki's login control file size to 2, indicating that the bot should logout there."""
+
+        with open(self.controlfile, 'w') as f:
+            f.write('11')
+
+
+    @property
+    def command(self):
+        """Return the content of the login control file, as a `LoginControlCommand` value."""
+        
+        # parse the size of the file
+        filesize = os.stat(self.controlfile).st_size
+        try:
+            return LoginControlCommand(int(filesize))
+        except ValueError:
+            # the file size is not in the enum's values
+            return
+
 
 
 def login_to_wiki(wikiname: str, logger: logging.Logger):

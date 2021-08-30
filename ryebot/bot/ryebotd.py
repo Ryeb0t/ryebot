@@ -1,5 +1,4 @@
 import os
-import time
 
 from daemon import DaemonContext
 from pid import PidFile
@@ -7,7 +6,6 @@ from pid import PidFile
 from ryebot.bot import PATHS
 from ryebot.bot.monitorer import start_monitoring
 from ryebot.bot.heartbeat import do_heartbeat
-
 
 
 # File that contains the PID of the daemon; only exists while it is running

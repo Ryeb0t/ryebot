@@ -2,8 +2,8 @@ import os
 import signal
 
 import click
-import psutil
 from pid import PidFile, PidFileAlreadyRunningError
+import psutil
 
 from ryebot.bot import PATHS
 from ryebot.bot.ryebotd import PIDFILE
@@ -44,7 +44,7 @@ def do_debug_action(ctx: click.Context, param: click.Parameter, value: str):
     def read_pid():
         with open(pidfile) as f:
             return int(f.read().strip())
-    
+
     if value == 'pid':
         if not _is_daemon_currently_running():
             click.echo('Daemon is currently not running, cannot retrieve PID.')
@@ -63,6 +63,6 @@ def do_debug_action(ctx: click.Context, param: click.Parameter, value: str):
         else:
             click.echo('Daemon was not already not running, starting it now.')
         _run_daemon()
-    
+
     # terminate the application to prevent the "missing command" error that would be thrown if the parsing continued
     ctx.exit()

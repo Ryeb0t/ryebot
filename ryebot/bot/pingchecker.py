@@ -5,8 +5,7 @@ import time
 from pid import PidFile
 
 from ryebot.bot import PATHS
-from ryebot.bot.cli.wiki_manager import get_wiki_directory_from_name
-from ryebot.bot.utils import get_login_time
+from ryebot.bot.utils import get_login_time, get_wiki_directory_from_name
 from ryebot.custom_utils.time_util import format_secs
 from ryebot.custom_utils.wiki_util import login_to_wiki as login
 from ryebot.custom_mwclient.fandom_client import FandomClient

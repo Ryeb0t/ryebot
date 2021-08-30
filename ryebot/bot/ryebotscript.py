@@ -4,7 +4,7 @@ import sys
 
 from ryebot.bot import PATHS
 from ryebot.bot.loggers import common_logger
-from ryebot.bot.cli.wiki_manager import get_wiki_name_from_path
+from ryebot.bot.utils import get_wiki_name_from_path
 
 
 def main():

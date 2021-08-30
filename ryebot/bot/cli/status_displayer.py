@@ -3,9 +3,7 @@ import time
 import click
 from beautifultable import BeautifulTable
 
-from ryebot.bot.cli.wiki_manager import get_local_wikis
-from ryebot.bot.logincontrol import ELoginControlCommand, LoginControl
-from ryebot.bot.loginstatus import ELoginStatus, LoginStatus
+from ryebot.bot.utils import get_local_wikis
 
 
 class StatusDisplayer():

@@ -12,6 +12,7 @@ from ryebot.bot.utils import get_wiki_directory_from_name, get_wiki_directory_fr
 
 
 class FileModifiedEventHandler():
+    """Class that starts new processes, depending on the file that was modified."""
 
     def __init__(self, logger: logging.Logger, file_path: str):
         self.logger = logger
@@ -19,6 +20,8 @@ class FileModifiedEventHandler():
 
 
     def handle(self):
+        """Entry function, contains all methods for starting new processes."""
+
         # a file was modified, so the daemon is supposed to do something.
         # we use the following methods to find out what that is, based on the file path, content, size, etc.
 
@@ -31,13 +34,18 @@ class FileModifiedEventHandler():
 
     def _logincontrolcommand(self):
         if os.path.basename(self.file_path) != LOGINCONTROLFILE:
+            # file must be the login control file
             return
         if os.path.dirname(os.path.dirname(os.path.dirname(self.file_path))) != PATHS['wikis']:
+            # file must be in the wikis directory
             return
 
         controlcommand = LoginControl(file=self.file_path).command
-        if controlcommand in (ELoginControlCommand.DO_NOTHING, ELoginControlCommand.UNKNOWN):
+        if controlcommand not in (ELoginControlCommand.DO_LOGIN, ELoginControlCommand.DO_LOGOUT):
+            # login control command must be login/logout
             return
+
+        # all checks passed
 
         wikidir, wikisubdir = get_wiki_directory_from_path(self.file_path)
 
@@ -54,13 +62,18 @@ class FileModifiedEventHandler():
 
     def _pingchecker(self):
         if os.path.basename(self.file_path) != LOGINSTATUSFILE:
+            # file must be the login status file
             return
         if os.path.dirname(os.path.dirname(os.path.dirname(self.file_path))) != PATHS['wikis']:
+            # file must be in the wikis directory
             return
 
         loginstatus = LoginStatus(file=self.file_path).status
-        if loginstatus in (ELoginStatus.LOGGING_IN, ELoginStatus.UNKNOWN):
+        if loginstatus not in (ELoginStatus.LOGGED_IN, ELoginStatus.LOGGED_OUT):
+            # login status must be logged in/out
             return
+
+        # all checks passed
 
         wikidir, wikisubdir = get_wiki_directory_from_path(self.file_path)
 

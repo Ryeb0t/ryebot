@@ -1,12 +1,13 @@
 """Utility methods that do not fit into any of the other `custom_utils` modules."""
 
-import chardet
 import json
 import os
 import shutil
 import stat
 import sys
 from typing import Iterable
+
+import chardet
 
 
 def get_caller_module_name() -> str:
@@ -138,7 +139,6 @@ def remove_empty_directories(dirs: Iterable[str]):
         # example of direc: ('project\Gores', [], ['Gore_1.png'])
         if not direc[1] and not direc[2]:
             os.rmdir(direc[0])
-    return
 
 
 def are_all_list_elements_equal(elemlist: Iterable) -> bool:

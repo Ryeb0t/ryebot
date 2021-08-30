@@ -48,7 +48,7 @@ def stdtimeformat_file_str():
     return "%Y-%m-%d_%H-%M-%S"
 
 
-def format_secs(secs, format="%a, %d %b %Y %H:%M:%S"):
+def format_secs(secs, formatstr="%a, %d %b %Y %H:%M:%S"):
     """Format a number of seconds in a specified date/time format.
 
     Also append ` (UTC)`.
@@ -72,7 +72,7 @@ def format_secs(secs, format="%a, %d %b %Y %H:%M:%S"):
         time_struct = secs
     else:
         time_struct = time.gmtime(secs)
-    timestr = time.strftime(format, time_struct)
+    timestr = time.strftime(formatstr, time_struct)
     return timestr + ' (UTC)'
 
 

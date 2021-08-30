@@ -123,8 +123,8 @@ def remove_files(filelist: list, log):
     for file in filelist:
         try:
             os.remove(file)
-        except:
-            log("Error while deleting the file \"{}\"!".format(file))
+        except (IsADirectoryError, FileNotFoundError):
+            log("Error while deleting the file \"{}\"! Skipped it.".format(file))
             log(exc_info=True, s='Error message:\n')
 
 

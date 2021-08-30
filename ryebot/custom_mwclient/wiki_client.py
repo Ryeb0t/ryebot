@@ -412,9 +412,7 @@ class WikiClient(object):
         try:
             api_result = self.client.api('query', prop='revisions',
                 titles=page.name, rvlimit=1)
-        except KeyboardInterrupt:
-            raise
-        except:
+        except Exception:
             log('\n***ERROR*** while getting last revision!')
             log(exc_info=True, s='Error message:\n')
             return None
@@ -431,7 +429,7 @@ class WikiClient(object):
 
         # this is a shorter alternative, but much much slower, since the limit=1 isn't
         # recognized for some reason, and instead all revs are gathered
-        # rev = [revision for revision in page.revisions(limit=1, prop='ids')][0]['revid']
+        #rev = [revision for revision in page.revisions(limit=1, prop='ids')][0]['revid']
         return rev
 
 
@@ -461,9 +459,7 @@ class WikiClient(object):
         result = None
         try:
             wikitext = mwparserfromhell.parse(page.text())
-        except KeyboardInterrupt:
-            raise
-        except:
+        except Exception:
             log('\n***ERROR*** while getting last section!')
             log(exc_info=True, s='Error message:\n')
             return None
@@ -479,9 +475,7 @@ class WikiClient(object):
             if anchor:
                 try:
                     api_result = self.client.api('parse', page=page.name, prop='sections')
-                except KeyboardInterrupt:
-                    raise
-                except:
+                except Exception:
                     log('\n***ERROR*** while getting last section!')
                     log(exc_info=True, s='Error message:\n')
                     return None
@@ -536,9 +530,7 @@ class WikiClient(object):
         try:
             api_result = self.client.api('query', prop='revisions', titles=page.name,
                 rvlimit=limit)
-        except KeyboardInterrupt:
-            raise
-        except:
+        except Exception:
             log('\n***ERROR*** while getting list of revisions!')
             log(exc_info=True, s='Error message:\n')
             return None
@@ -582,9 +574,7 @@ class WikiClient(object):
         result_namespaces = []
         try:
             api_result = self.client.api('query', meta='siteinfo', siprop='namespaces')
-        except KeyboardInterrupt:
-            raise
-        except:
+        except Exception:
             log('\n***ERROR*** while list of all namespaces!')
             log(exc_info=True, s='Error message:\n')
             return None
@@ -602,9 +592,7 @@ class WikiClient(object):
         """Check whether a page with the specified name exists on the wiki."""
         try:
             api_result = self.client.api('query', prop='info', titles=pagename)
-        except KeyboardInterrupt:
-            raise
-        except:
+        except Exception:
             log('\n***ERROR*** while checking whether the page "{}" exists!'.format(pagename))
             log(exc_info=True, s='Error message:\n')
             return False
@@ -649,9 +637,7 @@ class WikiClient(object):
 
         try:
             api_result = self.client.api('query', meta='tokens')
-        except KeyboardInterrupt:
-            raise
-        except:
+        except Exception:
             log('\n***ERROR*** while getting CSRF token!')
             log(exc_info=True, s='Error message:\n')
             return None
@@ -682,7 +668,7 @@ class WikiClient(object):
         try:
             api_result = self.client.api(action, **kwargs)
             #log('[{}] API result: {}'.format(i, api_result))
-        except:
+        except Exception:
             log('\n[{}] ***ERROR*** while executing continued API call '
                 '(parameters: action=\'{}\', {})'.format(i, action, kwargs))
             log(exc_info=True, s='[{}] Error message:\n'.format(i))

@@ -103,9 +103,7 @@ class FandomClient(WikiClient):
         try:
             # dynamic list
             valid_wikis = str_to_list(self.client.expandtemplates(text='{{langList|offWiki}}'))
-        except KeyboardInterrupt:
-            raise
-        except:
+        except Exception:
             log('\n***ERROR*** while expanding "{{langList|offWiki}}"!')
             log(exc_info=True, s='Error message:\n')
             # fallback: hardcoded list

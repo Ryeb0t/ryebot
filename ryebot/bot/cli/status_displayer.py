@@ -119,6 +119,6 @@ class StatusDisplayer():
         all_info = LoginStatus(wiki=wiki).all_info
         return {
             'current_status': all_info[0],
-            'last_login_time': all_info[1],
-            'last_logout_time': all_info[2]
+            'last_login_time': time.gmtime(all_info[1]),
+            'last_logout_time': time.gmtime(all_info[2])
         }

@@ -90,18 +90,18 @@ class LoginStatus():
 
     @property
     def last_login(self):
-        """Return the time of last login, as a `struct_time` value."""
+        """Return the time of last login, as a float value."""
 
         with open(self.statusfile) as f:
             try:
                 f.readline()
                 line = f.readline().strip() # second line in the file
-                return time.gmtime(float(line))
+                return float(line)
             except ValueError:
                 # reading the second line might have failed,
                 # or conversion to float might have failed,
                 # so return the default Jan 1, 1970
-                return time.gmtime(0)
+                return 0.0
 
     @last_login.setter
     def last_login(self, value: float):
@@ -112,19 +112,19 @@ class LoginStatus():
 
     @property
     def last_logout(self):
-        """Return the time of last logout, as a `struct_time` value."""
+        """Return the time of last logout, as a float value."""
 
         with open(self.statusfile) as f:
             try:
                 f.readline()
                 f.readline()
                 line = f.readline().strip() # third line in the file
-                return time.gmtime(float(line))
+                return float(line)
             except ValueError:
                 # reading the third line might have failed,
                 # or conversion to float might have failed,
                 # so return the default Jan 1, 1970
-                return time.gmtime(0)
+                return 0.0
 
     @last_logout.setter
     def last_logout(self, value: float):
@@ -149,12 +149,12 @@ class LoginStatus():
         except ValueError:
             all_info.append(ELoginStatus.UNKNOWN)
         try:
-            all_info.append(time.gmtime(float(last_login)))
+            all_info.append(float(last_login))
         except ValueError:
-            all_info.append(time.gmtime(0))
+            all_info.append(0.0)
         try:
-            all_info.append(time.gmtime(float(last_logout)))
+            all_info.append(float(last_logout))
         except ValueError:
-            all_info.append(time.gmtime(0))
+            all_info.append(0.0)
 
         return tuple(all_info)

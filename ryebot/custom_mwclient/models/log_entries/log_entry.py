@@ -1,7 +1,7 @@
 from custom_mwclient.wiki_client import WikiClient
 
 
-class LogEntry(object):
+class LogEntry():
     def __init__(self, log, site: WikiClient):
         self.site = site
         self.log_type = log['type']

@@ -13,7 +13,7 @@ def template_str_to_object(template_str: str):
     wikitext = mwparserfromhell.parse(template_str)
     for template in wikitext.filter_templates():
         return template
-    return
+    return None
 
 
 def login_to_wiki(targetwiki: str, credentials_file: str, return_log=False, log=None):

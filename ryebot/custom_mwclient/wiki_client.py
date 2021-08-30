@@ -208,15 +208,19 @@ class WikiClient(object):
             capitalization_corrected_query = []
             for title in query:
                 capitalization_corrected_query.append(title[0].upper() + title[1:])
-                # We don't know if the : is actually separating a namespace or not. So we'll put both in our lookup for
-                # the purpose of re-ordering the response that the api gave us. This is a safe thing to do AS LONG AS
-                # both capitalizations didn't previously exist in the original query given to us by the user
-                # So along the way just double check that wasn't the case.
+                # We don't know if the : is actually separating a namespace or not.
+                # So we'll put both in our lookup for the purpose of re-ordering the
+                # response that the api gave us. This is a safe thing to do AS LONG AS
+                # both capitalizations didn't previously exist in the original query
+                # given to us by the user. So along the way just double check that
+                # wasn't the case.
 
-                # This might be a bit of a hack but it works out pretty nicely; there's only two possible ways the title
-                # could be capitalized, and they end up consecutive in our list (again unless the user specifically
-                # specified both separately), so when we reorder later we're guaranteed to look up and find the entry,
-                # and have it be in the right order.
+                # This might be a bit of a hack but it works out pretty nicely;
+                # there's only two possible ways the title could be capitalized,
+                # and they end up consecutive in our list (again unless the user
+                # specifically specified both separately), so when we reorder later
+                # we're guaranteed to look up and find the entry, and have it be
+                # in the right order.
                 if ':' in title:
                     p = title.index(':')
                     ns_ucfirst_title = (title[0].upper() + title[1:p + 1]
@@ -673,7 +677,7 @@ class WikiClient(object):
                 '(parameters: action=\'{}\', {})'.format(i, action, kwargs))
             log(exc_info=True, s='[{}] Error message:\n'.format(i))
             log('[{}] Aborted API call.'.format(i))
-            return
+            return None
 
         flag = True
         try:
@@ -711,7 +715,7 @@ class WikiClient(object):
                     return result
                 else: # error during API call
                     #log('[%s] Return nothing.\n' % i)
-                    return
+                    return None
         else: # reached top of the stack
             #log('[{}] Return {}.\n'.format(i, api_result[action]))
             if i == 1: # still in the first call, no continues were necessary at all

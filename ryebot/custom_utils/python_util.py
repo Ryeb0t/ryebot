@@ -184,7 +184,7 @@ def is_list_in_other_list(larger_list: list, smaller_list: list):
             print('\t{}'.format(elem))
 
     if len(larger_list) < len(smaller_list):
-        return
+        return None
 
     if len(smaller_list) == 0:
         return (larger_list, [])
@@ -326,6 +326,7 @@ def get_dict_key_by_value(source_dict: dict, dict_value):
     for k, v in source_dict.items():
         if v == dict_value:
             return k
+    return None
 
 
 def copytree_custom(src, dst, symlinks=False, ignore=None):

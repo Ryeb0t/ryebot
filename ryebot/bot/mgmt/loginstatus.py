@@ -33,7 +33,7 @@ class ELoginStatus(Enum):
 class LoginStatus():
     """Class for reading and modifying the login status file of a wiki."""
 
-    def __init__(self, wiki: str='', file: str=''):
+    def __init__(self, wiki: str = '', file: str = ''):
         """Access the login status file of a wiki.
 
         This is possible either using the wiki name or the file name directly.

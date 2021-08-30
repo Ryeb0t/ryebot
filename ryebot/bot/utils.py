@@ -4,7 +4,7 @@ from ryebot.bot import PATHS
 from ryebot.custom_utils.wiki_util import login_to_wiki
 
 
-def login(wikiname: str, username: str='bot', **kwargs):
+def login(wikiname: str, username: str = 'bot', **kwargs):
 
     file_pattern = 'wiki_account_{}.json'
     credentials_file = os.path.join(PATHS['global_config'], file_pattern.format(username.lower()))

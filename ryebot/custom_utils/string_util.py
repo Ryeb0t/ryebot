@@ -1,4 +1,4 @@
-def str_to_list(string: str, delim: str=',', trim: bool=True):
+def str_to_list(string: str, delim: str = ',', trim: bool = True):
     """Convert a string to a list.
 
     Return an empty list if the string is `None`.
@@ -30,7 +30,7 @@ def csharp_string_concat(*args):
     return ''.join(args)
 
 
-def lstrip_max(string: str, characters: str=' ', max_chars: int=1):
+def lstrip_max(string: str, characters: str = ' ', max_chars: int = 1):
     """Return a copy of the string with leading whitespace removed.
 
     Similar to `lstrip()`, but do not strip more than `max_chars` characters.

@@ -16,7 +16,7 @@ def end_timecount(start_time: int) -> str:
     return 'Duration: {}'.format(delta)
 
 
-def stdtimeformat_file(use_localtime: bool=True):
+def stdtimeformat_file(use_localtime: bool = True):
     """Convert the current time to a standard time format to be used in file names.
 
     Parameters

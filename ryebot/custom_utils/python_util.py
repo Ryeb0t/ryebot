@@ -18,7 +18,7 @@ def get_caller_module_name() -> str:
             return current_module
 
 
-def import_constants(directory: str, filename: str=None) -> dict:
+def import_constants(directory: str, filename: str = None) -> dict:
     """Import constants data from a file.
 
     Rea the JSON file of the specified `filename` (without the `.json`
@@ -48,7 +48,7 @@ def clear_screen():
         os.system('clear') or None
 
 
-def get_files_list(directory: str, modname: str, ext: str='cs'):
+def get_files_list(directory: str, modname: str, ext: str = 'cs'):
     """Return a list of all files with the specified extension.
 
     Parameters
@@ -374,7 +374,7 @@ def copytree_robocopy(src, dst):
     os.system(cmd)
 
 
-def sepdelimited_keydata_to_json(data: dict, sep: str='.'):
+def sepdelimited_keydata_to_json(data: dict, sep: str = '.'):
         """Store a dict to JSON that originally has the following format:
 
         ```

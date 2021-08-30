@@ -29,8 +29,8 @@ class WikiClient(object):
     client = None
     write_errors = (AssertUserFailedError, ReadTimeout, APIError)
 
-    def __init__(self, url: str, path='/', credentials: AuthCredentials=None,
-        client: Site=None, max_retries=3, retry_interval=10, **kwargs):
+    def __init__(self, url: str, path: str = '/', credentials: AuthCredentials = None,
+        client: Site = None, max_retries: int = 3, retry_interval: int = 10, **kwargs):
         self.scheme = None
         if 'http://' in url:
             self.scheme = 'http'
@@ -308,7 +308,7 @@ class WikiClient(object):
             else:
                 raise
 
-    def touch(self, page: Page, summary: str=''):
+    def touch(self, page: Page, summary: str = ''):
         """Perform a null-edit on the page.
 
         The summary will be used in case of edit conflicts, i.e.
@@ -649,7 +649,7 @@ class WikiClient(object):
         return token
 
 
-    def api_continue(self, log, action: str, continue_name: str='', i: int=0, **kwargs):
+    def api_continue(self, log, action: str, continue_name: str = '', i: int = 0, **kwargs):
         """
         Provides an API call with recursive, thus unlimited "continue" capability
         (e.g. for when the number of category members may exceed the bot limit (5000)

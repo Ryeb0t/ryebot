@@ -41,7 +41,7 @@ class ELoginControlCommand(Enum):
 class LoginControl():
     """Class for reading and modifying the login control file of a wiki."""
 
-    def __init__(self, wiki: str='', file: str=''):
+    def __init__(self, wiki: str = '', file: str = ''):
         """Access the login control file of a wiki.
 
         This is possible either using the wiki name or the file name directly.

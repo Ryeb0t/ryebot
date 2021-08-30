@@ -2,7 +2,7 @@ from mwclient.errors import AssertUserFailedError
 
 
 class InvalidUserFile(KeyError):
-    def __init__(self, filename: str='', missing=False):
+    def __init__(self, filename: str = '', missing=False):
         self.filename = filename
         self.missing = missing
 

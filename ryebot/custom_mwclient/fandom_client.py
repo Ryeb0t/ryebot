@@ -16,8 +16,8 @@ class FandomClient(WikiClient):
     client: Site = None
     wiki: str = None
 
-    def __init__(self, wiki: str, client: Site=None,
-        credentials: AuthCredentials=None, lang: str=None, **kwargs):
+    def __init__(self, wiki: str, client: Site = None,
+        credentials: AuthCredentials = None, lang: str = None, **kwargs):
         """
         Create a site object.
         :param wiki: Name of a wiki
@@ -44,7 +44,7 @@ class FandomClient(WikiClient):
             self.url = self.url.replace('gamepedia', 'fandom')
             self.relog()
 
-    def search(self, search_term: str, title_list: List[str], limit: int=500):
+    def search(self, search_term: str, title_list: List[str], limit: int = 500):
         """
         Searches a specified list of titles for a given term.
         A replacement for Fandom's lack of insource search.
@@ -66,7 +66,7 @@ class FandomClient(WikiClient):
             if search_term in page.text:
                 print(page.name)
 
-    def search_namespace(self, search_term: str, namespace: Union[int, str], limit: int=500):
+    def search_namespace(self, search_term: str, namespace: Union[int, str], limit: int = 500):
         """
         Searches a specified namespace for a search term.
 
@@ -88,7 +88,7 @@ class FandomClient(WikiClient):
 
 
     # terraria
-    def get_wikis_from_str(self, wikis_str: str, log, delimiter=','):
+    def get_wikis_from_str(self, wikis_str: str, log, delimiter = ','):
         """Returns a list of wikis that is normalized and only includes valid (off-wiki) wikis.
 
         Parameters

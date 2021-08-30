@@ -19,7 +19,7 @@ COMMANDLOGFILE = '.cmdlog'
 WATCHLOGFILE = '.watchlog'
 
 
-def _make_logger(name: str='', handler: logging.Handler=None):
+def _make_logger(name: str = '', handler: logging.Handler = None):
     logger = logging.getLogger(name)
     if not logger.hasHandlers():
         # if the logger has handlers, then this function was already called for this logger.

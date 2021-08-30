@@ -5,8 +5,8 @@ class Namespace():
     capable of any operations.
     """
 
-    def __init__(self, id_number: int=None, name: str=None,
-        canonical_name: str=None, aliases: list=None):
+    def __init__(self, id_number: int = None, name: str = None,
+        canonical_name: str = None, aliases: list = None):
         self.id = id_number
         self.name = name
         self.canonical_name = canonical_name

@@ -25,6 +25,6 @@ def login_to_wiki(wikiname: str, logger: logging.Logger):
     logger.info(login_log)
 
     # connection was successful
-    loginstatus.status=ELoginStatus.LOGGED_IN
-    loginstatus.last_login=time.time()
+    loginstatus.status = ELoginStatus.LOGGED_IN
+    loginstatus.last_login = time.time()
     logincontrol.register_command()

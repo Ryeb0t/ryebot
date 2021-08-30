@@ -21,19 +21,19 @@ class CustomLoggingEventHandler(FileSystemEventHandler):
         logstr = f'[eventid {id(event)}] ' + logstr.format(what=what, src=event.src_path)
         self.logger.info(logstr)
 
-    def on_moved(self, event):
+    def on_moved(self, event: FileSystemEvent):
         super().on_moved(event)
         self.do_log("Moved {what}: from {src} to %s" % event.dest_path, event)
 
-    def on_created(self, event):
+    def on_created(self, event: FileSystemEvent):
         super().on_created(event)
         self.do_log("Created {what}: {src}", event)
 
-    def on_deleted(self, event):
+    def on_deleted(self, event: FileSystemEvent):
         super().on_deleted(event)
         self.do_log("Deleted {what}: {src}", event)
 
-    def on_modified(self, event):
+    def on_modified(self, event: FileSystemEvent):
         super().on_modified(event)
         logstr = "Modified {what}: {src} (new size %s)" % os.path.getsize(event.src_path)
         self.do_log(logstr, event)
@@ -44,7 +44,7 @@ class CustomEventHandler(CustomLoggingEventHandler):
         super().__init__(watchdog_logger)
         self.common_logger = common_logger
 
-    def on_modified(self, event):
+    def on_modified(self, event: FileSystemEvent):
         if os.path.basename(event.src_path) in (COMMONLOGFILE,
             COMMANDLOGFILE, WATCHLOGFILE, HEARTBEATFILE):
             # do not log modifications of the log files,

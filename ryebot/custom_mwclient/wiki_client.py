@@ -484,7 +484,7 @@ class WikiClient(object):
                     log(exc_info=True, s='Error message:\n')
                     return None
                 secs = api_result['parse']['sections']
-                if len(secs) == 0:
+                if not secs:
                     return None
                 anchor_str = secs[len(secs) - 1]['anchor']
 

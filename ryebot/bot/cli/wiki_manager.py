@@ -13,7 +13,7 @@ def display_wiki_list(only_show_count):
         return
 
     output_str = ''
-    if len(wikis) > 0:
+    if wikis:
         output_str = (f'The bot currently has access to the following {len(wikis)} wiki(s):\n'
             + '    '.join(wikis)
             + '\nUse "ryebot status" to review the bot\'s status in each wiki,'

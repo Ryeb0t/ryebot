@@ -20,7 +20,7 @@ class StatusDisplayer():
         self.unregistered_wikis = []
         self.requested_wikis = []
 
-        if len(requested_wikis) == 0:
+        if not requested_wikis:
             # no specific wiki requested, so display status for all
             self.requested_wikis = self.registered_wikis
         else:
@@ -33,7 +33,7 @@ class StatusDisplayer():
 
     def display(self):
 
-        if len(self.requested_wikis) == 0 and len(self.unregistered_wikis) == 0:
+        if not self.requested_wikis and not self.unregistered_wikis:
             click.echo('The bot currently has no access to any wikis. '
                 'Add one using "ryebot wiki add"!')
             return
@@ -78,7 +78,7 @@ class StatusDisplayer():
 
             statustable.rows.append([wiki, loginstatus, logincontrol, last_login])
 
-        if len(statustable.rows) > 0:
+        if statustable.rows:
             statustable.columns.header = ["WIKI", "STATUS", "CTRLCMD", "LASTLOGIN"]
             statustable.columns.alignment = BeautifulTable.ALIGN_LEFT
             statustable.columns.padding_right["WIKI"] = 3
@@ -87,7 +87,7 @@ class StatusDisplayer():
 
 
     def _make_output_string(self):
-        if len(self.unregistered_wikis) > 0:
+        if self.unregistered_wikis:
             self.unregistereds_str = '\n'.join((
                 'Could not display the status of the bot in the following wikis:',
                 '    '.join(self.unregistered_wikis),

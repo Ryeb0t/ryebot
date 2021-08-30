@@ -58,7 +58,7 @@ def ucfirst(string: str):
 
 def _change_first_case(string: str, upper: bool):
 
-    if len(string) == 0:
+    if not string:
         return ''
 
     if len(string) == 1:

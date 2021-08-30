@@ -144,7 +144,7 @@ def are_all_list_elements_equal(elemlist: list) -> bool:
     Return `True`/`False`, and `None` if the list is empty.
     """
 
-    if len(elemlist) == 0:
+    if not elemlist:
         return None
 
     check = elemlist[0]
@@ -186,7 +186,7 @@ def is_list_in_other_list(larger_list: list, smaller_list: list):
     if len(larger_list) < len(smaller_list):
         return None
 
-    if len(smaller_list) == 0:
+    if not smaller_list:
         return (larger_list, [])
 
     for startindex in range(0, len(larger_list)):

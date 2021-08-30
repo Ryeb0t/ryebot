@@ -1,10 +1,6 @@
-import os
-import shutil
-from pathlib import Path
-
 import click
 
-from ryebot.bot import PATHS
+from ryebot.bot.mgmt.add_and_remove import add_wiki, remove_wiki
 from ryebot.bot.mgmt.logincontrol import ELoginControlCommand, LoginControl
 from ryebot.bot.utils import get_local_wikis
 
@@ -34,11 +30,7 @@ def add_wiki(wikiname):
         click.echo(f'The bot already has access to the "{wikiname}" wiki!')
         return
 
-    # make new directory and standard files
-    new_wiki_directory = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wikiname))
-    os.makedirs(new_wiki_directory)
-    Path(os.path.join(new_wiki_directory, LOGINCONTROLFILE)).touch() # create the login control command file
-    Path(os.path.join(new_wiki_directory, LOGINSTATUSFILE)).touch() # create the login status file
+    add_wiki(wikiname)
     click.echo(f'Granted the bot access to the "{wikiname}" wiki!')
 
 
@@ -49,8 +41,7 @@ def remove_wiki(wikiname):
         click.echo(f'Cannot withdraw access from the "{wikiname}" wiki, because the bot currently does not have access to it.')
         return
 
-    # remove entire contents of the wiki subdirectory
-    shutil.rmtree(os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wikiname)))
+    remove_wiki(wikiname)
     click.echo(f'The bot now does not have access to the "{wikiname}" wiki any longer!')
 
 

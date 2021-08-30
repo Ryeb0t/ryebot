@@ -8,7 +8,6 @@ import sys
 
 def get_caller_module_name() -> str:
     """Return the name of the module that called this one."""
-
     frame = sys._getframe(1) # frame of the function calling this function
     base_module = frame.f_globals['__name__']
 
@@ -42,7 +41,6 @@ def import_constants(directory: str, filename: str = None) -> dict:
 
 def clear_screen():
     """Remove all text from the console."""
-
     if sys.platform == "win32":
         os.system('cls') or None
     elif sys.platform == "linux":
@@ -123,7 +121,6 @@ def list_files_wo_specific_extensions(extensions, directory):
 
 def remove_files(filelist: list, log):
     """Remove all files of the `filelist`."""
-
     for file in filelist:
         try:
             os.remove(file)
@@ -134,7 +131,6 @@ def remove_files(filelist: list, log):
 
 def remove_empty_directories(dirs):
     """Delete all subdirectories of `dirs` (recursively) that do not contain any files."""
-
     for direc in list(os.walk(dirs, False))[1:]: # topdown=False for bottom-up
         # example of direc: ('project\Gores', [], ['Gore_1.png'])
         if not direc[1] and not direc[2]:
@@ -244,7 +240,6 @@ def pstring_to_list(pstring, is_bytearray=False):
 
 def get_next_list_elem(elemlist: list, elem):
     """Return the element that immediately follows the specified one."""
-
     try:
         index = elemlist.index(elem)
     except ValueError:
@@ -327,7 +322,6 @@ def convert_file_encoding(filename: str, target_encoding: str):
 
 def get_dict_key_by_value(source_dict: dict, dict_value):
     """Return the first key of the `source_dict` that has the `dict_value` as value."""
-
     for k, v in source_dict.items():
         if v == dict_value:
             return k
@@ -371,7 +365,6 @@ def copytree_custom(src, dst, symlinks=False, ignore=None):
 
 def copytree_robocopy(src, dst):
     """Copy a tree, similarly to `shutil.copytree()`, using Windows's `robocopy` command."""
-
     if sys.platform != "win32":
         raise Exception('Attempting to use the Windows-exclusive "robocopy" command!')
 

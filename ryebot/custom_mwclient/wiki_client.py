@@ -137,7 +137,6 @@ class WikiClient(object):
     def pages_using(self, template, namespace: Optional[Union[int, str]]=None,
                     filterredir='all', limit=None, generator=True):
         """Return a list of `mwclient.page` objects that are transcluding the specified page."""
-
         if isinstance(namespace, str):
             namespace = self.get_ns_number(namespace)
         if ':' not in template:
@@ -672,7 +671,6 @@ class WikiClient(object):
 
     def get_current_wiki_user(self):
         """Returns the name of the currently logged in user."""
-
         api_result = self.client.api('query', meta='userinfo')
         wiki_user = api_result['query']['userinfo']['name']
         return wiki_user
@@ -680,7 +678,6 @@ class WikiClient(object):
 
     def get_csrf_token(self, log):
         """Get a CSRF token for a POST request."""
-
         try:
             api_result = self.client.api('query', meta='tokens')
         except Exception:

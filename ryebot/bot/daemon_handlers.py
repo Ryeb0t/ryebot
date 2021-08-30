@@ -25,7 +25,6 @@ class FileModifiedEventHandler():
 
     def handle(self):
         """Entry function, contains all methods for starting new processes."""
-
         # a file was modified, so the daemon is supposed to do something.
         # we use the following methods to find out what that is,
         # based on the file path, content, size, etc.

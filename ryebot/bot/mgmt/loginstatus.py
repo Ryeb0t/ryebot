@@ -56,7 +56,6 @@ class LoginStatus():
 
     def _modify_line(self, linenumber: int, new_linecontent: str):
         """Change the content of a line in the status file."""
-
         # read current lines in the file
         with open(self.statusfile) as f:
             lines = f.readlines()
@@ -77,7 +76,6 @@ class LoginStatus():
     @property
     def status(self):
         """Return the current login status, as an `ELoginStatus` value."""
-
         with open(self.statusfile) as f:
             try:
                 line = f.readline().strip() # first line in the file
@@ -91,14 +89,12 @@ class LoginStatus():
     @status.setter
     def status(self, value: ELoginStatus):
         """Set the "status" part of the login status file."""
-
         self._modify_line(0, str(value.value) + '\n')
 
 
     @property
     def last_login(self):
         """Return the time of last login, as a float value."""
-
         with open(self.statusfile) as f:
             try:
                 f.readline()
@@ -113,14 +109,12 @@ class LoginStatus():
     @last_login.setter
     def last_login(self, value: float):
         """Set the "last_login" part of the login status file."""
-
         self._modify_line(1, str(value) + '\n')
 
 
     @property
     def last_logout(self):
         """Return the time of last logout, as a float value."""
-
         with open(self.statusfile) as f:
             try:
                 f.readline()
@@ -136,14 +130,12 @@ class LoginStatus():
     @last_logout.setter
     def last_logout(self, value: float):
         """Set the "last_logout" part of the login status file."""
-
         self._modify_line(2, str(value))
 
 
     @property
     def all_info(self):
         """Return a tuple of the current status and the time of last login and logout."""
-
         all_info = []
 
         with open(self.statusfile) as f:

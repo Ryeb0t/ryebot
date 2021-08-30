@@ -3,13 +3,11 @@ import time
 
 def start_timecount() -> float:
     """Return the current time."""
-
     return time.time()
 
 
 def end_timecount(start_time: int) -> str:
     """Return a string of the time passed since the `start_time`."""
-
     micros_start = start_time * 1000000
     micros_end = time.time() * 1000000
     delta = datetime.timedelta(microseconds=micros_end - micros_start)
@@ -34,7 +32,6 @@ def stdtimeformat_file(use_localtime: bool = True):
 
 def stdtimeformat_file_from_secs(secs: int):
     """Convert the specified `secs` to a standard time format to be used in file names."""
-
     return time.strftime(stdtimeformat_file_str(), time.gmtime(secs))
 
 def stdtimeformat_file_str():

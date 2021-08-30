@@ -75,7 +75,6 @@ class LoginControl():
     @property
     def command(self):
         """Return the content of the login control file, as an `ELoginControlCommand` value."""
-
         # parse the size of the file
         filesize = os.stat(self.controlfile).st_size
         try:

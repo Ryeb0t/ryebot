@@ -110,12 +110,12 @@ class FileModifiedEventHandler():
                     'The ping checker is currently not running normally '
                     f'(check result: "{check_result}"), so leaving it be.'
                 )
-            except PidFileAlreadyRunningError as e:
+            except PidFileAlreadyRunningError as err:
                 # process is running normally, so we can terminate it without problems.
                 # conveniently, the error object has an attribute with the PID
                 # stored in the PID file
-                psutil.Process(e.pid).terminate()
+                psutil.Process(err.pid).terminate()
                 self.logger.info(
                     'Terminated the ping checker process successfully '
-                    f'(PID was {e.pid}).'
+                    f'(PID was {err.pid}).'
                 )

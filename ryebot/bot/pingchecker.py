@@ -40,12 +40,12 @@ def pingcheck(wikiname: str, logger: logging.Logger):
         # login to wiki
         try:
             site, login_log = login(wikiname, return_log=True)
-        except Exception as e:
+        except Exception as err:
             logger.info(
                 f'Failed to login to the "{wikiname}" wiki in order to'
                 'start the pingchecker.'
             )
-            raise e
+            raise err
 
         logger.info(login_log)
         logger.info(f'Started pingchecker on the "{wikiname}" wiki.')

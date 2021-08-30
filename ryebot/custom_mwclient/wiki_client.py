@@ -266,9 +266,9 @@ class WikiClient(object):
         patrol_token = self.client.get_token('patrol')
         try:
             self.client.api('patrol', revid=revid, rcid=rcid, **kwargs, token=patrol_token)
-        except APIError as e:
-            if e.code == 'nosuchrevid' or e.code == 'nosuchrcid':
-                raise PatrolRevisionInvalid from e
+        except APIError as err:
+            if err.code == 'nosuchrevid' or err.code == 'nosuchrcid':
+                raise PatrolRevisionInvalid from err
             self._retry_login_action(
                 self._retry_patrol, 'patrol', revid=revid,
                 rcid=rcid, token=patrol_token, **kwargs
@@ -373,15 +373,15 @@ class WikiClient(object):
                 new_title, reason=reason, move_talk=move_talk, no_redirect=no_redirect,
                 move_subpages=move_subpages, ignore_warnings=ignore_warnings
             )
-        except APIError as e:
-            if e.code == 'badtoken':
+        except APIError as err:
+            if err.code == 'badtoken':
                 self._retry_login_action(
                     self._retry_move, 'move', page=page, new_title=new_title,
                     reason=reason, move_talk=move_talk, no_redirect=no_redirect,
                     move_subpages=move_subpages, ignore_warnings=ignore_warnings
                 )
             else:
-                raise e
+                raise err
 
     def _retry_move(self, **kwargs):
         old_page: Page = kwargs.pop('page')
@@ -421,9 +421,9 @@ class WikiClient(object):
                 f(**kwargs)
                 was_successful = True
                 break
-            except self.write_errors as e:
-                if isinstance(e, APIError):
-                    codes.append(e.code)
+            except self.write_errors as err:
+                if isinstance(err, APIError):
+                    codes.append(err.code)
                 continue
         if not was_successful:
             raise RetriedLoginAndStillFailed(failure_type, codes)

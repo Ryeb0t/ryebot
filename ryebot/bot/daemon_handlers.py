@@ -5,9 +5,8 @@ from pid import PidFile, PidFileAlreadyRunningError
 import psutil
 
 from ryebot.bot import PATHS
-from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, LOGINSTATUSFILE
-from ryebot.bot.logincontrol import ELoginControlCommand, LoginControl
-from ryebot.bot.loginstatus import ELoginStatus, LoginStatus
+from ryebot.bot.mgmt.logincontrol import ELoginControlCommand, LoginControl, LOGINCONTROLFILE
+from ryebot.bot.mgmt.loginstatus import ELoginStatus, LoginStatus, LOGINSTATUSFILE
 from ryebot.bot.pingchecker import PIDFILE
 from ryebot.bot.utils import get_wiki_directory_from_name, get_wiki_directory_from_path, get_wiki_name_from_directory
 

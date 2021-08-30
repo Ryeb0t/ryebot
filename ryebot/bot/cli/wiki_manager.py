@@ -5,21 +5,8 @@ from pathlib import Path
 import click
 
 from ryebot.bot import PATHS
-from ryebot.bot.logincontrol import ELoginControlCommand, LoginControl
-
-
-# Name of the file that contains the command for the daemon.
-# This file is empty if there is currently no command to login
-# or logout. It contains a single byte if the daemon should login
-# and two bytes if the daemon should logout.
-LOGINCONTROLFILE = '.login.control'
-
-# Name of the file that holds the login status for the wiki.
-# This file contains three lines: 1) the status (0 - logged out,
-# 1 - logging in, 2 - logged in), 2) the time of the last successful
-# login, and 3) the time of the last logout. Both times are in
-# seconds since the Unix epoch.
-LOGINSTATUSFILE = '.login.status'
+from ryebot.bot.mgmt.logincontrol import ELoginControlCommand, LoginControl
+from ryebot.bot.utils import get_local_wikis
 
 
 def display_wiki_list(only_show_count):

@@ -4,7 +4,15 @@ from pathlib import Path
 import time
 
 from ryebot.bot import PATHS
-from ryebot.bot.cli.wiki_manager import LOGINSTATUSFILE, get_wiki_directory_from_name
+from ryebot.bot.utils import get_wiki_directory_from_name
+
+
+# Name of the file that holds the login status for the wiki.
+# This file contains three lines: 1) the status (0 - logged out,
+# 1 - logging in, 2 - logged in), 2) the time of the last successful
+# login, and 3) the time of the last logout. Both times are in
+# seconds since the Unix epoch.
+LOGINSTATUSFILE = '.login.status'
 
 
 class ELoginStatus(Enum):

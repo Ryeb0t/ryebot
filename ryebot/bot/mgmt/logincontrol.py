@@ -3,7 +3,14 @@ from enum import Enum
 from pathlib import Path
 
 from ryebot.bot import PATHS
-from ryebot.bot.cli.wiki_manager import LOGINCONTROLFILE, get_wiki_directory_from_name
+from ryebot.bot.utils import get_wiki_directory_from_name
+
+
+# Name of the file that contains the command for the daemon.
+# This file is empty if there is currently no command to login
+# or logout. It contains a single byte if the daemon should login
+# and two bytes if the daemon should logout.
+LOGINCONTROLFILE = '.login.control'
 
 
 class ELoginControlCommand(Enum):

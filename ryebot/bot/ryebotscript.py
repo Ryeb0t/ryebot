@@ -24,12 +24,12 @@ def main():
         # import script and run it
         # special scripts:
         if scriptname == '_login':
-            from ryebot.bot.login_and_logout import login_to_wiki
+            from ryebot.bot.mgmt.login_and_logout import login_to_wiki
             login_to_wiki(wikiname, logger)
         elif scriptname == '_pingchecker':
             from ryebot.bot.pingchecker import pingcheck
             pingcheck(wikiname, logger)
-        
+
         # common scripts:
         else:
             scriptmodule = importlib.import_module(scriptname)

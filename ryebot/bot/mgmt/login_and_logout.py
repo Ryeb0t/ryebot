@@ -1,8 +1,8 @@
 import logging
 import time
 
-from ryebot.bot.logincontrol import LoginControl
-from ryebot.bot.loginstatus import ELoginStatus, LoginStatus
+from ryebot.bot.mgmt.logincontrol import LoginControl
+from ryebot.bot.mgmt.loginstatus import ELoginStatus, LoginStatus
 from ryebot.custom_utils.wiki_util import login_to_wiki as login
 
 

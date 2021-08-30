@@ -2,11 +2,10 @@ from typing import Union, List
 
 from mwclient import InvalidResponse
 
-from custom_utils.string_util import str_to_list
-
 from .auth_credentials import AuthCredentials
 from .site import Site
 from .wiki_client import WikiClient
+from custom_utils.string_util import str_to_list
 
 
 class FandomClient(WikiClient):
@@ -16,8 +15,8 @@ class FandomClient(WikiClient):
     client: Site = None
     wiki: str = None
 
-    def __init__(self, wiki: str, client: Site = None,
-        credentials: AuthCredentials = None, lang: str = None, **kwargs):
+    def __init__(self, wiki: str, client: Site = None, lang: str = None,
+                 credentials: AuthCredentials = None, **kwargs):
         """
         Create a site object.
         :param wiki: Name of a wiki
@@ -28,8 +27,10 @@ class FandomClient(WikiClient):
 
         url = '{}.fandom.com'.format(wiki)
         self.lang = '/' + ('' if lang is None else lang + '/')
-        super().__init__(url=url, path=self.lang, credentials=credentials,
-            client=client, **kwargs)
+        super().__init__(
+            url=url, path=self.lang, credentials=credentials,
+            client=client, **kwargs
+        )
 
     def relog(self):
         super().relog()
@@ -38,8 +39,10 @@ class FandomClient(WikiClient):
         if self.credentials is None:
             return
         try:
-            self.client.login(username=self.credentials.username,
-                password=self.credentials.password)
+            self.client.login(
+                username=self.credentials.username,
+                password=self.credentials.password
+            )
         except InvalidResponse:
             self.url = self.url.replace('gamepedia', 'fandom')
             self.relog()
@@ -79,16 +82,18 @@ class FandomClient(WikiClient):
         """
         if isinstance(namespace, str):
             namespace = self.get_ns_number(namespace)
-        self.search(search_term,
+        self.search(
+            search_term,
             self.client.allpages(namespace=namespace, generator=False),
-            limit=limit)
+            limit=limit
+        )
 
 
     ##### Wiki-specific functions
 
 
     # terraria
-    def get_wikis_from_str(self, wikis_str: str, log, delimiter = ','):
+    def get_wikis_from_str(self, wikis_str: str, log, delimiter=','):
         """Returns a list of wikis that is normalized and only includes valid (off-wiki) wikis.
 
         Parameters

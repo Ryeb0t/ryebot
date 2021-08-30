@@ -1,5 +1,5 @@
-import os
 from enum import Enum
+import os
 from pathlib import Path
 
 from ryebot.bot import PATHS
@@ -42,8 +42,11 @@ class LoginStatus():
         if file:
             self.statusfile = file
         elif wiki:
-            self.statusfile = os.path.join(PATHS['wikis'],
-                *get_wiki_directory_from_name(wiki), LOGINSTATUSFILE)
+            self.statusfile = os.path.join(
+                PATHS['wikis'],
+                *get_wiki_directory_from_name(wiki),
+                LOGINSTATUSFILE
+            )
         else:
             raise ValueError('LoginStatus requires either a wiki name or a file name!')
 
@@ -59,7 +62,8 @@ class LoginStatus():
             lines = f.readlines()
 
         for _ in range(3-len(lines)):
-            # if the file has fewer than three lines, then append the missing number of lines
+            # if the file has fewer than three lines,
+            # then append the missing number of lines
             lines.append('\n')
 
         # modify the relevant line

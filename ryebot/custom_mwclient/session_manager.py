@@ -9,7 +9,7 @@ class SessionManager():
     existing_wikis = {}
 
     def get_client(self, url: str = None, path: str = None, scheme: str = None,
-        credentials: AuthCredentials = None, force_new=False, **kwargs):
+                   credentials: AuthCredentials = None, force_new=False, **kwargs):
         if url in self.existing_wikis and not force_new:
             return self.existing_wikis[url]['client']
         if scheme is not None:

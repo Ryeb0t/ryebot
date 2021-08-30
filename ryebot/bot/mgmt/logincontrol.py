@@ -1,5 +1,5 @@
-import os
 from enum import Enum
+import os
 from pathlib import Path
 
 from ryebot.bot import PATHS
@@ -50,8 +50,11 @@ class LoginControl():
         if file:
             self.controlfile = file
         elif wiki:
-            self.controlfile = os.path.join(PATHS['wikis'],
-                *get_wiki_directory_from_name(wiki), LOGINCONTROLFILE)
+            self.controlfile = os.path.join(
+                PATHS['wikis'],
+                *get_wiki_directory_from_name(wiki),
+                LOGINCONTROLFILE
+            )
         else:
             raise ValueError('LoginControl requires either a wiki name or a file name!')
 

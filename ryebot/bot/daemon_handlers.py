@@ -8,8 +8,11 @@ from ryebot.bot import PATHS
 from ryebot.bot.mgmt.logincontrol import ELoginControlCommand, LoginControl, LOGINCONTROLFILE
 from ryebot.bot.mgmt.loginstatus import ELoginStatus, LoginStatus, LOGINSTATUSFILE
 from ryebot.bot.pingchecker import PIDFILE
-from ryebot.bot.utils import (get_wiki_directory_from_name,
-    get_wiki_directory_from_path, get_wiki_name_from_directory)
+from ryebot.bot.utils import (
+    get_wiki_directory_from_name,
+    get_wiki_directory_from_path,
+    get_wiki_name_from_directory
+)
 
 
 class FileModifiedEventHandler():
@@ -82,7 +85,8 @@ class FileModifiedEventHandler():
         wikiname = get_wiki_name_from_directory(wikidir, wikisubdir)
         logstr = '{action} the pingchecker on the "{wiki}" wiki.'.format(
             action="Starting" if loginstatus == ELoginStatus.LOGGED_IN else "Stopping",
-            wiki=wikiname)
+            wiki=wikiname
+        )
         self.logger.info(logstr)
 
         if loginstatus == ELoginStatus.LOGGED_IN:
@@ -91,8 +95,10 @@ class FileModifiedEventHandler():
             script_file = os.path.join(PATHS['package'], 'bot', 'ryebotscript.py')
             wikidirectory = os.path.join(PATHS['wikis'], wikidir, wikisubdir)
             p = psutil.Popen([python_command, script_file, '_pingchecker'], cwd=wikidirectory)
-            self.logger.info(f'Started new Python process with PID {p.pid}'
-                'for starting the pingchecker.')
+            self.logger.info(
+                f'Started new Python process with PID {p.pid}'
+                'for starting the pingchecker.'
+            )
         else:
             # stop the pingchecker
             pidfiledir = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wikiname))
@@ -100,12 +106,16 @@ class FileModifiedEventHandler():
                 check_result = PidFile(pidname=PIDFILE, piddir=pidfiledir).check()
                 # if the check() method succeeded without an error, then the process
                 # is currently not running normally, so there's no need to terminate it
-                self.logger.info('The ping checker is currently not running '
-                    f'normally (check result: "{check_result}"), so leaving it be.')
+                self.logger.info(
+                    'The ping checker is currently not running normally '
+                    f'(check result: "{check_result}"), so leaving it be.'
+                )
             except PidFileAlreadyRunningError as e:
                 # process is running normally, so we can terminate it without problems.
                 # conveniently, the error object has an attribute with the PID
                 # stored in the PID file
                 psutil.Process(e.pid).terminate()
-                self.logger.info('Terminated the ping checker process successfully '
-                    f'(PID was {e.pid}).')
+                self.logger.info(
+                    'Terminated the ping checker process successfully '
+                    f'(PID was {e.pid}).'
+                )

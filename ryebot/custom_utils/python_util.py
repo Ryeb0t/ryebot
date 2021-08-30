@@ -5,6 +5,7 @@ import shutil
 import stat
 import sys
 
+
 def get_caller_module_name() -> str:
     """Return the name of the module that called this one."""
 
@@ -77,7 +78,8 @@ def get_files_list(directory: str, modname: str, ext: str = 'cs'):
     return files_list
 
 
-def list_files_w_wo_specific_extensions(without: bool, extensions: list, directory: str) -> list:
+def list_files_w_wo_specific_extensions(without: bool, extensions: list,
+                                        directory: str) -> list:
     """Returns a list of all files with or without a number extensions.
 
     Parameters
@@ -96,7 +98,9 @@ def list_files_w_wo_specific_extensions(without: bool, extensions: list, directo
     for root, dirs, files in os.walk(directory):
         for f in files:
             ext = os.path.splitext(f)[1]
-            if (without and ext not in extensions) or (not without and ext in extensions):
+            with_ext = not without and ext in extensions
+            without_ext = without and ext not in extensions
+            if with_ext or without_ext:
                 fileslist.append(os.path.join(root, f))
     return fileslist
 
@@ -124,7 +128,7 @@ def remove_files(filelist: list, log):
         try:
             os.remove(file)
         except (IsADirectoryError, FileNotFoundError):
-            log("Error while deleting the file \"{}\"! Skipped it.".format(file))
+            log('Error while deleting the file "{}"! Skipped it.'.format(file))
             log(exc_info=True, s='Error message:\n')
 
 
@@ -304,7 +308,8 @@ def convert_file_encoding(filename: str, target_encoding: str):
         logstr = f'The file "{filename}" was already encoded with "{target_encoding}".'
         return (False, logstr)
 
-    # take the content of the file into memory (we're not expecting to be handling very large files)
+    # take the content of the file into memory
+    # (we're not expecting to be handling very large files)
     with open(filename, 'r', encoding=src_encoding) as f:
         filetext = f.read()
 

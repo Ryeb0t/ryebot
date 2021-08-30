@@ -28,8 +28,8 @@ class RetriedLoginAndStillFailed(AssertUserFailedError):
         self.codes = codes
 
     def __str__(self):
-        return "Tried to re-login but still failed. Attempted action: {}, codes: {}".format(
-            self.action, ', '.join(self.codes))
+        msg = "Tried to re-login but still failed. Attempted action: {}, codes: {}"
+        return msg.format(self.action, ', '.join(self.codes))
 
 
 class InvalidNamespaceName(KeyError):

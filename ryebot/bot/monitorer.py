@@ -45,14 +45,15 @@ class CustomEventHandler(CustomLoggingEventHandler):
         self.common_logger = common_logger
 
     def on_modified(self, event: FileSystemEvent):
-        if os.path.basename(event.src_path) in (COMMONLOGFILE,
-            COMMANDLOGFILE, WATCHLOGFILE, HEARTBEATFILE):
+        logfiles = (COMMONLOGFILE, COMMANDLOGFILE, WATCHLOGFILE, HEARTBEATFILE)
+        if os.path.basename(event.src_path) in logfiles:
             # do not log modifications of the log files,
             # partly to prevent an infinite logging loop
             return
         if event.src_path == PATHS['localdata']:
-            # do not log modifications of the localdata directory, because these are likely
-            # caused by the loggers (also the heartbeat in particular) and have little meaning
+            # do not log modifications of the localdata directory, because
+            # these are likely caused by the loggers (also the heartbeat in
+            # particular) and have little meaning
             return
         super().on_modified(event) # log standard "Modified ..." message
         if not event.is_directory:
@@ -68,6 +69,8 @@ def start_monitoring(watchdog_logger, common_logger):
     observer.schedule(CustomEventHandler(watchdog_logger, common_logger),
         monitored_directory, recursive=True)
 
-    watchdog_logger.info(f'Now listening to all changes to the "{monitored_directory}" '
-        'directory and its subdirectories, recursively.')
+    watchdog_logger.info(
+        f'Now listening to all changes to the "{monitored_directory}" '
+        'directory and its subdirectories, recursively.'
+    )
     observer.start()

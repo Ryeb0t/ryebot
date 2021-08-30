@@ -40,8 +40,10 @@ def get_wiki_directory_from_name(wikiname: str):
         basedirname = wikiname
         subdirname = 'MAIN'
     else:
-        raise ValueError(f'Wiki name "{wikiname}" contains more than one slash; '
-            'expected is one or no slash!')
+        raise ValueError(
+            f'Wiki name "{wikiname}" contains more than one slash; '
+            'expected is one or no slash!'
+        )
     return (basedirname, subdirname)
 
 

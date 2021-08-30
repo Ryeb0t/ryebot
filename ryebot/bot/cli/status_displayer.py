@@ -1,7 +1,7 @@
 import time
 
-import click
 from beautifultable import BeautifulTable
+import click
 
 from ryebot.bot.utils import get_local_wikis
 from ryebot.bot.mgmt.logincontrol import ELoginControlCommand, LoginControl
@@ -34,8 +34,10 @@ class StatusDisplayer():
     def display(self):
 
         if not self.requested_wikis and not self.unregistered_wikis:
-            click.echo('The bot currently has no access to any wikis. '
-                'Add one using "ryebot wiki add"!')
+            click.echo(
+                'The bot currently has no access to any wikis. '
+                'Add one using "ryebot wiki add"!'
+            )
             return
 
         self._get_statuses()
@@ -92,7 +94,7 @@ class StatusDisplayer():
                 'Could not display the status of the bot in the following wikis:',
                 '    '.join(self.unregistered_wikis),
                 'This is because the bot does not have access to those wikis. '
-                'You can grant access using "ryebot wiki add".'
+                    'You can grant access using "ryebot wiki add".'
             ))
 
         if self.status_str == '' and self.unregistereds_str != '':

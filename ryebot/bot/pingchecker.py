@@ -5,7 +5,8 @@ import time
 from pid import PidFile
 
 from ryebot.bot import PATHS
-from ryebot.bot.utils import get_login_time, get_wiki_directory_from_name
+from ryebot.bot.mgmt.loginstatus import LoginStatus
+from ryebot.bot.utils import get_wiki_directory_from_name
 from ryebot.custom_utils.time_util import format_secs
 from ryebot.custom_utils.wiki_util import login_to_wiki as login
 from ryebot.custom_mwclient.fandom_client import FandomClient
@@ -47,7 +48,7 @@ def pingcheck(wikiname: str, logger: logging.Logger):
         initial_pingpage_text = site.client.pages[pingpage_name].text()
 
         # get time of formal login to wiki, for the ping responses
-        startuptime = get_login_time(wikiname)
+        startuptime = LoginStatus(wiki=wikiname).last_login
         if not startuptime:
             startuptime = '(unknown)'
         else:

@@ -1,20 +1,19 @@
 import datetime
 import time
-import logging
-
-from mwclient.page import Page
-from mwclient.errors import AssertUserFailedError
-from mwclient.errors import APIError
-from mwclient.errors import ProtectedPageError
-from requests.exceptions import ReadTimeout
 from typing import Optional, Union, List, Dict
+
+from requests.exceptions import ReadTimeout
+
 import mwparserfromhell
+from mwclient.errors import APIError, AssertUserFailedError, ProtectedPageError
+from mwclient.page import Page
 
 from custom_mwclient.models.simple_page import SimplePage
 from custom_mwclient.models.namespace import Namespace
 
 from .auth_credentials import AuthCredentials
-from .errors import RetriedLoginAndStillFailed, InvalidNamespaceName, PatrolRevisionNotSpecified, PatrolRevisionInvalid
+from .errors import (RetriedLoginAndStillFailed, InvalidNamespaceName,
+    PatrolRevisionNotSpecified, PatrolRevisionInvalid)
 from .session_manager import session_manager
 from .site import Site
 
@@ -30,7 +29,8 @@ class WikiClient(object):
     client = None
     write_errors = (AssertUserFailedError, ReadTimeout, APIError)
 
-    def __init__(self, url: str, path='/', credentials: AuthCredentials = None, client: Site = None, max_retries=3, retry_interval=10, **kwargs):
+    def __init__(self, url: str, path='/', credentials: AuthCredentials=None,
+        client: Site=None, max_retries=3, retry_interval=10, **kwargs):
         self.scheme = None
         if 'http://' in url:
             self.scheme = 'http'
@@ -60,20 +60,23 @@ class WikiClient(object):
             self.client = client
             return
 
-        self.client = session_manager.get_client(url=url, path=path, scheme=self.scheme, credentials=credentials, **kwargs)
+        self.client = session_manager.get_client(url=url, path=path,
+            scheme=self.scheme, credentials=credentials, **kwargs)
 
 
     def login(self):
         """Login to the wiki."""
         if self.credentials is None:
             return
-        self.client.login(username=self.credentials.username, password=self.credentials.password)
+        self.client.login(username=self.credentials.username,
+            password=self.credentials.password)
 
 
     def relog(self):
         """Completely discards pre-existing session and creates a new site object."""
         # The session manager will log in for us too
-        self.client = session_manager.get_client(url=self.url, path=self.path, credentials=self.credentials, **self.kwargs, force_new=True)
+        self.client = session_manager.get_client(url=self.url, path=self.path,
+            credentials=self.credentials, **self.kwargs, force_new=True)
 
     @property
     def namespaces(self):
@@ -122,8 +125,9 @@ class WikiClient(object):
             raise InvalidNamespaceName
         return ns_obj.id
 
-    def pages_using(self, template, namespace: Optional[Union[int, str]] = None, filterredir='all', limit=None, generator=True):
-        """Return a list of ``mwclient.page`` objects that are transcluding the specified page."""
+    def pages_using(self, template, namespace: Optional[Union[int, str]]=None,
+        filterredir='all', limit=None, generator=True):
+        """Return a list of `mwclient.page` objects that are transcluding the specified page."""
 
         if isinstance(namespace, str):
             namespace = self.get_ns_number(namespace)
@@ -133,9 +137,11 @@ class WikiClient(object):
             title = template[1:]
         else:
             title = template
-        return self.client.pages[title].embeddedin(namespace=namespace, filterredir=filterredir, limit=limit, generator=generator)
+        return self.client.pages[title].embeddedin(namespace=namespace,
+            filterredir=filterredir, limit=limit, generator=generator)
 
-    def recentchanges_by_interval(self, minutes, offset=0, prop='title|ids|tags|user|patrolled', **kwargs):
+    def recentchanges_by_interval(self, minutes, offset=0,
+        prop='title|ids|tags|user|patrolled', **kwargs):
         now = datetime.datetime.utcnow() - datetime.timedelta(minutes=offset)
         then = now - datetime.timedelta(minutes=minutes)
         result = self.client.recentchanges(
@@ -165,7 +171,7 @@ class WikiClient(object):
         ----------
         1. name : str
             - The name of the redirect page.
-        
+
         Returns
         -------
         - The name of the target page of the redirect.
@@ -188,14 +194,14 @@ class WikiClient(object):
         ret = []
         titles_paginated.append(paginated_element)
         for query in titles_paginated:
-            result = self.client.api('query', prop='revisions', titles='|'.join(query), rvprop='content',
-                                     rvslots='main')
+            result = self.client.api('query', prop='revisions',
+                titles='|'.join(query), rvprop='content', rvslots='main')
             unsorted_pages = []
             for pageid in result['query']['pages']:
                 row = result['query']['pages'][pageid]
                 name = row['title']
                 text = row['revisions'][0]['slots']['main']['*'] if row.get('revisions') else ''
-                exists = True if row.get('revisions') else False
+                exists = bool(row.get('revisions'))
                 unsorted_pages.append(SimplePage(name=name, text=text, exists=exists))
 
             # de-alphabetize & sort according to our initial order
@@ -213,16 +219,16 @@ class WikiClient(object):
                 # and have it be in the right order.
                 if ':' in title:
                     p = title.index(':')
-                    ns_ucfirst_title = title[0].upper() + title[1:p + 1] + title[p + 1].upper() + title[p + 2:]
-                    if not any([ns_ucfirst_title in q for q in titles_paginated]):
+                    ns_ucfirst_title = (title[0].upper() + title[1:p + 1]
+                        + title[p + 1].upper() + title[p + 2:])
+                    if not any(ns_ucfirst_title in q for q in titles_paginated):
                         capitalization_corrected_query.append(ns_ucfirst_title)
             unsorted_pages.sort(key=lambda x: capitalization_corrected_query.index(x.name))
             ret += unsorted_pages
         return ret
 
-    def logs_by_interval(self, minutes, offset=0,
-                         lelimit="max",
-                         leprop='details|type|title|tags', **kwargs):
+    def logs_by_interval(self, minutes, offset=0, lelimit="max",
+        leprop='details|type|title|tags', **kwargs):
         now = datetime.datetime.utcnow() - datetime.timedelta(minutes=offset)
         then = now - datetime.timedelta(minutes=minutes)
         logs = self.client.api('query', format='json',
@@ -244,7 +250,7 @@ class WikiClient(object):
             self.client.api('patrol', revid=revid, rcid=rcid, **kwargs, token=patrol_token)
         except APIError as e:
             if e.code == 'nosuchrevid' or e.code == 'nosuchrcid':
-                raise PatrolRevisionInvalid
+                raise PatrolRevisionInvalid from e
             self._retry_login_action(self._retry_patrol, 'patrol',
                                      revid=revid, rcid=rcid, token=patrol_token, **kwargs)
 
@@ -258,7 +264,8 @@ class WikiClient(object):
         self.client.api('patrol', revid=revid, rcid=rcid, token=token, **kwargs)
 
 
-    def save(self, page: Page, text, summary=u'', minor=False, bot=True, section=None, log=None, **kwargs):
+    def save(self, page: Page, text, summary='', minor=False, bot=True,
+        section=None, log=None, **kwargs):
         """Performs a page edit, retrying the login once if the edit fails due to the user being logged out.
 
         This function hopefully makes it easy to workaround the lag and frequent login timeouts
@@ -279,8 +286,9 @@ class WikiClient(object):
             else:
                 raise
         except self.write_errors:
-            self._retry_login_action(self._retry_save, 'edit', page=page, text=text, summary=summary, minor=minor,
-                                     bot=bot, section=section, log=log, **kwargs)
+            self._retry_login_action(self._retry_save, 'edit', page=page,
+                text=text, summary=summary, minor=minor, bot=bot,
+                section=section, log=log, **kwargs)
 
     def _retry_save(self, **kwargs):
         old_page: Page = kwargs.pop('page')
@@ -292,11 +300,11 @@ class WikiClient(object):
             page.edit(text, **kwargs)
         except ProtectedPageError:
             if log:
-                log(exc_info=True, s='Error while saving page {}: Page is protected!'.format(page.name))
+                log(exc_info=True, s=f'Error while saving page {page.name}: Page is protected!')
             else:
                 raise
 
-    def touch(self, page: Page, summary: str = u''):
+    def touch(self, page: Page, summary: str=''):
         """Perform a null-edit on the page.
 
         The summary will be used in case of edit conflicts, i.e.
@@ -338,9 +346,10 @@ class WikiClient(object):
                       move_subpages=move_subpages, ignore_warnings=ignore_warnings)
         except APIError as e:
             if e.code == 'badtoken':
-                self._retry_login_action(self._retry_move, 'move', page=page, new_title=new_title,
-                                         reason=reason, move_talk=move_talk, no_redirect=no_redirect,
-                                         move_subpages=move_subpages, ignore_warnings=ignore_warnings)
+                self._retry_login_action(self._retry_move, 'move', page=page,
+                    new_title=new_title, reason=reason, move_talk=move_talk,
+                    no_redirect=no_redirect, move_subpages=move_subpages,
+                    ignore_warnings=ignore_warnings)
             else:
                 raise e
 
@@ -357,8 +366,8 @@ class WikiClient(object):
             page.delete(reason=reason, watch=watch, unwatch=unwatch, oldimage=oldimage)
         except APIError as e:
             if e.code == 'badtoken':
-                self._retry_login_action(self._retry_delete, 'delete', page=page, reason=reason,
-                                         watch=watch, unwatch=unwatch, oldimage=oldimage)
+                self._retry_login_action(self._retry_delete, 'delete', page=page,
+                    reason=reason, watch=watch, unwatch=unwatch, oldimage=oldimage)
             else:
                 raise e
 
@@ -387,7 +396,8 @@ class WikiClient(object):
         if not was_successful:
             raise RetriedLoginAndStillFailed(failure_type, codes)
 
-    def save_title(self, title: str, text, summary=None, minor=False, bot=True, section=None, **kwargs):
+    def save_title(self, title: str, text, summary=None, minor=False,
+        bot=True, section=None, **kwargs):
         self.save(self.client.pages[title], text,
                   summary=summary, minor=minor, bot=bot, section=section, **kwargs)
 
@@ -400,7 +410,8 @@ class WikiClient(object):
             - The name of the page to get the revision for.
         """
         try:
-            api_result = self.client.api('query', prop='revisions', titles=page.name, rvlimit=1) # https://terraria.gamepedia.com/api.php?action=query&prop=revisions&titles=User:Rye_Greenwood/Sandbox&rvlimit=1
+            api_result = self.client.api('query', prop='revisions',
+                titles=page.name, rvlimit=1)
         except KeyboardInterrupt:
             raise
         except:
@@ -409,28 +420,33 @@ class WikiClient(object):
             return None
         page_ids = api_result['query']['pages']
         page_id = -1
-        for id in page_ids:
-            page_id = id
+        for p_id in page_ids:
+            page_id = p_id
         try:
             rev = page_ids[page_id]['revisions'][0][query]
-        except KeyError: # specified key doesn't exist, either because of invalid "query" arg or nonexistent page
+        except KeyError:
+            # specified key doesn't exist, either because of invalid
+            # "query" arg or nonexistent page
             rev = None
 
-        # rev = [revision for revision in page.revisions(limit=1, prop='ids')][0]['revid'] # this is a shorter alternative, but much much slower, since the limit=1 isn't recognized for some reason, and instead all revs are gathered
+        # this is a shorter alternative, but much much slower, since the limit=1 isn't
+        # recognized for some reason, and instead all revs are gathered
+        # rev = [revision for revision in page.revisions(limit=1, prop='ids')][0]['revid']
         return rev
 
 
-    def get_last_section(self, page: Page, log, output_as_Wikicode=False, strip=True, anchor=False):
+    def get_last_section(self, page: Page, log, output_as_wikicode=False,
+        strip=True, anchor=False):
         """Get the heading and wikitext of the last section of the given page.
 
         Parameters
         ----------
         1. page : mwclient.Page
             - The name of the page to get the section from.
-        2. output_as_Wikicode : bool
+        2. output_as_wikicode : bool
             - Whether to return the output as a Wikicode object instead of a string.
         3. strip : bool
-            - Whether to trim the output (only valid if not output_as_Wikicode).
+            - Whether to trim the output (only valid if not `output_as_wikicode`).
         4. anchor : bool
             - Whether to include the anchor of the heading in the output.
 
@@ -480,7 +496,7 @@ class WikiClient(object):
             content = lastsec
 
             # Format:
-            if not output_as_Wikicode:
+            if not output_as_wikicode:
                 content = str(content)
                 heading = str(heading)
                 if strip:
@@ -494,7 +510,8 @@ class WikiClient(object):
         return result
 
 
-    def find_summmary_in_revs(self, page: Page, summary: str, log, user='Ryebot', limit=5, for_undo=False):
+    def find_summmary_in_revs(self, page: Page, summary: str, log,
+        user='Ryebot', limit=5, for_undo=False):
         """Get the revision ID of a revision with a specified summary from the specified user in a specified number of last revisions.
 
         Parameters
@@ -507,17 +524,18 @@ class WikiClient(object):
             - The maximum number of revisions to search, starting from the latest
         4. for_undo : bool
             - Whether this method is called for an undo of that revision.
-        
+
         Returns
         -------
-        Without ``for_undo``:
+        Without `for_undo`:
             Revision ID.
-        With ``for_undo``:
+        With `for_undo`:
             (revid, prev_revid)
         """
 
         try:
-            api_result = self.client.api('query', prop='revisions', titles=page.name, rvlimit=limit)
+            api_result = self.client.api('query', prop='revisions', titles=page.name,
+                rvlimit=limit)
         except KeyboardInterrupt:
             raise
         except:
@@ -555,7 +573,7 @@ class WikiClient(object):
         ----------
         1. namespaces : list[str]
             - The input list of namespace names.
-        
+
         Returns
         -------
         The list of IDs as strings each.
@@ -563,7 +581,7 @@ class WikiClient(object):
 
         result_namespaces = []
         try:
-            api_result = self.client.api('query', meta='siteinfo', siprop='namespaces') # https://terraria.gamepedia.com/api.php?action=query&meta=siteinfo&siprop=namespaces
+            api_result = self.client.api('query', meta='siteinfo', siprop='namespaces')
         except KeyboardInterrupt:
             raise
         except:
@@ -600,7 +618,11 @@ class WikiClient(object):
 
 
     def get_current_wiki_name(self):
-        """Return the name of the current host, without ``.gamepedia.com`` and ``.fandom.com``, and with ``/<lang>`` appended, if not English."""
+        """Return the normalized name of the current host.
+
+        The result is without `.gamepedia.com` and `.fandom.com`,
+        and with `/<lang>` appended, if not English.
+        """
 
         api_result = self.client.api('query', meta='siteinfo', siprop='general')
 
@@ -608,7 +630,7 @@ class WikiClient(object):
         sitename = sitename.replace('.gamepedia.com', '').replace('.fandom.com', '')
 
         sitelang = api_result['query']['general']['lang']
-        if sitelang != "en" and sitelang != '':
+        if sitelang not in ('en', ''):
             sitename += '/' + sitelang
 
         return sitename
@@ -639,15 +661,18 @@ class WikiClient(object):
 
     def api_continue(self, log, action: str, continue_name: str='', i: int=0, **kwargs):
         """
-        Provides an API call with recursive, thus unlimited "continue" capability (e.g. for when the number of category members may exceed the bot limit (5000) but we want to get all >5000 of them).
+        Provides an API call with recursive, thus unlimited "continue" capability
+        (e.g. for when the number of category members may exceed the bot limit (5000)
+        but we want to get all >5000 of them).
         Returns an array with the contents of each "action" (e.g. "query") call.
 
         Parameters
         ----------
         1. action : str
-            - API action module (e.g. ``query``).
+            - API action module (e.g. `query`).
         2. continue_name: str
-            - Name of the ``continue`` attribute for the specified action (e.g. ``cmcontinue``). Defaults to first element in the ``continue`` array of the API result.
+            - Name of the `continue` attribute for the specified action (e.g. `cmcontinue`).
+            Defaults to first element in the `continue` array of the API result.
         3. i: int
             - Internally used by the recursion for debug. Do not use from outside!
         """
@@ -658,7 +683,8 @@ class WikiClient(object):
             api_result = self.client.api(action, **kwargs)
             #log('[{}] API result: {}'.format(i, api_result))
         except:
-            log('\n[{}] ***ERROR*** while executing continued API call (parameters: action=\'{}\', {})'.format(i, action, kwargs))
+            log('\n[{}] ***ERROR*** while executing continued API call '
+                '(parameters: action=\'{}\', {})'.format(i, action, kwargs))
             log(exc_info=True, s='[{}] Error message:\n'.format(i))
             log('[{}] Aborted API call.'.format(i))
             return
@@ -674,14 +700,18 @@ class WikiClient(object):
                 continue_name = list(api_result['continue'].keys())[0]
             if api_result['continue'][continue_name]:
                 #log('[{}] continue = {}'.format(i, api_result['continue'][continue_name]))
-                kwargs.__setitem__(continue_name, api_result['continue'][continue_name]) # add the continue parameter to the next API call
-                #log('[{}] Fetching new api result with the following parameters: action=\'{}\', {}'.format(i, action, kwargs))
-                next_api_result = self.api_continue(log, action, continue_name, i, **kwargs) # do recursion
+                # add the continue parameter to the next API call
+                kwargs.__setitem__(continue_name, api_result['continue'][continue_name])
+                #log('[{}] Fetching new api result with the following parameters: '
+                    #'action=\'{}\', {}'.format(i, action, kwargs))
+                # do recursion
+                next_api_result = self.api_continue(log, action, continue_name, i, **kwargs)
                 #log('[{}] Received api result from previous call: {}'.format(i, next_api_result))
                 if next_api_result:
                     #log('- Append this previous api result to api result from this call:')
                     #log('--- This api result: %s' % [api_result[action]])
-                    #log('--- Previous api result that will be appended to above: %s' % next_api_result)
+                    #log('--- Previous api result that will be appended to above: '
+                        #'%s' % next_api_result)
 
                     if isinstance(next_api_result, dict):
                         next_api_result = [next_api_result]
@@ -700,12 +730,15 @@ class WikiClient(object):
             #log('[{}] Return {}.\n'.format(i, api_result[action]))
             if i == 1: # still in the first call, no continues were necessary at all
                 return [api_result[action]]
-            else:
-                return api_result[action]
+            return api_result[action]
 
 
     def redirects_to_inclfragment(self, pagename: str):
-        """Similar to ``mwclient.Site.redirects_to()``, but also returns the fragment of the redirect target."""
+        """Get the redirect target of a page.
+
+        Similar to `mwclient.Site.redirects_to()`, but also returns
+        the fragment of the redirect target.
+        """
 
         api_result = self.client.api('query', prop='pageprops', titles=pagename, redirects='')
         if 'redirects' in api_result['query']:
@@ -713,8 +746,7 @@ class WikiClient(object):
                 if page['from'] == pagename:
                     if 'tofragment' in page:
                         return (page['to'], page['tofragment'])
-                    else:
-                        return (page['to'], None)
-                        
+                    return (page['to'], None)
+
         return (None, None)
 

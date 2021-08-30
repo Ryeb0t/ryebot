@@ -34,7 +34,8 @@ class StatusDisplayer():
     def display(self):
 
         if len(self.requested_wikis) == 0 and len(self.unregistered_wikis) == 0:
-            click.echo('The bot currently has no access to any wikis. Add one using "ryebot wiki add"!')
+            click.echo('The bot currently has no access to any wikis. '
+                'Add one using "ryebot wiki add"!')
             return
 
         self._get_statuses()
@@ -90,7 +91,8 @@ class StatusDisplayer():
             self.unregistereds_str = '\n'.join((
                 'Could not display the status of the bot in the following wikis:',
                 '    '.join(self.unregistered_wikis),
-                'This is because the bot does not have access to those wikis. You can grant access using "ryebot wiki add".'
+                'This is because the bot does not have access to those wikis. '
+                'You can grant access using "ryebot wiki add".'
             ))
 
         if self.status_str == '' and self.unregistereds_str != '':

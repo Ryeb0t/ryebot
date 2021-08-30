@@ -5,7 +5,7 @@ from custom_mwclient.fandom_client import FandomClient
 
 
 def template_str_to_object(template_str: str):
-    """Turns the input string into an mwparserfromhell.Template object.
+    """Turn the input string into an mwparserfromhell.Template object.
 
     It is assumed the string does contain a template and only consists of that template.
     """
@@ -22,19 +22,19 @@ def login_to_wiki(targetwiki: str, credentials_file: str, return_log=False, log=
     Parameters
     ----------
     1. targetwiki : str
-        - The name of the wiki, e.g. ``terrariamods`` or ``terraria/de``.
+        - The name of the wiki, e.g. `terrariamods` or `terraria/de`.
     2. credentials_file : str
         - Path to the file that contains the credentials for the target user.
     3. return_log : bool
         - Whether to return a log of the login actions.
-        Will log on its own (using the function provided in the ``log`` parameter)
-        if set to ``False``.
+        Will log on its own (using the function provided in the `log` parameter)
+        if set to `False`.
 
     Returns
     -------
-    1. Without ``return_log``:
+    1. Without `return_log`:
         - site
-    2. With ``return_log``:
+    2. With `return_log`:
         - (site, logstr)
     """
 
@@ -56,7 +56,7 @@ def login_to_wiki(targetwiki: str, credentials_file: str, return_log=False, log=
     # -- validate wikiname post-login ---
     wiki_id = site.get_current_wiki_name()
     if wiki_id != targetwiki:
-        raise Exception('Target wiki was "{}", current wiki is "{}"!'.format(targetwiki, wiki_id))
+        raise Exception(f'Target wiki was "{targetwiki}", current wiki is "{wiki_id}"!')
 
     # --- validate username post-login ---
     expected_user = creds.username.split('@')[0]
@@ -64,13 +64,13 @@ def login_to_wiki(targetwiki: str, credentials_file: str, return_log=False, log=
     # get_current_wiki_user returns the name with spaces, so aligning them both here
     wiki_user = site.get_current_wiki_user().replace(" ", "_")
     if wiki_user != expected_user:
-        raise Exception('Target user was "{}", current user is "{}"!'.format(expected_user, wiki_user))
+        raise Exception(f'Target user was "{expected_user}", current user is "{wiki_user}"!')
 
     # --- validations were successful ---
-    logstr = 'Logged in to wiki "{}" with user "{}".'.format(wiki_id, wiki_user)
+    logstr = f'Logged in to wiki "{wiki_id}" with user "{wiki_user}".'
 
     if return_log:
         return (site, logstr)
-    elif log:
+    if log:
         log(logstr)
     return site

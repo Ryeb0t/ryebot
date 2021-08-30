@@ -42,12 +42,16 @@ class LoginControl():
     """Class for reading and modifying the login control file of a wiki."""
 
     def __init__(self, wiki: str='', file: str=''):
-        """Access the login control file of a wiki, either using the wiki name or the file name directly."""
+        """Access the login control file of a wiki.
+
+        This is possible either using the wiki name or the file name directly.
+        """
 
         if file:
             self.controlfile = file
         elif wiki:
-            self.controlfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wiki), LOGINCONTROLFILE)
+            self.controlfile = os.path.join(PATHS['wikis'],
+                *get_wiki_directory_from_name(wiki), LOGINCONTROLFILE)
         else:
             raise ValueError('LoginControl requires either a wiki name or a file name!')
 
@@ -56,7 +60,10 @@ class LoginControl():
 
 
     def register_command(self):
-        """Clear the login control file, indicating that the command in there has been registered and executed."""
+        """Clear the login control file.
+
+        This indicates that the command in there has been registered and executed.
+        """
 
         with open(self.controlfile, 'w'):
             pass # empty the file
@@ -77,7 +84,11 @@ class LoginControl():
 
     @command.setter
     def command(self, value: ELoginControlCommand):
-        """Set the content of the wiki's login control file, indicating that the bot should login/logout there."""
+        """Set a login control command.
+
+        This modifies the content of the wiki's login control file, which will
+        be recognized by the daemon, and it will initiate the actual login action.
+        """
 
         with open(self.controlfile, 'w') as f:
             if value == ELoginControlCommand.DO_LOGIN:

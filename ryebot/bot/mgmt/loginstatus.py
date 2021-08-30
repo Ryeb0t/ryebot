@@ -1,7 +1,6 @@
 import os
 from enum import Enum
 from pathlib import Path
-import time
 
 from ryebot.bot import PATHS
 from ryebot.bot.utils import get_wiki_directory_from_name
@@ -35,12 +34,16 @@ class LoginStatus():
     """Class for reading and modifying the login status file of a wiki."""
 
     def __init__(self, wiki: str='', file: str=''):
-        """Access the login status file of a wiki, either using the wiki name or the file name directly."""
+        """Access the login status file of a wiki.
+
+        This is possible either using the wiki name or the file name directly.
+        """
 
         if file:
             self.statusfile = file
         elif wiki:
-            self.statusfile = os.path.join(PATHS['wikis'], *get_wiki_directory_from_name(wiki), LOGINSTATUSFILE)
+            self.statusfile = os.path.join(PATHS['wikis'],
+                *get_wiki_directory_from_name(wiki), LOGINSTATUSFILE)
         else:
             raise ValueError('LoginStatus requires either a wiki name or a file name!')
 

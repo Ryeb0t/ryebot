@@ -1,12 +1,12 @@
-import sys
-import os
-import stat
-import json
-import shutil
 import chardet
+import json
+import os
+import shutil
+import stat
+import sys
 
 def get_caller_module_name() -> str:
-    """Returns the name of the module that called this one."""
+    """Return the name of the module that called this one."""
 
     frame = sys._getframe(1) # frame of the function calling this function
     base_module = frame.f_globals['__name__']
@@ -19,15 +19,15 @@ def get_caller_module_name() -> str:
 
 
 def import_constants(directory: str, filename: str=None) -> dict:
-    """Imports constants data from a file.
-    
-    Reads the JSON file of the specified ``filename`` (without ``.json`` extension) at the specified ``directory``
-    and returns its contents as a dict.
+    """Import constants data from a file.
+
+    Rea the JSON file of the specified `filename` (without the `.json`
+    extension) at the specified `directory` and return its contents as a dict.
     """
 
     if filename is None:
         return {}
-    
+
     filename = os.path.join(directory, f"{filename}.json")
 
     if not os.path.isfile(filename):
@@ -40,27 +40,27 @@ def import_constants(directory: str, filename: str=None) -> dict:
 
 
 def clear_screen():
-    """Removes all text from the console."""
-    
+    """Remove all text from the console."""
+
     if sys.platform == "win32":
         os.system('cls') or None
     elif sys.platform == "linux":
         os.system('clear') or None
-    return
 
 
 def get_files_list(directory: str, modname: str, ext: str='cs'):
-    """Returns a list of all files with the specified extension.
+    """Return a list of all files with the specified extension.
 
     Parameters
     ----------
     1. directory : str
-        - The directory in which to search for the files. All subdirectories will be considered, recursively.
+        - The directory in which to search for the files.
+        All subdirectories will be considered, recursively.
     2. modname : str
-        - Files named like this will have ``is_item`` set to ``True`` in the result.
+        - Files named like this will have `is_item` set to `True` in the result.
     3. ext : str
         - The file extension.
-    
+
     Returns
     -------
     [[filename_no_ext, filename_with_full_dir, is_item]]
@@ -79,15 +79,17 @@ def get_files_list(directory: str, modname: str, ext: str='cs'):
 
 def list_files_w_wo_specific_extensions(without: bool, extensions: list, directory: str) -> list:
     """Returns a list of all files with or without a number extensions.
-    
+
     Parameters
     ----------
     1. without : bool
-        - Whether the list of returned files should contain files with (``False``) or without (``True``) the specified ``extensions``.
-    2. extensions : list[str] 
+        - Whether the list of returned files should contain files
+        with (`False`) or without (`True`) the specified `extensions`.
+    2. extensions : list[str]
         - The list of file extensions to consider.
     3. directory : str
-        - The directory from which to fetch the files. All subdirectories will be considered, recursively.
+        - The directory from which to fetch the files.
+        All subdirectories will be considered, recursively.
     """
 
     fileslist = []
@@ -99,16 +101,24 @@ def list_files_w_wo_specific_extensions(without: bool, extensions: list, directo
     return fileslist
 
 def list_files_w_specific_extensions(extensions, directory):
-    """Returns a list of all files in ``directory`` (including subdirectories, recursively) that have any of the ``extensions``."""
+    """Return a list of files in `directory` that have any of the `extensions`.
+
+    Subdirectories are included, recursively.
+    """
+
     return list_files_w_wo_specific_extensions(False, extensions, directory)
 
 def list_files_wo_specific_extensions(extensions, directory):
-    """Returns a list of all files in ``directory`` (including subdirectories, recursively) that do not have any of the ``extensions``."""
+    """Return a list of files in `directory` that have none of the `extensions`.
+
+    Subdirectories are included, recursively.
+    """
+
     return list_files_w_wo_specific_extensions(True, extensions, directory)
 
 
 def remove_files(filelist: list, log):
-    """Removes all files of the ``filelist``."""
+    """Remove all files of the `filelist`."""
 
     for file in filelist:
         try:
@@ -116,11 +126,10 @@ def remove_files(filelist: list, log):
         except:
             log("Error while deleting the file \"{}\"!".format(file))
             log(exc_info=True, s='Error message:\n')
-    return
 
 
 def remove_empty_directories(dirs):
-    """Deletes all subdirectories of ``dirs`` (recursively) that do not contain any files."""
+    """Delete all subdirectories of `dirs` (recursively) that do not contain any files."""
 
     for direc in list(os.walk(dirs, False))[1:]: # topdown=False for bottom-up
         # example of direc: ('project\Gores', [], ['Gore_1.png'])
@@ -130,7 +139,10 @@ def remove_empty_directories(dirs):
 
 
 def are_all_list_elements_equal(elemlist: list) -> bool:
-    """Returns ``True`` if all items of the ``elemlist`` are equal, ``False`` if they are not, and ``None`` if the list is empty."""
+    """Check if all items of the `elemlist` are equal.
+
+    Return `True`/`False`, and `None` if the list is empty.
+    """
 
     if len(elemlist) == 0:
         return None
@@ -151,17 +163,17 @@ def is_list_in_other_list(larger_list: list, smaller_list: list):
         - The "outer" list that contains the other list (or not – to be checked).
     2. smaller_list : list
         - The list that is contained in the other one (or not – to be checked).
-    
+
     Returns
     -------
-    - If the ``larger_list`` is shorter than the ``smaller_list``:
+    - If the `larger_list` is shorter than the `smaller_list`:
         - None
-    - If the ``smaller_list`` is empty:
+    - If the `smaller_list` is empty:
         - (larger_list, [])
     - Else:
         - (before_smaller_list, after_smaller_list), any or both of these might be empty
     """
-    
+
     if False: # for debugging
         print('\nCompare:')
         print('larger_list:')
@@ -192,19 +204,19 @@ def is_list_in_other_list(larger_list: list, smaller_list: list):
                     after.append(elem)
 
             return (before, after)
-    
+
     return ([], [])
 
 
 def pstring_to_list(pstring, is_bytearray=False):
-    """Converts a Pascal string to a list.
-    
+    """Convert a Pascal string to a list.
+
     Parameters
     ----------
     1. pstring
         - The Pascal string to convert.
     2. is_bytearray : bool
-        - Whether the ``pstring`` is a bytearray.
+        - Whether the `pstring` is a bytearray.
     """
 
     string_list = []
@@ -213,42 +225,43 @@ def pstring_to_list(pstring, is_bytearray=False):
             lengthbyte = pstring[0]
         else:
             lengthbyte = pstring[0].encode() # convert char to byte
-        pstring = pstring[1:] # remove the first byte, which holds the length of the following string part
+        # remove the first byte, which holds the length of the following string part
+        pstring = pstring[1:]
         if is_bytearray:
             length = lengthbyte
         else:
             length = int.from_bytes(lengthbyte, byteorder='big') # byte to int
-        #string_list.append("{} {}".format(length, pstring[:length])) # for debug: prepend length of string
+        # for debug: prepend length of string
+        #string_list.append("{} {}".format(length, pstring[:length]))
         string_list.append(pstring[:length])
         pstring = pstring[length:]
     return string_list
 
 
-def get_next_list_elem(list: list, elem):
-    """Returns the element that immediately follows the specified one."""
+def get_next_list_elem(elemlist: list, elem):
+    """Return the element that immediately follows the specified one."""
 
     try:
-        index = list.index(elem)
+        index = elemlist.index(elem)
     except ValueError:
         pass
     else:
         try:
-            return list[index + 1]
+            return elemlist[index + 1]
         except IndexError:
             pass
-    return
 
 
 def compare_lists(list1: list, list2: list):
-    """Returns the diff of the two lists.
+    """Return the diff of the two lists.
 
     Returns
     -------
     - (added, removed)
 
-    ``added`` is a list of elements that are in ``list2`` but not in ``list1``.
+    `added` is a list of elements that are in `list2` but not in `list1`.
 
-    ``removed`` is a list of elements that are in ``list1`` but not in ``list2``.
+    `removed` is a list of elements that are in `list1` but not in `list2`.
     """
 
     added = []
@@ -263,20 +276,23 @@ def compare_lists(list1: list, list2: list):
 
 
 def convert_file_encoding(filename: str, target_encoding: str):
-    """Convert the text encoding of the file to the desired one. The file may already be in the target encoding, in which case nothing is changed.
-    
+    """Convert the text encoding of the file to the desired one.
+
+    The file may already be in the target encoding, in which case nothing is changed.
+
     Parameters
     ----------
     1. filename : str
         - The full path and name of the file in question.
     2. target_encoding : str
-        - The target encoding, e.g. ``utf-8``.
-    
+        - The target encoding, e.g. `utf-8`.
+
     Returns
     -------
-    A tuple ``(bool, str)`` which contains a hint as to whether a conversion took place (``True``) or not (``False``), and a log string.
+    A tuple `(bool, str)` which contains a hint as to whether a
+    conversion took place (`True`) or not (`False`), and a log string.
     """
-    
+
     # method is based on https://stackoverflow.com/a/53851783
 
     # get encoding of the file
@@ -285,36 +301,40 @@ def convert_file_encoding(filename: str, target_encoding: str):
     src_encoding = chardet.detect(filecontents)['encoding']
 
     if src_encoding == target_encoding:
-        logstr = 'The file "{}" was already encoded with "{}".'.format(filename, target_encoding)
+        logstr = f'The file "{filename}" was already encoded with "{target_encoding}".'
         return (False, logstr)
-    
+
     # take the content of the file into memory (we're not expecting to be handling very large files)
     with open(filename, 'r', encoding=src_encoding) as f:
         filetext = f.read()
-    
+
     # write the content into the file again, but opened with the target encoding
     with open(filename, 'w', encoding=target_encoding) as f:
         f.write(filetext)
-    
+
     # TODO: maybe extend functionality: save a copy of the file with the old encoding?
 
-    logstr = 'Converted the encoding of the file "{}" from "{}" to "{}".'.format(filename, src_encoding, target_encoding)
+    logstr = 'Converted the encoding of the file "{}" from "{}" to "{}".'
+    logstr = logstr.format(filename, src_encoding, target_encoding)
 
     return (True, logstr)
 
 
 def get_dict_key_by_value(source_dict: dict, dict_value):
-    """Return the first key of the ``source_dict`` that has the ``dict_value`` as value."""
+    """Return the first key of the `source_dict` that has the `dict_value` as value."""
 
     for k, v in source_dict.items():
         if v == dict_value:
             return k
-    return
 
 
 def copytree_custom(src, dst, symlinks=False, ignore=None):
-    """Own implementation of the ``shutil.copytree()`` method, which fails if the target directory already exists. This method does not fail in that case, and instead just creates the directory."""
-    
+    """Failsafe version of `shutil.copytree()`.
+
+    The original implementation fails if the target directory already exists.
+    This method does not fail in that case, and instead just creates the directory.
+    """
+
     # from https://stackoverflow.com/a/22331852
 
     if not os.path.exists(dst):
@@ -335,38 +355,38 @@ def copytree_custom(src, dst, symlinks=False, ignore=None):
                 st = os.lstat(s)
                 mode = stat.S_IMODE(st.st_mode)
                 os.lchmod(d, mode)
-            except:
+            except AttributeError:
                 pass # lchmod not available
         elif os.path.isdir(s):
             copytree_custom(s, d, symlinks, ignore)
         else:
             shutil.copy2(s, d)
-    return
 
 
 def copytree_robocopy(src, dst):
-    """Copy a tree, similarly to ``shutil.copytree()``, using Windows's ``robocopy`` command."""
+    """Copy a tree, similarly to `shutil.copytree()`, using Windows's `robocopy` command."""
 
-    if os.system != "win32":
+    if sys.platform != "win32":
         raise Exception('Attempting to use the Windows-exclusive "robocopy" command!')
 
     cmd = r'"robocopy "{src}" "{dst}" /E /NFL /NDL /NJH /NJS /NC /NS /NP"'.format(src=src, dst=dst)
     os.system(cmd)
-    
-    return
 
 
 def sepdelimited_keydata_to_json(data: dict, sep: str='.'):
         """Store a dict to JSON that originally has the following format:
 
+        ```
         {
             "a.bc.def": "value1",
             "a.bc.ghi": "value2",
             "j": "value3"
         }
+        ```
 
         The resulting JSON will be as follows:
 
+        ```
         {
             "a": {
                 "bc": {
@@ -376,8 +396,9 @@ def sepdelimited_keydata_to_json(data: dict, sep: str='.'):
             },
             "j": "value3"
         }
-        
-        The keypart separator can be specified via the ``sep`` parameter.
+        ```
+
+        The keypart separator can be specified via the `sep` parameter.
         """
 
         jsondata = {}
@@ -409,7 +430,12 @@ def sepdelimited_keydata_to_json(data: dict, sep: str='.'):
 
 
 def find_file(base_directory: str, filename: str):
-    """Return the full path of the given ``filename`` in the ``base_directories`` or any of its subdirectories (recursively; file must match exactly)."""
+    """Return the full path of the given `filename` in the `base_directory`.
+
+    Include all subdirectories of `base_directory`, recursively.
+
+    The file must match exactly.
+    """
 
     for root, dirs, files in os.walk(base_directory):
         if filename in files:

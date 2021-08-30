@@ -2,7 +2,6 @@ import importlib
 import os
 import sys
 
-from ryebot.bot import PATHS
 from ryebot.bot.loggers import common_logger
 from ryebot.bot.utils import get_wiki_name_from_path
 
@@ -36,7 +35,8 @@ def main():
             scriptmodule.main()
 
     except Exception:
-        logger.info(f'Error during the "{sys.argv[1]}" script on the "{wikiname}" wiki!', exc_info=True, stack_info=True)
+        logstr = f'Error during the "{sys.argv[1]}" script on the "{wikiname}" wiki!'
+        logger.info(logstr, exc_info=True, stack_info=True)
 
 
 if __name__ == '__main__':

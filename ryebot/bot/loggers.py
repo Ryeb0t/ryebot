@@ -4,7 +4,10 @@ import os
 from ryebot.bot import PATHS
 
 
-LOGFORMAT = ('[%(asctime)s] [pid %(process)d tid %(thread)d (%(threadName)s)] %(message)s', '%a %b %d %H:%M:%S %Y')
+LOGFORMAT = ('[%(asctime)s] '
+    '[pid %(process)d tid %(thread)d (%(threadName)s)] '
+    '%(message)s',
+    '%a %b %d %H:%M:%S %Y')
 
 # logfile for everything from the ryebotscript process
 COMMONLOGFILE = '.log'

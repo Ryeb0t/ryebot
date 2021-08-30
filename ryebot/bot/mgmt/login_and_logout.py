@@ -15,12 +15,12 @@ def login_to_wiki(wikiname: str, logger: logging.Logger):
     try:
         # connect to wiki
         site, login_log = login(wikiname, return_log=True)
-    except Exception as e:
+    except:
         # connection failed
         loginstatus.status = ELoginStatus.LOGGED_OUT
         logger.info("Modified the login status file due to error while logging in.")
         logincontrol.register_command()
-        raise e
+        raise
 
     logger.info(login_log)
 

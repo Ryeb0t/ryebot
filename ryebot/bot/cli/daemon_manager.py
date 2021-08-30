@@ -35,7 +35,8 @@ def start_daemon():
 
 def do_debug_action(ctx: click.Context, param: click.Parameter, value: str):
     if not value or ctx.resilient_parsing:
-        # this is necessary because this callback function is always executed, even if the --debug parameter is not set
+        # this is necessary because this callback function is always executed,
+        # even if the --debug parameter is not set
         # (see https://click.palletsprojects.com/en/8.0.x/advanced/#callback-evaluation-order)
         return
 
@@ -64,5 +65,6 @@ def do_debug_action(ctx: click.Context, param: click.Parameter, value: str):
             click.echo('Daemon was not already not running, starting it now.')
         _run_daemon()
 
-    # terminate the application to prevent the "missing command" error that would be thrown if the parsing continued
+    # terminate the application to prevent the "missing command" error
+    # that would be thrown if the parsing continued
     ctx.exit()

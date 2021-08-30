@@ -1,4 +1,4 @@
-class Namespace(object):
+class Namespace():
     """A data container holding the id, name, canonical name, and aliases of a namespace. Not capable of any operations."""
 
     def __init__(self, id_number: int = None, name: str = None, canonical_name: str = None, aliases: list = None):

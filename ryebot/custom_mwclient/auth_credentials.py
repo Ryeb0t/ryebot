@@ -4,11 +4,11 @@ import os
 from .errors import InvalidUserFile
 
 
-class AuthCredentials(object):
+class AuthCredentials():
     username = None
     password = None
 
-    def __init__(self, credentials_file):
+    def __init__(self, credentials_file: str):
         """Store username and password for future use with a WikiClient.
 
         Username and password are taken from the `credentials_file`,

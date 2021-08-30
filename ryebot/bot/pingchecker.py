@@ -18,11 +18,13 @@ PERIOD = 7
 PIDFILE = '.pingchecker.pid'
 
 PINGPAGE = 'User:{username}/bot/ping'
-PINGPAGETEXT = "Use this page to verify my online status. If I'm online, I will respond within a couple of seconds!"
+PINGPAGETEXT = ('Use this page to verify my online status. '
+    "If I'm online, I will respond within a couple of seconds!")
 TIME_UNTIL_WIPE = 90
 WIPE_SUMMARY = 'Wiped.'
 RESPONSE_SUMMARY = 'Ping response.'
-RESPONSE_TEXT = '\n\nOnline. Time of startup: {startuptime}. --~~~~\n\nWill wipe this page shortly...'
+RESPONSE_TEXT = ('\n\nOnline. Time of startup: {startuptime}. --~~~~\n\n'
+    'Will wipe this page shortly...')
 
 
 def pingcheck(wikiname: str, logger: logging.Logger):
@@ -35,7 +37,8 @@ def pingcheck(wikiname: str, logger: logging.Logger):
         try:
             site, login_log = login(wikiname, return_log=True)
         except Exception as e:
-            logger.info(f'Failed to login to the "{wikiname}" wiki in order to start the pingchecker.')
+            logger.info(f'Failed to login to the "{wikiname}" wiki in order to'
+                'start the pingchecker.')
             raise e
 
         logger.info(login_log)

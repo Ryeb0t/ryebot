@@ -1,7 +1,7 @@
 def str_to_list(string: str, delim: str=',', trim: bool=True):
     """Convert a string to a list.
 
-    Returns an empty list if the string is ``None``.
+    Return an empty list if the string is `None`.
 
     Parameters
     ----------
@@ -12,7 +12,7 @@ def str_to_list(string: str, delim: str=',', trim: bool=True):
     3. trim : bool
         - Whether to trim list items.
     """
-    
+
     if not string:
         return []
     result_list = list(string.split(delim))
@@ -22,17 +22,23 @@ def str_to_list(string: str, delim: str=',', trim: bool=True):
 
 
 def csharp_string_concat(*args):
-    """A Python version of C#'s ``String.Concat()``. Works like ``.join()``, but joins the parameters instead of an iterable."""
+    """A Python version of C#'s `String.Concat()`.
+
+    Similar to `join()`, but join the parameters instead of an iterable.
+    """
 
     return ''.join(args)
 
 
-def lstrip_max(string: str, characters: str=' ', max: int=1):
-    """Works like ``string.lstrip()``, but will not strip more than ``max`` characters."""
+def lstrip_max(string: str, characters: str=' ', max_chars: int=1):
+    """Return a copy of the string with leading whitespace removed.
+
+    Similar to `lstrip()`, but do not strip more than `max_chars` characters.
+    """
 
     chars = list(characters)
 
-    for i in range(max):
+    for _ in range(max_chars):
         if string[0] in chars:
             string = string[1:]
         else:
@@ -57,5 +63,5 @@ def _change_first_case(string: str, upper: bool):
 
     if len(string) == 1:
         return string.upper() if upper else string.lower()
-    
+
     return (string[0].upper() if upper else string[0].lower()) + string[1:]

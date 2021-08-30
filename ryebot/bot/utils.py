@@ -5,7 +5,7 @@ from ryebot.custom_utils.wiki_util import login_to_wiki
 
 
 def login(wikiname: str, username: str='bot', **kwargs):
-    
+
     file_pattern = 'wiki_account_{}.json'
     credentials_file = os.path.join(PATHS['global_config'], file_pattern.format(username.lower()))
 
@@ -13,7 +13,11 @@ def login(wikiname: str, username: str='bot', **kwargs):
 
 
 def get_local_wikis():
-    """Return a list of the wikis that are registered in the `localdata/wikis` directory, i.e., that the bot has access to."""
+    """Return a list of registered wikis.
+
+    Registered wikis are those that have a subdirectory in the `localdata/wikis`
+    directory, i.e., that the bot has access to.
+    """
 
     local_wikis = []
     for wikiname in os.listdir(PATHS['wikis']):
@@ -36,7 +40,8 @@ def get_wiki_directory_from_name(wikiname: str):
         basedirname = wikiname
         subdirname = 'MAIN'
     else:
-        raise ValueError(f'Wiki name "{wikiname}" contains more than one slash; expected is one or no slash!')
+        raise ValueError(f'Wiki name "{wikiname}" contains more than one slash; '
+            'expected is one or no slash!')
     return (basedirname, subdirname)
 
 

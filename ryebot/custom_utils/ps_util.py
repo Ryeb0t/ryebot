@@ -1,7 +1,9 @@
+"""Utility methods related to process management."""
+
 import psutil
 
 
-def find_procs_by_cmd(cmd):
+def find_procs_by_cmd(cmd: str):
     """Return a list of processes where any of the `cmdline()` list elements contain `cmd`."""
     ls = []
     for process in psutil.process_iter(['cmdline']):

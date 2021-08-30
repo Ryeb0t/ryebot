@@ -1,3 +1,9 @@
+"""Utility methods related to wiki operations but not depending on a Site object.
+
+The most relevant method is `login_to_wiki`, which adds logging and validation
+to the login process.
+"""
+
 import mwparserfromhell
 
 from custom_mwclient.auth_credentials import AuthCredentials
@@ -5,7 +11,7 @@ from custom_mwclient.fandom_client import FandomClient
 
 
 def template_str_to_object(template_str: str):
-    """Turn the input string into an mwparserfromhell.Template object.
+    """Turn the input string into an `mwparserfromhell.Template` object.
 
     It is assumed the string does contain a template and only consists of that template.
     """
@@ -16,7 +22,8 @@ def template_str_to_object(template_str: str):
     return None
 
 
-def login_to_wiki(targetwiki: str, credentials_file: str, return_log=False, log=None):
+def login_to_wiki(targetwiki: str, credentials_file: str,
+                  return_log: bool = False, log=None):
     """Basic login to a wiki.
 
     Parameters

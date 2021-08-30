@@ -1,5 +1,8 @@
+"""Utility methods related to operations including times and durations."""
+
 import datetime
 import time
+
 
 def start_timecount() -> float:
     """Return the current time."""
@@ -76,7 +79,11 @@ def format_secs(secs, format="%a, %d %b %Y %H:%M:%S"):
 def asctime_std():
     """Convert the current UTC time to a standard format.
 
-    The format is analogous to `Sat Jun  6 16:26:11 1998`.
+    The format is as follows:
+
+    `weekday month day hour:minute:second year`
+
+    Example: `Sat Jun  6 16:26:11 1998`
     """
 
     return time.asctime(time.gmtime())

@@ -1,3 +1,6 @@
+"""Utility methods related to operations revolving around strings."""
+
+
 def str_to_list(string: str, delim: str = ',', trim: bool = True):
     """Convert a string to a list.
 

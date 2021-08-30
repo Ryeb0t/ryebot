@@ -1,9 +1,12 @@
+"""Utility methods that do not fit into any of the other `custom_utils` modules."""
+
 import chardet
 import json
 import os
 import shutil
 import stat
 import sys
+from typing import Iterable
 
 
 def get_caller_module_name() -> str:
@@ -47,7 +50,7 @@ def clear_screen():
         os.system('clear') or None
 
 
-def get_files_list(directory: str, modname: str, ext: str = 'cs'):
+def get_files_list(directory: str, modname: str, ext: str = 'cs') -> list[tuple[str, str, bool]]:
     """Return a list of all files with the specified extension.
 
     Parameters
@@ -62,7 +65,7 @@ def get_files_list(directory: str, modname: str, ext: str = 'cs'):
 
     Returns
     -------
-    [[filename_no_ext, filename_with_full_dir, is_item]]
+    `[(filename_no_ext, filename_with_full_dir, is_item)]`
     """
 
     files_list = []
@@ -71,13 +74,13 @@ def get_files_list(directory: str, modname: str, ext: str = 'cs'):
             name, ext = os.path.splitext(f)
             if ext == ".cs":
                 is_item = name != modname
-                files_list.append([name, os.path.join(root, f), is_item])
+                files_list.append((name, os.path.join(root, f), is_item))
 
     return files_list
 
 
-def list_files_w_wo_specific_extensions(without: bool, extensions: list,
-                                        directory: str) -> list:
+def list_files_w_wo_specific_extensions(without: bool, extensions: Iterable[str],
+                                        directory: str) -> list[str]:
     """Returns a list of all files with or without a number extensions.
 
     Parameters
@@ -102,7 +105,7 @@ def list_files_w_wo_specific_extensions(without: bool, extensions: list,
                 fileslist.append(os.path.join(root, f))
     return fileslist
 
-def list_files_w_specific_extensions(extensions, directory):
+def list_files_w_specific_extensions(extensions: Iterable[str], directory: str):
     """Return a list of files in `directory` that have any of the `extensions`.
 
     Subdirectories are included, recursively.
@@ -110,7 +113,7 @@ def list_files_w_specific_extensions(extensions, directory):
 
     return list_files_w_wo_specific_extensions(False, extensions, directory)
 
-def list_files_wo_specific_extensions(extensions, directory):
+def list_files_wo_specific_extensions(extensions: Iterable[str], directory: str):
     """Return a list of files in `directory` that have none of the `extensions`.
 
     Subdirectories are included, recursively.
@@ -119,7 +122,7 @@ def list_files_wo_specific_extensions(extensions, directory):
     return list_files_w_wo_specific_extensions(True, extensions, directory)
 
 
-def remove_files(filelist: list, log):
+def remove_files(filelist: Iterable[str], log):
     """Remove all files of the `filelist`."""
     for file in filelist:
         try:
@@ -129,7 +132,7 @@ def remove_files(filelist: list, log):
             log(exc_info=True, s='Error message:\n')
 
 
-def remove_empty_directories(dirs):
+def remove_empty_directories(dirs: Iterable[str]):
     """Delete all subdirectories of `dirs` (recursively) that do not contain any files."""
     for direc in list(os.walk(dirs, False))[1:]: # topdown=False for bottom-up
         # example of direc: ('project\Gores', [], ['Gore_1.png'])
@@ -138,7 +141,7 @@ def remove_empty_directories(dirs):
     return
 
 
-def are_all_list_elements_equal(elemlist: list) -> bool:
+def are_all_list_elements_equal(elemlist: Iterable) -> bool:
     """Check if all items of the `elemlist` are equal.
 
     Return `True`/`False`, and `None` if the list is empty.
@@ -208,7 +211,7 @@ def is_list_in_other_list(larger_list: list, smaller_list: list):
     return ([], [])
 
 
-def pstring_to_list(pstring, is_bytearray=False):
+def pstring_to_list(pstring, is_bytearray: bool = False):
     """Convert a Pascal string to a list.
 
     Parameters
@@ -238,7 +241,7 @@ def pstring_to_list(pstring, is_bytearray=False):
     return string_list
 
 
-def get_next_list_elem(elemlist: list, elem):
+def get_next_list_elem(elemlist: Iterable, elem):
     """Return the element that immediately follows the specified one."""
     try:
         index = elemlist.index(elem)
@@ -251,7 +254,7 @@ def get_next_list_elem(elemlist: list, elem):
             pass
 
 
-def compare_lists(list1: list, list2: list):
+def compare_lists(list1: Iterable, list2: Iterable):
     """Return the diff of the two lists.
 
     Returns
@@ -274,7 +277,7 @@ def compare_lists(list1: list, list2: list):
     return (added, removed)
 
 
-def convert_file_encoding(filename: str, target_encoding: str):
+def convert_file_encoding(filename: str, target_encoding: str) -> tuple[bool, str]:
     """Convert the text encoding of the file to the desired one.
 
     The file may already be in the target encoding, in which case nothing is changed.
@@ -328,7 +331,7 @@ def get_dict_key_by_value(source_dict: dict, dict_value):
     return None
 
 
-def copytree_custom(src, dst, symlinks=False, ignore=None):
+def copytree_custom(src: str, dst: str, symlinks: bool = False, ignore=None):
     """Failsafe version of `shutil.copytree()`.
 
     The original implementation fails if the target directory already exists.
@@ -363,7 +366,7 @@ def copytree_custom(src, dst, symlinks=False, ignore=None):
             shutil.copy2(s, d)
 
 
-def copytree_robocopy(src, dst):
+def copytree_robocopy(src: str, dst: str):
     """Copy a tree, similarly to `shutil.copytree()`, using Windows's `robocopy` command."""
     if sys.platform != "win32":
         raise Exception('Attempting to use the Windows-exclusive "robocopy" command!')

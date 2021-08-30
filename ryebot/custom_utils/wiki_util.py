@@ -6,7 +6,7 @@ from custom_mwclient.fandom_client import FandomClient
 
 def template_str_to_object(template_str: str):
     """Turns the input string into an mwparserfromhell.Template object.
-    
+
     It is assumed the string does contain a template and only consists of that template.
     """
 
@@ -16,18 +16,20 @@ def template_str_to_object(template_str: str):
     return
 
 
-def login_to_wiki(targetwiki: str, username='bot', return_log=False, log=None):
+def login_to_wiki(targetwiki: str, credentials_file: str, return_log=False, log=None):
     """Basic login to a wiki.
 
     Parameters
     ----------
     1. targetwiki : str
         - The name of the wiki, e.g. ``terrariamods`` or ``terraria/de``.
-    2. username : str
-        - Whether to log in as Ryebot (``bot``) or Rye Greenwood (``me``).
+    2. credentials_file : str
+        - Path to the file that contains the credentials for the target user.
     3. return_log : bool
-        - Whether to return a log of the login actions. Will log on its own (using the function provided in the ``log`` parameter) if set to ``False``.
-    
+        - Whether to return a log of the login actions.
+        Will log on its own (using the function provided in the ``log`` parameter)
+        if set to ``False``.
+
     Returns
     -------
     1. Without ``return_log``:
@@ -37,7 +39,7 @@ def login_to_wiki(targetwiki: str, username='bot', return_log=False, log=None):
     """
 
     # --- do login ---
-    creds = AuthCredentials(user_name=username)
+    creds = AuthCredentials(credentials_file)
 
     try:
         targetwiki_base, targetwiki_lang = targetwiki.split('/')

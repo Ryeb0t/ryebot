@@ -38,8 +38,8 @@ def import_constants(directory: str, filename: str = None) -> dict:
         return {}
 
     jsondata = {}
-    with open(filename, encoding='utf-8') as f:
-        jsondata = json.load(f)
+    with open(filename, encoding='utf-8') as jsonfile:
+        jsondata = json.load(jsonfile)
     return jsondata
 
 
@@ -71,11 +71,11 @@ def get_files_list(directory: str, modname: str, ext: str = 'cs') -> list[tuple[
 
     files_list = []
     for root, _, files in os.walk(directory):
-        for f in files:
-            name, ext = os.path.splitext(f)
+        for filename in files:
+            name, ext = os.path.splitext(filename)
             if ext == ".cs":
                 is_item = name != modname
-                files_list.append((name, os.path.join(root, f), is_item))
+                files_list.append((name, os.path.join(root, filename), is_item))
 
     return files_list
 
@@ -97,13 +97,13 @@ def list_files_w_wo_specific_extensions(without: bool, extensions: Iterable[str]
     """
 
     fileslist = []
-    for root, dirs, files in os.walk(directory):
-        for f in files:
-            ext = os.path.splitext(f)[1]
+    for root, _, files in os.walk(directory):
+        for filename in files:
+            ext = os.path.splitext(filename)[1]
             with_ext = not without and ext in extensions
             without_ext = without and ext not in extensions
             if with_ext or without_ext:
-                fileslist.append(os.path.join(root, f))
+                fileslist.append(os.path.join(root, filename))
     return fileslist
 
 def list_files_w_specific_extensions(extensions: Iterable[str], directory: str):
@@ -298,8 +298,8 @@ def convert_file_encoding(filename: str, target_encoding: str) -> tuple[bool, st
     # method is based on https://stackoverflow.com/a/53851783
 
     # get encoding of the file
-    with open(filename, 'rb') as f:
-        filecontents = f.read()
+    with open(filename, 'rb') as file_obj:
+        filecontents = file_obj.read()
     src_encoding = chardet.detect(filecontents)['encoding']
 
     if src_encoding == target_encoding:
@@ -308,12 +308,12 @@ def convert_file_encoding(filename: str, target_encoding: str) -> tuple[bool, st
 
     # take the content of the file into memory
     # (we're not expecting to be handling very large files)
-    with open(filename, 'r', encoding=src_encoding) as f:
-        filetext = f.read()
+    with open(filename, 'r', encoding=src_encoding) as file_obj:
+        filetext = file_obj.read()
 
     # write the content into the file again, but opened with the target encoding
-    with open(filename, 'w', encoding=target_encoding) as f:
-        f.write(filetext)
+    with open(filename, 'w', encoding=target_encoding) as file_obj:
+        file_obj.write(filetext)
 
     # TODO: maybe extend functionality: save a copy of the file with the old encoding?
 

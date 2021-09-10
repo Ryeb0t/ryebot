@@ -34,9 +34,9 @@ ENTRYPOINT_COMMAND = 'ryebot'
 # load long description from readme.md
 try:
     with open('README.md', encoding='utf-8') as f:
-        long_description = f.read()
+        LONG_DESCRIPTION = f.read()
 except FileNotFoundError:
-    long_description = DESCRIPTION # fallback to short description if no README.md available
+    LONG_DESCRIPTION = DESCRIPTION # fallback to short description if no README.md available
 
 # load version from _version.py as dictionary
 versioninfo = {}
@@ -54,7 +54,7 @@ setup(
     name=PACKAGE_NAME,
     version=versioninfo['__version__'],
     description=DESCRIPTION,
-    long_description=long_description,
+    long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,

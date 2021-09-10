@@ -14,8 +14,8 @@ from .errors import (
 )
 from .session_manager import session_manager
 from .site import Site
-from custom_mwclient.models.simple_page import SimplePage
-from custom_mwclient.models.namespace import Namespace
+from custom_mwclient.models import SimplePage
+from custom_mwclient.models import Namespace
 
 
 class WikiClient(object):

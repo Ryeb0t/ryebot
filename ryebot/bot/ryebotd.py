@@ -18,7 +18,7 @@ from ryebot.bot.heartbeat import do_heartbeat
 PIDFILE = '.ryebotd.pid'
 
 
-def on_startup():
+def _on_startup():
     # empty all control command files
     for dirpath, dirnames, filenames in os.walk(PATHS['localdata']):
         for filename in filenames:
@@ -32,7 +32,7 @@ def on_startup():
 
 
 def main():
-    on_startup()
+    _on_startup()
     start_monitoring(watchdog_logger(), common_logger())
     while True:
         do_heartbeat()

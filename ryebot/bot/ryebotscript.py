@@ -1,3 +1,10 @@
+"""Entry script for running a wiki script.
+
+It is called from the `daemon_handlers` module, and includes the "meta scripts"
+for logging in or out and starting the pingchecker. Depending on which script
+is to be run, it imports that script's module and runs its main function.
+"""
+
 import importlib
 import os
 import sys

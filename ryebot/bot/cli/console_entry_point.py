@@ -1,3 +1,8 @@
+"""The CLI "frontend".
+
+The `main` function of this module is defined as the CLI entry point in `setup.py`.
+"""
+
 from importlib import metadata
 import sys
 

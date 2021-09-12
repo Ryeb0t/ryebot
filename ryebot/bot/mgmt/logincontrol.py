@@ -1,3 +1,18 @@
+"""Enables the "login control" functionality.
+
+A "login control command" is a command for the daemon to execute a login-
+related action, i.e. to login or logout on a wiki.
+
+The current login control command of a wiki is stored in a file in its
+directory. This file can be read from and written to by simply instantiating
+the `LoginControl` class with e.g. the name of the wiki, and then getting
+or setting that object's attributes.
+
+The possible login control command values are available as part of the
+`ELoginControlCommand` enum. This enum should always be used whenever login
+control commands are dealt with.
+"""
+
 from enum import Enum
 import os
 from pathlib import Path

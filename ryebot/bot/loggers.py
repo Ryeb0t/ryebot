@@ -1,3 +1,10 @@
+"""Provides the logging configuration.
+
+The three functions `common_logger`, `cmd_logger`, and `watchdog_logger`
+return their respective logger, which has the correct logging level and
+handler set.
+"""
+
 import logging
 import os
 

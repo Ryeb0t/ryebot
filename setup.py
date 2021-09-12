@@ -1,3 +1,5 @@
+"""Defines metadata and package requirements to ensure correct installation of this package."""
+
 import os.path
 
 from setuptools import find_packages, setup

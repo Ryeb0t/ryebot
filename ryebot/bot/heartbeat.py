@@ -1,3 +1,13 @@
+"""Implements the "heartbeat" functionality.
+
+This includes writing the current time and date to a file every couple of
+seconds, which proves that the daemon is still "alive" (i.e. running, its
+"heart is beating").
+
+The simple function `do_heartbeat` is called from the daemon's `main` function
+in `ryebotd`.
+"""
+
 import os
 import time
 

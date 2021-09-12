@@ -1,3 +1,12 @@
+"""Provides the base functionality for monitoring the file system.
+
+The `start_monitoring` function begins the monitoring. Each time an event
+occurs, the class `CustomEventHandler` (and its super class,
+`CustomLoggingEventHandler`) determines the action to take, depending on
+the parameters of the event. Most notably, it usually calls the `handle`
+function of the `FileModifiedEventHandler` class from `daemon_handlers`.
+"""
+
 import os
 
 from watchdog.events import FileSystemEvent, FileSystemEventHandler

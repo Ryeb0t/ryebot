@@ -1,3 +1,10 @@
+""""Backend" for the CLI for starting the daemon process.
+
+The function `start_daemon` is called from `console_entry_point`, the CLI
+"frontend", and safely starts the daemon process. The function `do_debug_action`
+enables the `--debug` option.
+"""
+
 import os
 import signal
 

@@ -1,3 +1,10 @@
+"""Provides a class for displaying the bot's status on the wikis.
+
+The entry function is `StatusDisplayer().display`. It reads the internal login
+control and login status files of each requested wiki and displays the result
+in a table. The function is called from `console_entry_point`, the CLI "frontend".
+"""
+
 import time
 
 from beautifultable import BeautifulTable

@@ -1,3 +1,9 @@
+"""Entry script for the daemon process.
+
+It turns the process with which is was started into the Ryebot daemon.
+The `daemon_manager` module is used for running this script from the CLI.
+"""
+
 import os
 
 from daemon import DaemonContext

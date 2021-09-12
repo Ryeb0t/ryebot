@@ -1,3 +1,11 @@
+"""Maps a file system event to the corresponding actions.
+
+The entry function, `handle`, in the `FileModifiedEventHandler` class, is
+called as a result of a file system event from `monitorer`. It analyzes the
+event parameters and determines the action to take. Normally, this action
+constitutes starting a new process via the `ryebotscript` module.
+"""
+
 import logging
 import os
 

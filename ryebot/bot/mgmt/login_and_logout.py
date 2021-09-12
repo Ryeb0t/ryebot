@@ -1,3 +1,9 @@
+"""Performs the "formal" login and logout.
+
+This includes modifying the internal login status and login control command
+files. The functions are called from `ryebotscript`.
+"""
+
 import logging
 import time
 

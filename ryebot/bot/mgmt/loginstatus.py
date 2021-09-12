@@ -1,3 +1,20 @@
+"""Enables the "login status" functionality.
+
+The "login status" of the bot on a wiki is e.g. "logged out" or "logging in".
+There is no real "login/logout" system, because a script can simply fetch a
+`Site` object to have access to a wiki (and thus be "logged in" to it). Hence,
+the "login status" information is rather an indicator for the user whether the
+bot is online and available for usage.
+
+The login status of a wiki is stored in a file in its directory. This file can
+be read from and written to by simply instantiating the `LoginStatus` class
+with e.g. the name of the wiki, and then getting or setting that object's
+attributes.
+
+The possible login status values are available as part of the `ELoginStatus`
+enum. This enum should always be used whenever login statuses are dealt with.
+"""
+
 from enum import Enum
 import os
 from pathlib import Path

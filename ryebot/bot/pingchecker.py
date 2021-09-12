@@ -1,3 +1,13 @@
+"""Provides the "pingcheck" functionality to respond to ping requests.
+
+Wiki editors can edit a specific page on the wiki to make a "ping request"
+and check if the bot is online. If it is, it edits that page too, as a
+"ping response".
+
+The entry function is `pingcheck`, it starts an infinite loop where the
+ping request page is checked every couple of seconds.
+"""
+
 import logging
 import os
 import time

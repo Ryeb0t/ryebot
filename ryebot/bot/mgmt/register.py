@@ -1,3 +1,5 @@
+"""Functions for registering and un-registering (adding/removing) a wiki."""
+
 import os
 import shutil
 

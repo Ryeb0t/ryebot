@@ -1,3 +1,9 @@
+""""Backend" for the CLI for wiki-related functionalities.
+
+The functions are called from `console_entry_point`, the CLI "frontend".
+They mostly display messages and modify the internal files.
+"""
+
 import click
 
 from ryebot.bot.mgmt.logincontrol import ELoginControlCommand, LoginControl

@@ -1,3 +1,5 @@
+"""Main module of the package."""
+
 import os.path
 
 PATHS = {}

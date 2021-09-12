@@ -19,11 +19,11 @@ from ryebot.bot.scripts import __availablescripts__
 
 
 # allow using "-h", "-?", and "--help" for help (default is only "--help")
-CONTEXT_SETTINGS = dict(help_option_names=['-h', '-?', '--help'])
+CTX_SETTINGS = dict(help_option_names=['-h', '-?', '--help'])
 
 
 @click.group(
-    context_settings=CONTEXT_SETTINGS,
+    context_settings=CTX_SETTINGS,
     help='Welcome to the Ryebot menu! Specify one of the commands below to perform an action.\n\n'
     'Each command has a "-h" option for help about its usage.'
 )
@@ -50,7 +50,7 @@ def main():
 
 
 @click.group(
-    context_settings=CONTEXT_SETTINGS,
+    context_settings=CTX_SETTINGS,
     help='Use this menu to display the wikis that the bot has access to, '
         'and to add or remove wikis from that list.\n\n'
         'Each command has a "-h" option for help about its usage.',
@@ -61,7 +61,7 @@ def wiki():
 
 
 
-@click.command(context_settings=CONTEXT_SETTINGS, name='status')
+@click.command(context_settings=CTX_SETTINGS, name='status')
 @click.option(
     '-w', '--wiki',
     multiple=True,
@@ -72,7 +72,7 @@ def main_status(wiki):
     StatusDisplayer(wiki).display()
 
 
-@click.command(context_settings=CONTEXT_SETTINGS, name='list')
+@click.command(context_settings=CTX_SETTINGS, name='list')
 def main_list():
     """List all available scripts."""
     click.echo('\n'.join((
@@ -83,7 +83,7 @@ def main_list():
     )))
 
 
-@click.command(context_settings=CONTEXT_SETTINGS, name='scriptinfo')
+@click.command(context_settings=CTX_SETTINGS, name='scriptinfo')
 @click.option(
     '-s', '--scriptname',
     required=True,
@@ -100,7 +100,7 @@ def main_scriptinfo(scriptname):
         click.echo(f'This is some info about the script "{scriptname}".')
 
 
-@click.command(context_settings=CONTEXT_SETTINGS, name='up', no_args_is_help=True)
+@click.command(context_settings=CTX_SETTINGS, name='up', no_args_is_help=True)
 @click.option(
     '-w', '--wiki',
     multiple=True,
@@ -112,7 +112,7 @@ def main_up(wiki, all):
     go_online_on_wiki(wiki, all)
 
 
-@click.command(context_settings=CONTEXT_SETTINGS, name='down', no_args_is_help=True)
+@click.command(context_settings=CTX_SETTINGS, name='down', no_args_is_help=True)
 @click.option(
     '-w', '--wiki',
     multiple=True,
@@ -124,7 +124,7 @@ def main_down(wiki, all):
     go_offline_on_wiki(wiki, all)
 
 
-@click.command(context_settings=CONTEXT_SETTINGS, name='start')
+@click.command(context_settings=CTX_SETTINGS, name='start')
 @click.option(
     '-s', '--scriptname',
     type=click.Choice(__availablescripts__, case_sensitive=False),
@@ -137,7 +137,7 @@ def main_start(scriptname, wiki):
 
 
 
-@click.command(context_settings=CONTEXT_SETTINGS, name='list')
+@click.command(context_settings=CTX_SETTINGS, name='list')
 @click.option(
     '-c', '--count',
     is_flag=True,
@@ -148,7 +148,7 @@ def wiki_list(count):
     display_wiki_list(count)
 
 
-@click.command(context_settings=CONTEXT_SETTINGS, name='add')
+@click.command(context_settings=CTX_SETTINGS, name='add')
 @click.option(
     '-n', '--name',
     prompt='Name of the wiki',
@@ -159,7 +159,7 @@ def wiki_add(name):
     add_wiki(name)
 
 
-@click.command(context_settings=CONTEXT_SETTINGS, name='remove')
+@click.command(context_settings=CTX_SETTINGS, name='remove')
 @click.option(
     '-n', '--name',
     prompt='Name of the wiki',

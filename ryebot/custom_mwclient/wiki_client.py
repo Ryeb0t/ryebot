@@ -18,7 +18,7 @@ from custom_mwclient.models import SimplePage
 from custom_mwclient.models import Namespace
 
 
-class WikiClient(object):
+class WikiClient():
     """
     Various utilities that extend mwclient and could be useful on any wiki/wiki farm.
     Utilities here should not depend on any extensions.

@@ -378,7 +378,7 @@ def copytree_robocopy(src: str, dst: str):
 def sepdelimited_keydata_to_json(data: dict, sep: str = '.'):
     """Store a dict to JSON that originally has the following format:
 
-    ```
+    ```json
     {
         "a.bc.def": "value1",
         "a.bc.ghi": "value2",
@@ -388,7 +388,7 @@ def sepdelimited_keydata_to_json(data: dict, sep: str = '.'):
 
     The resulting JSON will be as follows:
 
-    ```
+    ```json
     {
         "a": {
             "bc": {

@@ -285,7 +285,7 @@ class WikiClient(object):
 
     def save(self, page: Page, text, summary='', minor=False,
              bot=True, section=None, log=None, **kwargs):
-        """Performs a page edit, retrying the login once if the edit fails due to the user being logged out.
+        """Perform a page edit, retrying once upon failure due to being logged out.
 
         This function hopefully makes it easy to workaround the lag and frequent login timeouts
         experienced on the Fandom UCP platform compared to Gamepedia Hydra.
@@ -542,7 +542,9 @@ class WikiClient(object):
 
     def find_summmary_in_revs(self, page: Page, summary: str, log,
                               user='Ryebot', limit=5, for_undo=False):
-        """Get the revision ID of a revision with a specified summary from the specified user in a specified number of last revisions.
+        """Get the revision ID of a certain revision.
+
+        The revision is identified by summary, user, and being in a number of last revisions.
 
         Parameters
         ----------
@@ -551,7 +553,7 @@ class WikiClient(object):
         2. summary : str
     	    - The edit summary to find.
         3. limit : int
-            - The maximum number of revisions to search, starting from the latest
+            - The maximum number of revisions to search, starting from the latest.
         4. for_undo : bool
             - Whether this method is called for an undo of that revision.
 

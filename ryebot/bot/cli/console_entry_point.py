@@ -57,7 +57,7 @@ def main():
     short_help='Manage the wikis that the bot has access to.'
 )
 def wiki():
-    """Entry function into the "wiki" sub-group. Executed when "$ ryebot wiki" is called."""
+    """Entry function into the "wiki" sub-group. Executed when `$ ryebot wiki` is called."""
 
 
 

@@ -177,7 +177,8 @@ def is_list_in_other_list(larger_list: list, smaller_list: list):
         - (before_smaller_list, after_smaller_list), any or both of these might be empty
     """
 
-    if False: # for debugging
+    debug = False
+    if debug:
         print('\nCompare:')
         print('larger_list:')
         for elem in larger_list:

@@ -104,7 +104,6 @@ class FandomClient(WikiClient):
             - Delimiter between the wikis in `wiki_str`.
         """
 
-        wikis = []
         try:
             # dynamic list
             valid_wikis = str_to_list(self.client.expandtemplates(text='{{langList|offWiki}}'))
@@ -116,10 +115,11 @@ class FandomClient(WikiClient):
             log('Setting valid_wikis to hard-coded list: ' + str(valid_wikis))
 
         wikis_raw = str_to_list(wikis_str, delim=delimiter)
-        for w in wikis_raw:
-            if w in valid_wikis:
-                wikis.append(w)
+        wikis = []
+        for wiki in wikis_raw:
+            if wiki in valid_wikis:
+                wikis.append(wiki)
             else:
-                log('Warning: Wiki "{}" from config isn\'t valid! Dismissing it.'.format(w))
+                log('Warning: Wiki "{}" from config isn\'t valid! Dismissing it.'.format(wiki))
 
         return wikis

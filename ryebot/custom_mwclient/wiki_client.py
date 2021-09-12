@@ -784,4 +784,3 @@ class WikiClient(object):
                     return (page['to'], None)
 
         return (None, None)
-

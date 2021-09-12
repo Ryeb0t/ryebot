@@ -22,4 +22,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        pylint $(find . -iname "*.py" | xargs)
+        pylint $(find . -iname "*.py" | xargs) --exit-zero

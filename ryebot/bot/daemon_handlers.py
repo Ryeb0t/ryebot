@@ -6,8 +6,7 @@ event parameters and determines the action to take. Normally, this action
 constitutes starting a new process via the `ryebotscript` module.
 """
 
-import logging
-import os
+import os.path
 
 from pid import PidFile, PidFileAlreadyRunningError
 import psutil
@@ -26,7 +25,7 @@ from ryebot.bot.utils import (
 class FileModifiedEventHandler():
     """Class that starts new processes, depending on the file that was modified."""
 
-    def __init__(self, logger: logging.Logger, file_path: str):
+    def __init__(self, logger, file_path: str):
         self.logger = logger
         self.file_path = file_path
 

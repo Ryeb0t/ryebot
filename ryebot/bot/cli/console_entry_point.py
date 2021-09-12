@@ -25,7 +25,7 @@ CTX_SETTINGS = dict(help_option_names=['-h', '-?', '--help'])
 @click.group(
     context_settings=CTX_SETTINGS,
     help='Welcome to the Ryebot menu! Specify one of the commands below to perform an action.\n\n'
-    'Each command has a "-h" option for help about its usage.'
+        'Each command has a "-h" option for help about its usage.'
 )
 @click.version_option(metadata.version('ryebot'), '-v', '--version') # enable version option
 @click.option(

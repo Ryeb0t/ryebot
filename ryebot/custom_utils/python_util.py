@@ -376,59 +376,59 @@ def copytree_robocopy(src: str, dst: str):
 
 
 def sepdelimited_keydata_to_json(data: dict, sep: str = '.'):
-        """Store a dict to JSON that originally has the following format:
+    """Store a dict to JSON that originally has the following format:
 
-        ```
-        {
-            "a.bc.def": "value1",
-            "a.bc.ghi": "value2",
-            "j": "value3"
-        }
-        ```
+    ```
+    {
+        "a.bc.def": "value1",
+        "a.bc.ghi": "value2",
+        "j": "value3"
+    }
+    ```
 
-        The resulting JSON will be as follows:
+    The resulting JSON will be as follows:
 
-        ```
-        {
-            "a": {
-                "bc": {
-                    "def": "value1",
-                    "ghi": "value2"
-                }
-            },
-            "j": "value3"
-        }
-        ```
+    ```
+    {
+        "a": {
+            "bc": {
+                "def": "value1",
+                "ghi": "value2"
+            }
+        },
+        "j": "value3"
+    }
+    ```
 
-        The keypart separator can be specified via the `sep` parameter.
-        """
+    The keypart separator can be specified via the `sep` parameter.
+    """
 
-        jsondata = {}
+    jsondata = {}
 
-        for key, value in list(data.items()):
+    for key, value in list(data.items()):
 
-            if key.find(sep) < 0:
-                # the key is not nested, just store it as-is
-                jsondata[key] = value
-                continue
+        if key.find(sep) < 0:
+            # the key is not nested, just store it as-is
+            jsondata[key] = value
+            continue
 
-            jsonsubdict = jsondata
-            keyparts = key.split(sep)
-            max_i = len(keyparts)
-            for i in range(max_i):
-                keypart = keyparts[i]
-                if i+1 < max_i:
-                    # we've not reached the last keypart yet
-                    try:
-                        jsonsubdict = jsonsubdict[keypart]
-                    except KeyError:
-                        jsonsubdict[keypart] = {}
-                        jsonsubdict = jsonsubdict[keypart]
-                else:
-                    # this is the last keypart
-                    jsonsubdict[keypart] = value
+        jsonsubdict = jsondata
+        keyparts = key.split(sep)
+        max_i = len(keyparts)
+        for i in range(max_i):
+            keypart = keyparts[i]
+            if i+1 < max_i:
+                # we've not reached the last keypart yet
+                try:
+                    jsonsubdict = jsonsubdict[keypart]
+                except KeyError:
+                    jsonsubdict[keypart] = {}
+                    jsonsubdict = jsonsubdict[keypart]
+            else:
+                # this is the last keypart
+                jsonsubdict[keypart] = value
 
-        return jsondata
+    return jsondata
 
 
 def find_file(base_directory: str, filename: str):

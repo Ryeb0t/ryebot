@@ -45,8 +45,10 @@ def add_wiki(wikiname):
 
 def remove_wiki(wikiname):
     if wikiname not in get_local_wikis():
-        click.echo(f'Cannot withdraw access from the "{wikiname}" wiki, '
-            'because the bot currently does not have access to it.')
+        click.echo(
+            f'Cannot withdraw access from the "{wikiname}" wiki, '
+            'because the bot currently does not have access to it.'
+        )
         return
 
     unregister_wiki(wikiname)
@@ -64,11 +66,11 @@ def go_online_on_wiki(wikinames, on_all_wikis):
     for wikiname in sorted(wikinames):
 
         if wikiname not in wikis:
-            click.echo('\n'.join((
+            click.echo(
                 f'Cannot go online on the "{wikiname}" wiki, because the bot '
-                    'currently does not have access to it.',
+                'currently does not have access to it.\n'
                 'You can grant access to the wiki using "ryebot wiki add".'
-            )))
+            )
             continue
 
         current_command = LoginControl(wiki=wikiname).command
@@ -95,11 +97,11 @@ def go_offline_on_wiki(wikinames, on_all_wikis):
     for wikiname in sorted(wikinames):
 
         if wikiname not in wikis:
-            click.echo('\n'.join((
+            click.echo(
                 f'Cannot go offline on the "{wikiname}" wiki, because the bot '
-                'currently does not have access to it.',
+                'currently does not have access to it.\n'
                 'You can grant access to the wiki using "ryebot wiki add".'
-            )))
+            )
             return
 
         current_command = LoginControl(wiki=wikiname).command

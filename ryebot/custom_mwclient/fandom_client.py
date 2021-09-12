@@ -93,7 +93,7 @@ class FandomClient(WikiClient):
 
 
     # terraria
-    def get_wikis_from_str(self, wikis_str: str, log, delimiter=','):
+    def get_wikis_from_str(self, wikis_str: str, log, delimiter: str = ','):
         """Returns a list of wikis that is normalized and only includes valid (off-wiki) wikis.
 
         Parameters

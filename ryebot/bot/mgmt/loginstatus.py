@@ -151,7 +151,7 @@ class LoginStatus():
 
 
     @property
-    def all_info(self):
+    def all_info(self) -> tuple[ELoginStatus, float, float]:
         """Return a tuple of the current status and the time of last login and logout."""
         all_info = []
 

@@ -376,7 +376,7 @@ def copytree_robocopy(src: str, dst: str):
     os.system(cmd)
 
 
-def sepdelimited_keydata_to_json(data: dict, sep: str = '.'):
+def sepdelimited_keydata_to_json(data: dict[str], sep: str = '.'):
     """Store a dict to JSON that originally has the following format:
 
     ```json
